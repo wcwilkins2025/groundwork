@@ -18,6 +18,7 @@ SOURCES = {
     "food": {"name": "USDA Food and Nutrition Service, Official USDA Thrifty Food Plan, U.S. average, October 2026", "date": "October 2026", "url": "https://www.fns.usda.gov/sites/default/files/resource-files/CostofFoodOct2026Thrifty.pdf"},
     "budget": {"name": "Utah State University Extension, PowerPay debt reduction tool", "date": "2025", "url": "https://extension.usu.edu/powerpay"},
     "jobs": {"name": "Ranch and farm job boards, read November 14, 2026", "date": "November 2026", "url": "https://ranchwork.com/"},
+    "medicaid": {"name": "KFF, Status of State Action on the Medicaid Expansion Decision (November 2026); healthcare.gov, Medicaid expansion and what it means for you", "date": "November 2026", "url": "https://www.kff.org/affordable-care-act/state-indicator/state-activity-around-expanding-medicaid-under-the-affordable-care-act/"},
     "courses": {"name": "Beginning farmer and rancher programs, courses and land-link listings by state, read from each program's own page", "date": "November 14, 2026",
                 "url": "https://farmanswers.org/"},
 }
@@ -129,7 +130,12 @@ JOBS = [
     {"name": "WorkInTexas.com", "url": "https://www.workintexas.com/", "what": "The Texas Workforce Commission's free statewide job site."},
 ]
 
+# Medicaid expansion, as of November 2026 (KFF). Adults in expansion states qualify up to 138% of the poverty line.
+MEDICAID = {"not_expanded": ["AL", "FL", "GA", "KS", "MS", "SC", "TN", "TX", "WI", "WY"], "limit_pct": 138,
+            "note": "In a state that did not expand, a man below the poverty line qualifies for neither Medicaid nor the marketplace credit (healthcare.gov).", "source": "medicaid"}
+
 STAGE = {
+    "medicaid": MEDICAID,
     "wages": WAGES,
     "household_by_size": HOUSEHOLD,
     "aca": ACA,

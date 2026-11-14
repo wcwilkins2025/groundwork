@@ -79,7 +79,13 @@
           var pctFpl = (num(p.inc) * 12) / fpl * 100;
           var cap = pctFpl >= 100 ? capShare(S.aca.applicable_pct, pctFpl) : null;
           out.pctFpl = Math.round(pctFpl);
-          if (pctFpl < 100) { out.fplIncomeMonthly = Math.ceil(fpl / 12); healthNote = 'Below the poverty line (' + Math.round(pctFpl) + '% of it at your income) the marketplace credit does not apply, and in states that did not expand Medicaid a man there gets no help. Income of $' + fmt(out.fplIncomeMonthly) + ' a month opens the credit, which caps the plan at ' + S.aca.applicable_pct[0][2].toFixed(1) + '% of income.'; }
+          if (pctFpl < 100) {
+            out.fplIncomeMonthly = Math.ceil(fpl / 12);
+            var expanded = S.medicaid ? S.medicaid.not_expanded.indexOf(p.state) < 0 : null;
+            if (expanded === true) { health = 0; healthNote = 'Below the poverty line (' + Math.round(pctFpl) + '% of it at your income). Your state expanded Medicaid, so you qualify for it up to ' + S.medicaid.limit_pct + '% of the line. Apply.'; }
+            else healthNote = 'Below the poverty line (' + Math.round(pctFpl) + '% of it at your income) the marketplace credit does not apply' + (expanded === false ? ', and your state did not expand Medicaid, so there is no help at this income' : '') + '. Income of $' + fmt(out.fplIncomeMonthly) + ' a month opens the credit, which caps the plan at ' + S.aca.applicable_pct[0][2].toFixed(1) + '% of income.';
+          }
+          if (cap != null && S.medicaid && S.medicaid.not_expanded.indexOf(p.state) < 0 && pctFpl <= S.medicaid.limit_pct) { health = 0; healthNote = 'At ' + Math.round(pctFpl) + '% of the poverty line in a state that expanded Medicaid, you qualify for Medicaid (up to ' + S.medicaid.limit_pct + '%). Apply.'; cap = null; }
           if (cap != null) {
             var capped = Math.round(num(p.inc) * cap / 100);
             if (capped < health) { health = capped; healthNote = 'Marketplace plan capped at ' + cap.toFixed(1) + '% of income at your income (' + Math.round(pctFpl) + '% of the poverty line). Check it at the subsidy calculator.'; }
@@ -113,6 +119,37 @@
       }
     }
     return null;
+  }
+
+
+  /* ---------- paying off what he owes: smallest balance first, every freed payment rolls to the next ----------
+     debts: [{name, bal, pay, rate}] with rate in percent a year (0 if unknown); extra: dollars a month above the minimums.
+     Returns the payoff month for each debt, the month everything is clear, and the interest paid along the way. */
+  function debtPlan(debts, extra) {
+    var list = (debts || []).map(function (d, i) { return { i: i, name: d.name || ('Debt ' + (i + 1)), bal: Math.max(0, num(d.bal)), pay: Math.max(0, num(d.pay)), rate: Math.max(0, num(d.rate)), paidMonth: null, interest: 0 }; })
+      .filter(function (d) { return d.bal > 0; });
+    list.sort(function (a, b) { return a.bal - b.bal; });
+    extra = Math.max(0, num(extra));
+    var month = 0, interest = 0, budget = list.reduce(function (t, d) { return t + d.pay; }, 0) + extra;
+    var stuck = list.some(function (d) { return d.pay + extra <= d.bal * d.rate / 1200; });
+    if (list.length && budget <= 0) stuck = true;
+    while (!stuck && month < 600 && list.some(function (d) { return d.bal > 0; })) {
+      month++;
+      var pool = budget;
+      /* interest first, then minimums, then everything left to the smallest open balance */
+      list.forEach(function (d) { if (d.bal > 0) { var i = d.bal * d.rate / 1200; d.bal += i; d.interest += i; interest += i; } });
+      list.forEach(function (d) { if (d.bal > 0) { var m = Math.min(d.pay, d.bal); d.bal -= m; pool -= m; } });
+      for (var k = 0; k < list.length && pool > 0; k++) {
+        var d2 = list[k];
+        if (d2.bal > 0) { var m2 = Math.min(pool, d2.bal); d2.bal -= m2; pool -= m2; }
+      }
+      list.forEach(function (d) { if (d.bal <= 0.005 && d.paidMonth == null) { d.bal = 0; d.paidMonth = month; } });
+    }
+    var done = list.every(function (d) { return d.paidMonth != null; });
+    var order = list.map(function (d) { return { name: d.name, paidMonth: d.paidMonth, interest: Math.round(d.interest) }; });
+    order.sort(function (a, b) { return (a.paidMonth == null ? 1e9 : a.paidMonth) - (b.paidMonth == null ? 1e9 : b.paidMonth); });
+    return { order: order,
+      months: list.length && done ? month : null, interest: Math.round(interest), monthly: Math.round(budget), stuck: list.length ? (stuck || !done) : false };
   }
 
   /* ---------- where he stands ---------- */
@@ -153,7 +190,12 @@
       s1.wageState = !!(w.states && w.states[st] && w.states[st].median_hourly);
     }
     s1.debt = Math.round(num(p.debt));
-    if (s1.debt > 0) {
+    var debts = typeof p.debts === 'object' ? p.debts : null;
+    if (debts && debts.length) {
+      var dp = debtPlan(debts, surplus);
+      s1.debt = Math.round(debts.reduce(function (t, d) { return t + num(d.bal); }, 0));
+      s1.debtMonths = dp.months; s1.debtPlan = dp;
+    } else if (s1.debt > 0) {
       var pay = n.debt + surplus;
       s1.debtMonths = pay > 0 ? Math.ceil(s1.debt / pay) : null;
     }
@@ -262,5 +304,5 @@
     };
   }
 
-  root.GWpath = { STAGES: STAGES, needs: needs, place: place, path: path, calcInput: calcInput, fmt: fmt };
+  root.GWpath = { STAGES: STAGES, needs: needs, place: place, path: path, calcInput: calcInput, debtPlan: debtPlan, fmt: fmt };
 })(typeof window !== 'undefined' ? window : globalThis);

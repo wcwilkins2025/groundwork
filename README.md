@@ -12,12 +12,14 @@ Grows out of the [Brotherhood Homestead Cost Calculator](https://github.com/wcwi
 | `start.html` | Where you are: nine plain questions. |
 | `path.html` | Your path: the stage you are in, the gate, this month's steps, and the figures for each stage on your numbers. Printable. |
 | `numbers.html` | Your numbers: the cost calculator and Make it pay, prefilled from your answers. |
+| `steady.html` | Get steady: the budget sheet, what you owe and the payoff order (smallest first, payments roll on), health insurance at your income with the Medicaid and marketplace rules, and the jobs that pay while you learn. Printable. |
+| `resources.html` | Courses, the people to call, land-link programs, loans, job boards and the subsidy calculator, by state. |
 
 The plan rides in the link. Every page carries the answers in the query string, so a bookmark or a pasted link is the saved plan. Accounts come in a later milestone.
 
 ## The profile
 
-`cash`, `debt`, `debtm` (payments a month), `inc` (money in a month, after tax), `from` (none, job, own, pension, other), `spend` (a month, not counting rent, health or debt; 0 means the BLS average for the family size), `adults`, `kids`, `exp` (none, some, two, own), `place` (rent, house, own), `move` (yes, no), `state`, `county`, `hours` (a week), `health` (none, work, marketplace, other).
+`cash`, `debt`, `debtm` (payments a month), `inc` (money in a month, after tax), `from` (none, job, own, pension, other), `spend` (a month, not counting rent, health or debt; 0 means the BLS average for the family size), `adults`, `kids`, `exp` (none, some, two, own), `place` (rent, house, own), `move` (yes, no), `state`, `county`, `hours` (a week), `health` (none, work, marketplace, other), `debts` (name:balance:payment:rate, joined with |).
 
 Example: `path.html?cash=3000&debt=12000&debtm=350&inc=2400&from=job&adults=2&kids=2&exp=none&state=TX&county=Fannin&hours=10&health=none`
 

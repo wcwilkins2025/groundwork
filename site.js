@@ -6,8 +6,8 @@
   var GW = {};
 
   /* ---------- the profile: fields, defaults, URL ---------- */
-  GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'adults', 'kids', 'exp', 'place', 'move', 'state', 'county', 'hours', 'health'];
-  GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none' };
+  GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'adults', 'kids', 'exp', 'place', 'move', 'state', 'county', 'hours', 'health', 'debts'];
+  GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '' };
 
   GW.readProfile = function () {
     var q = new URLSearchParams(location.search);
@@ -31,6 +31,15 @@
       var page = a.getAttribute('data-carry');
       a.setAttribute('href', GW.link(page, p));
     });
+  };
+
+  /* the debt list in the link: name:balance:payment:rate|name:balance:payment:rate */
+  GW.parseDebts = function (s) {
+    if (!s) return [];
+    return String(s).split('|').map(function (part) { var f = part.split(':'); return { name: decodeURIComponent(f[0] || ''), bal: +f[1] || 0, pay: +f[2] || 0, rate: +f[3] || 0 }; }).filter(function (d) { return d.bal > 0 || d.name; });
+  };
+  GW.encodeDebts = function (list) {
+    return list.filter(function (d) { return d.bal > 0; }).map(function (d) { return [encodeURIComponent(d.name || ''), d.bal, d.pay, d.rate].join(':'); }).join('|');
   };
 
   /* ---------- theme ---------- */

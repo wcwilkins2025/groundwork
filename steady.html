@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Get steady</title>
+<meta name="description" content="Stage 1 on one page: the budget sheet, what you owe and the order to pay it, health insurance at your income, and the jobs that pay while you learn.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+  .sheet td input { width: 120px; max-width: 100%; font: inherit; font-size: 16px; color: var(--fg); background: var(--field); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 8px; text-align: right; font-variant-numeric: tabular-nums; }
+  .sheet td.n { white-space: nowrap; }
+  .debts td input[type=text] { width: 140px; text-align: left; }
+  .debts td input[type=number] { width: 96px; }
+  .debts .rm { font: inherit; font-size: 14px; color: var(--warn); background: none; border: 0; cursor: pointer; min-height: 40px; }
+  .big { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1; margin: 4px 0; }
+  .ok { color: var(--step); } .short { color: var(--warn); }
+  .wages td.n { white-space: nowrap; }
+  @media (max-width: 560px) { .sheet td input, .debts td input[type=number] { width: 84px; } .debts td input[type=text] { width: 110px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Pages">
+      <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
+      <a href="start.html" data-carry="start.html">Where you are</a>
+      <a href="path.html" data-carry="path.html">Your path</a>
+      <a href="steady.html" data-carry="steady.html" aria-current="page">Get steady</a>
+      <a href="numbers.html" data-carry="numbers.html">Your numbers</a>
+      <a href="resources.html" data-carry="resources.html">Resources</a>
+      <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+    <h1>Get steady</h1>
+    <p class="lede">Stage 1 on one page. The budget sheet, what you owe and the order to pay it, health insurance at your income, and the jobs that pay while you learn. Nothing here is about cattle yet. It is about getting your feet under you.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="printonly" id="printHead"></p>
+  <div class="heroes">
+    <div class="hero"><p class="lbl">In each month</p><p class="val" id="heroIn">$0</p><p class="rng" id="heroInSub"></p></div>
+    <div class="hero"><p class="lbl">Out each month</p><p class="val" id="heroOut">$0</p><p class="rng" id="heroOutSub"></p></div>
+    <div class="hero"><p class="lbl">The gap</p><p class="val" id="heroGap">$0</p><p class="rng" id="heroGapSub"></p></div>
+  </div>
+
+  <div class="card">
+    <h3>1. The budget sheet</h3>
+    <p class="sub">One sheet, every month. Change the two lines that are yours; the others come from public tables for your county and family and are explained on Your path.</p>
+    <div class="tablewrap sheet"><table>
+      <thead><tr><th>Line</th><th class="n">Per month</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Money coming in, after tax</td><td class="n"><input id="inc" type="number" min="0" step="50" inputmode="numeric"></td><td class="muted">Take-home pay, pension, disability, anything steady.</td></tr>
+        <tr><td>Groceries, fuel, phone, clothes, everything else</td><td class="n"><input id="spend" type="number" min="0" step="50" inputmode="numeric"></td><td class="muted" id="spendNote"></td></tr>
+        <tr><td>Rent</td><td class="n" id="rentCell"></td><td class="muted" id="rentNote"></td></tr>
+        <tr><td>Health insurance</td><td class="n" id="healthCell"></td><td class="muted" id="healthNote"></td></tr>
+        <tr><td>Debt payments</td><td class="n" id="debtCell"></td><td class="muted">From the list below.</td></tr>
+        <tr><td><b>Out each month</b></td><td class="n" id="outCell"></td><td class="muted" id="outNote"></td></tr>
+      </tbody>
+    </table></div>
+    <p id="cushion" style="margin:12px 0 0"></p>
+  </div>
+
+  <div class="card">
+    <h3>2. What you owe</h3>
+    <p class="sub">Every debt, smallest balance first. Pay the minimum on all of them and put every spare dollar on the smallest. When it is gone, its payment rolls onto the next. Interest rate is optional; leave it 0 if you do not know it.</p>
+    <div class="tablewrap debts"><table id="debtTable">
+      <thead><tr><th>What</th><th class="n">Balance</th><th class="n">Payment</th><th class="n">Rate %</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="actions noprint"><button class="btn ghost" type="button" id="addDebt">Add a debt</button></div>
+    <div id="debtOut" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h3>3. Health insurance</h3>
+    <div id="healthOut"></div>
+  </div>
+
+  <div class="card">
+    <h3>4. Jobs that pay while you learn</h3>
+    <p class="sub" id="jobsSub"></p>
+    <div class="tablewrap wages"><table id="wageTable"><thead><tr><th>Job</th><th class="n">An hour</th><th class="n">A month, full time</th><th>Why it fits the path</th></tr></thead><tbody></tbody></table></div>
+    <ul id="boards" style="margin:12px 0 0;padding-left:20px"></ul>
+  </div>
+
+  <div class="card noprint">
+    <div class="actions">
+      <a class="btn" id="pathBtn" href="path.html">Back to your path</a>
+      <button class="btn ghost" type="button" id="printBtn">Print this sheet</button>
+      <button class="btn ghost" type="button" id="linkBtn">Copy the link</button>
+    </div>
+    <p class="flash" id="flash" aria-live="polite"></p>
+  </div>
+
+  <div class="card">
+    <h3>Sources on this page</h3>
+    <ol id="sourceList" style="padding-left:20px;font-size:14.5px"></ol>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <p>Planning figures, not advice from a licensed anyone. Wages are medians; a job pays what it pays. Premiums and the subsidy rule are the 2026 figures and change every year.</p>
+</div></footer>
+
+<script src="data/bundle.js"></script>
+<script src="engine/calc.js"></script>
+<script src="engine/path.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = GW.$, D = window.HC, P = window.GWpath, el = GW.el, money = GW.money, fmt = GW.fmt;
+  GW.initTheme();
+  var C = D.costs.items, S = D.stage || {}, SRC = D.costs.sources, names = D.land.state_names;
+  var p = GW.readProfile();
+  var debts = GW.parseDebts(p.debts);
+  if (!debts.length && p.debt > 0) debts = [{ name: 'What I owe', bal: p.debt, pay: p.debtm, rate: 0 }];
+  var used = {};
+
+  function sync() {
+    p.inc = +$('inc').value || 0;
+    p.spend = +$('spend').value || 0;
+    p.debts = GW.encodeDebts(debts);
+    p.debt = Math.round(debts.reduce(function (t, d) { return t + (+d.bal || 0); }, 0));
+    p.debtm = Math.round(debts.reduce(function (t, d) { return t + (+d.pay || 0); }, 0));
+    GW.carry(p);
+    $('pathBtn').href = GW.link('path.html', p);
+    history.replaceState(null, '', GW.link('steady.html', p));
+    render();
+  }
+
+  function render() {
+    var q = Object.assign({}, p, { debts: debts });
+    var n = P.needs(q, D);
+    var surplus = Math.max(0, n.gap);
+    $('heroIn').textContent = money(n.income); $('heroInSub').textContent = 'After tax.';
+    $('heroOut').textContent = money(n.outgo); $('heroOutSub').textContent = 'For ' + (n.family === 1 ? 'one man' : n.family + ' people') + (p.county ? ' in ' + p.county + ' County' : ' in ' + names[p.state]) + '.';
+    $('heroGap').textContent = (n.gap >= 0 ? '+' : '-') + money(Math.abs(n.gap)).replace('-', '');
+    $('heroGap').className = 'val ' + (n.gap >= 0 ? 'ok' : 'short');
+    $('heroGapSub').textContent = n.gap >= 0 ? 'Spare each month. This is what pays off debt and builds the cushion.' : 'Short each month. Stage 1 is closing this, and the first move is money coming in.';
+    $('spendNote').textContent = p.spend > 0 ? 'Your figure. The BLS average for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ' is $' + fmt(n.householdAverage) + '.' : 'Leave at 0 and this is the BLS average for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ', $' + fmt(n.householdAverage) + '. Put in your own figure.';
+    $('rentCell').textContent = money(n.rent); $('rentNote').textContent = p.place === 'own' ? 'You own your place.' : (n.rentFound ? 'HUD Fair Market Rent, ' + (n.family <= 2 ? '2 bedroom' : '3 bedroom') + ', your county, 2026.' : 'HUD Fair Market Rent for Fannin County, TX stands in; pick your county on Where you are.');
+    $('healthCell').textContent = money(n.health); $('healthNote').textContent = n.healthNote;
+    $('debtCell').textContent = money(n.debt);
+    $('outCell').textContent = money(n.outgo); $('outNote').textContent = '';
+    var cushionShort = Math.max(0, n.runwayTarget - p.cash);
+    $('cushion').textContent = 'The cushion: ' + n.runwayMonths + ' months of this is ' + money(n.runwayTarget) + '. You have ' + money(p.cash) + ' of it' + (cushionShort === 0 ? '. That gate is open.' : (surplus > 0 ? ', and at ' + money(surplus) + ' a month spare the rest takes ' + Math.ceil(cushionShort / surplus) + ' months.' : '. It cannot grow until money in covers money out.'));
+
+    /* debts */
+    var tb = $('debtTable').querySelector('tbody'); tb.textContent = '';
+    debts.forEach(function (d, i) {
+      var tr = el('tr');
+      function cell(type, key, step) { var td = el('td', type === 'number' ? 'n' : null); var inp = el('input'); inp.type = type; inp.value = d[key]; if (type === 'number') { inp.min = 0; inp.step = step; inp.inputMode = 'decimal'; } inp.setAttribute('aria-label', key); inp.addEventListener('input', function () { d[key] = type === 'number' ? +inp.value || 0 : inp.value; sync(); }); td.appendChild(inp); return td; }
+      tr.appendChild(cell('text', 'name')); tr.appendChild(cell('number', 'bal', 50)); tr.appendChild(cell('number', 'pay', 10)); tr.appendChild(cell('number', 'rate', 0.5));
+      var rm = el('td'); var b = el('button', 'rm noprint', 'Remove'); b.type = 'button'; b.addEventListener('click', function () { debts.splice(i, 1); sync(); }); rm.appendChild(b); tr.appendChild(rm);
+      tb.appendChild(tr);
+    });
+    var out = $('debtOut'); out.textContent = '';
+    if (!debts.length) out.appendChild(el('p', 'muted', 'Nothing listed. If you owe nothing, that is a head start most men do not have.'));
+    else {
+      var dp = P.debtPlan(debts, surplus);
+      var total = debts.reduce(function (t, d) { return t + (+d.bal || 0); }, 0);
+      if (dp.stuck) out.appendChild(el('p', 'short', 'At these payments the balance does not come down' + (surplus <= 0 ? ', because there is nothing spare yet. Stage 1 starts with money coming in.' : '. The payment on at least one debt is below its interest. Call them and ask for a lower rate, or move it.')));
+      else {
+        out.appendChild(el('p', 'big', 'All clear in ' + (dp.months < 12 ? dp.months + ' months' : Math.round(dp.months / 12 * 10) / 10 + ' years')));
+        out.appendChild(el('p', null, money(total) + ' at ' + money(dp.monthly) + ' a month (' + money(dp.monthly - surplus) + ' of minimums plus ' + money(surplus) + ' spare)' + (dp.interest ? ', about ' + money(dp.interest) + ' of it interest.' : '.')));
+        var ol = el('ol'); ol.style.paddingLeft = '20px';
+        dp.order.forEach(function (d) { ol.appendChild(el('li', null, d.name + ': paid off in month ' + d.paidMonth + (d.interest ? ' (' + money(d.interest) + ' interest)' : ''))); });
+        out.appendChild(ol);
+      }
+      if (S.budget) { var pb = el('p', 'muted'); pb.appendChild(document.createTextNode('A free tool that does this with your real statements: ')); var a = el('a', null, S.budget.name); a.href = S.budget.url; a.rel = 'noopener'; pb.appendChild(a); pb.appendChild(document.createTextNode('. ' + S.budget.what)); out.appendChild(pb); used['stage:budget'] = S.sources.budget; }
+    }
+
+    /* health */
+    var h = $('healthOut'); h.textContent = '';
+    if (p.health === 'work') h.appendChild(el('p', null, 'You have it through your job. Keep that job as long as you can; when you leave it, this becomes the biggest new line on the sheet, about ' + money(n.family === 1 ? ((S.aca && S.aca.benchmark_single && (S.aca.benchmark_single[p.state] || S.aca.benchmark_single.US)) || C.health_family_monthly.low) : C.health_family_monthly.typ) + ' a month at full price.'));
+    else if (p.health === 'other') h.appendChild(el('p', null, 'Medicare, VA or Medicaid is covering you. Nothing to do here but keep it.'));
+    else {
+      h.appendChild(el('p', 'big', money(n.health) + ' a month'));
+      h.appendChild(el('p', null, n.healthNote));
+      if (S.aca) {
+        var fpl = S.aca.fpl[String(Math.min(n.family, 8))];
+        var lines = el('ul'); lines.style.paddingLeft = '20px';
+        lines.appendChild(el('li', null, 'The poverty line for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ' is $' + fmt(fpl) + ' a year, $' + fmt(Math.ceil(fpl / 12)) + ' a month. You are at ' + (n.pctFpl != null ? n.pctFpl + '%' : 'no income') + ' of it.'));
+        lines.appendChild(el('li', null, 'From 100% to 400% of the line, the marketplace credit caps the benchmark plan at ' + S.aca.applicable_pct[0][2].toFixed(1) + '% of income near the line, rising to ' + S.aca.applicable_pct[S.aca.applicable_pct.length - 1][3].toFixed(2) + '% at 300% and above. Over 400% there is no credit in 2026.'));
+        if (S.medicaid) {
+          var exp = S.medicaid.not_expanded.indexOf(p.state) < 0;
+          lines.appendChild(el('li', null, exp ? names[p.state] + ' expanded Medicaid: adults up to ' + S.medicaid.limit_pct + '% of the poverty line qualify for Medicaid, so a man below the line is covered there.' : names[p.state] + ' did not expand Medicaid. A man below the poverty line gets neither Medicaid nor the marketplace credit. Income of $' + fmt(Math.ceil(fpl / 12)) + ' a month opens the credit.'));
+          used['stage:medicaid'] = S.sources.medicaid;
+        }
+        var li = el('li'); li.appendChild(document.createTextNode('Check your own number at the ')); var a2 = el('a', null, S.aca.calculator.name); a2.href = S.aca.calculator.url; a2.rel = 'noopener'; li.appendChild(a2); li.appendChild(document.createTextNode('. It takes two minutes.')); lines.appendChild(li);
+        h.appendChild(lines);
+        used['stage:aca'] = S.sources.aca;
+      }
+    }
+
+    /* jobs */
+    $('jobsSub').textContent = 'Median pay in ' + names[p.state] + ' where the BLS prints it, otherwise the national figure. A ranch hand job is stage 1 and stage 2 at once: it pays, and it is the two years of experience.';
+    var wb = $('wageTable').querySelector('tbody'); wb.textContent = '';
+    if (S.wages) {
+      var why = { ranch_hand: 'The schooling. Two years of this is what every lease and loan asks about.', fence: 'Fence is the first thing every lease needs fixed. A man who can build it gets asked back.', equipment: 'Tractor, baler, sprayer. Custom hay crews hire every summer.', truck: 'A CDL hauls cattle and hay, and pays enough to build the cushion fast.' };
+      Object.keys(S.wages).forEach(function (k) {
+        var w = S.wages[k]; var st = w.states && w.states[p.state];
+        var hourly = st && st.median_hourly ? st.median_hourly : w.median_hourly;
+        var tr = el('tr'); tr.appendChild(el('td', null, w.label + (st && st.median_hourly ? '' : ' (US)'))); tr.appendChild(el('td', 'n', '$' + hourly.toFixed(2))); tr.appendChild(el('td', 'n', money(Math.round(hourly * 2080 / 12)))); tr.appendChild(el('td', 'muted', why[k] || '')); wb.appendChild(tr);
+      });
+      used['stage:wages'] = S.sources.wages;
+    }
+    var bl = $('boards'); bl.textContent = '';
+    (S.jobs || []).forEach(function (j) { var li2 = el('li'); var a3 = el('a', null, j.name); a3.href = j.url; a3.rel = 'noopener'; li2.appendChild(a3); li2.appendChild(document.createTextNode(' ' + j.what)); bl.appendChild(li2); });
+    if (S.jobs) used['stage:jobs'] = S.sources.jobs;
+    used['stage:household'] = S.sources.household;
+    if (n.rentFound) used['rent'] = { name: D.rent.source.name, url: D.rent.source.url, date: D.rent.source.date };
+    used['stage:runway'] = S.sources.runway;
+
+    var ol2 = $('sourceList'); ol2.textContent = '';
+    Object.keys(used).forEach(function (k) { var s = used[k]; if (!s) return; var li3 = el('li'); if (s.url) { var a4 = el('a', null, s.name); a4.href = s.url; a4.rel = 'noopener'; li3.appendChild(a4); } else li3.appendChild(document.createTextNode(s.name)); li3.appendChild(document.createTextNode((s.date ? ' (' + s.date + ')' : '') + (s.estimate ? '. Estimate: ' + s.basis : ''))); ol2.appendChild(li3); });
+    $('printHead').textContent = 'Groundwork, Get steady. ' + new Date().toLocaleDateString();
+  }
+
+  $('inc').value = p.inc; $('spend').value = p.spend;
+  $('inc').addEventListener('input', sync); $('spend').addEventListener('input', sync);
+  $('addDebt').addEventListener('click', function () { debts.push({ name: '', bal: 0, pay: 0, rate: 0 }); sync(); });
+  $('printBtn').addEventListener('click', function () { window.print(); });
+  $('linkBtn').addEventListener('click', function () { GW.copyText(location.href, 'Link copied. That link is your sheet.'); });
+  sync();
+})();
+</script>
+</body>
+</html>

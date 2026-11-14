@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Resources</title>
+<meta name="description" content="Courses, the people to call, land-link programs, job boards, loan programs and the health insurance calculator, by state. Each with a date and a link.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+  .res td:first-child a { font-weight: 600; }
+  .pick { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 14px; }
+  .pick select { font: inherit; font-size: 17px; color: var(--fg); background: var(--field); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 12px; min-height: 44px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Pages">
+      <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
+      <a href="start.html" data-carry="start.html">Where you are</a>
+      <a href="path.html" data-carry="path.html">Your path</a>
+      <a href="steady.html" data-carry="steady.html">Get steady</a>
+      <a href="numbers.html" data-carry="numbers.html">Your numbers</a>
+      <a href="resources.html" data-carry="resources.html" aria-current="page">Resources</a>
+      <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+    <h1>Resources</h1>
+    <p class="lede">Courses, the people to call, programs that match new operators with landowners, job boards, loans, and the health insurance calculator. Each one read from its own page on the date shown. If a link is dead or a program is gone, say so and it gets fixed.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <div class="pick"><label for="state">State</label><select id="state"></select><span class="muted" id="pickNote"></span></div>
+    <h3 id="stateTitle"></h3>
+    <div class="tablewrap res"><table id="stateTable"><thead><tr><th>What</th><th>Who</th><th>Cost</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h3>Everywhere</h3>
+    <div class="tablewrap res"><table id="natTable"><thead><tr><th>What</th><th>Who</th><th>Cost</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h3>Money, work and insurance</h3>
+    <div class="tablewrap res"><table id="moneyTable"><thead><tr><th>What</th><th>Who</th><th>For</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h3>The tables behind the numbers</h3>
+    <p class="sub">Every figure on Groundwork comes from one of these, or is marked estimate with its basis. The full list with notes is in <a href="sources-costs.md">the cost sources file</a>.</p>
+    <ol id="sourceList" style="padding-left:20px;font-size:14.5px"></ol>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <p>Programs change, fees change, pages move. Dates are when each page was read. Call before you drive.</p>
+</div></footer>
+
+<script src="data/bundle.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = GW.$, D = window.HC, el = GW.el, S = D.stage || {}, names = D.land.state_names;
+  GW.initTheme();
+  var p = GW.readProfile();
+  GW.carry(p);
+  var codes = Object.keys(names).sort(function (a, b) { return names[a] < names[b] ? -1 : 1; });
+  codes.forEach(function (c) { var o = el('option', null, names[c] + (S.courses && S.courses.states && S.courses.states[c] ? '' : ' (national only)')); o.value = c; $('state').appendChild(o); });
+  $('state').value = names[p.state] ? p.state : 'TX';
+
+  function row(tb, name, url, what, who, cost) {
+    var tr = el('tr'); var td = el('td'); var a = el('a', null, name); a.href = url; a.rel = 'noopener'; td.appendChild(a); if (what) td.appendChild(el('span', 'muted', ' ' + what)); tr.appendChild(td);
+    tr.appendChild(el('td', 'muted', who)); tr.appendChild(el('td', null, cost || '')); tb.appendChild(tr);
+  }
+  function render() {
+    var st = $('state').value;
+    p.state = st; GW.carry(p);
+    var list = (S.courses && S.courses.states && S.courses.states[st]) || [];
+    $('stateTitle').textContent = 'In ' + names[st];
+    $('pickNote').textContent = list.length ? '' : 'No state listing yet for ' + names[st] + '. Start with the USDA beginning farmer coordinator for your state, below, and your county extension office.';
+    var tb = $('stateTable').querySelector('tbody'); tb.textContent = '';
+    list.forEach(function (c) { row(tb, c.name, c.url, c.what, c.who + (c.date ? ' (' + c.date + ')' : ''), c.cost); });
+    if (!list.length) row(tb, 'USDA beginning farmer and rancher coordinator for ' + names[st], 'https://www.farmers.gov/your-business/beginning-farmers/coordinators', 'A name, email and phone number. Call them and ask what is near you.', 'USDA', 'free');
+  }
+  var nb = $('natTable').querySelector('tbody');
+  ((S.courses && S.courses.national) || []).forEach(function (c) { row(nb, c.name, c.url, c.what, c.who + (c.date ? ' (' + c.date + ')' : ''), c.cost); });
+  var mb = $('moneyTable').querySelector('tbody');
+  if (S.aca && S.aca.calculator) row(mb, S.aca.calculator.name, S.aca.calculator.url, 'What a marketplace plan costs at your income, with the credit.', 'KFF', 'health insurance');
+  row(mb, 'FSA farm loans', 'https://www.farmers.gov/your-business/beginning-farmers', 'Operating loans to $400,000, microloans to $50,000, farm ownership to $600,000, the down payment program. Rates posted monthly.', 'USDA Farm Service Agency (October 2025 chart, November 2026 rates)', 'loans');
+  row(mb, 'Find your USDA service center', 'https://www.farmers.gov/working-with-us/service-center-locator', 'The FSA office that takes the loan application.', 'USDA', 'loans');
+  if (S.budget) row(mb, S.budget.name, S.budget.url, S.budget.what, 'Utah State University Extension', 'debt');
+  (S.jobs || []).forEach(function (j) { row(mb, j.name, j.url, j.what, '', 'work'); });
+
+  var ol = $('sourceList');
+  var seen = {};
+  Object.keys(S.sources || {}).forEach(function (k) { var s = S.sources[k]; if (!s.url || seen[s.url]) return; seen[s.url] = true; var li = el('li'); var a = el('a', null, s.name); a.href = s.url; a.rel = 'noopener'; li.appendChild(a); li.appendChild(document.createTextNode(s.date ? ' (' + s.date + ')' : '')); ol.appendChild(li); });
+  if (D.rent && D.rent.source) { var li2 = el('li'); var a2 = el('a', null, D.rent.source.name); a2.href = D.rent.source.url; a2.rel = 'noopener'; li2.appendChild(a2); ol.appendChild(li2); }
+  (D.land.source_list || []).concat(D.tax.source_list || [], D.counties.source_list || []).forEach(function (s) { if (seen[s.url]) return; seen[s.url] = true; var li3 = el('li'); var a3 = el('a', null, s.name); a3.href = s.url; a3.rel = 'noopener'; li3.appendChild(a3); li3.appendChild(document.createTextNode(s.date ? ' (' + s.date + ')' : '')); ol.appendChild(li3); });
+
+  $('state').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

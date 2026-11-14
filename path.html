@@ -15,7 +15,9 @@
       <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
       <a href="start.html" data-carry="start.html">Where you are</a>
       <a href="path.html" data-carry="path.html" aria-current="page">Your path</a>
+      <a href="steady.html" data-carry="steady.html">Get steady</a>
       <a href="numbers.html" id="numbersLink">Your numbers</a>
+      <a href="resources.html" data-carry="resources.html">Resources</a>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <h1>Your path</h1>
@@ -143,7 +145,7 @@
   } else {
     m1.push('Money in covers money out. Now the cushion: put ' + money(surplus) + ' a month away until you have ' + money(n.runwayTarget) + ' in hand. That is ' + months(s1.monthsToRunway) + '.');
   }
-  m1.push('Write the budget on one sheet: what comes in, what goes out, the gap. Every month, the same sheet.' + (S.budget && S.budget.url ? '' : ''));
+  m1.push(['Write the budget on one sheet, list what you owe, and see the payoff order on', 'Get steady', GW.link('steady.html', p), '']);
   if (S.budget && S.budget.url) m1.push(['A free budget sheet and debt payoff plan:', S.budget.name, S.budget.url, '']);
   if (s1.debt > 0) m1.push('List what you owe, smallest to largest, and pay the smallest off first while paying the minimum on the rest. At ' + money(n.debt + surplus) + ' a month, ' + money(s1.debt) + ' is gone in ' + months(s1.debtMonths) + '.');
   if (p.health === 'none' || p.health === 'marketplace') m1.push([n.pctFpl != null && n.pctFpl < 100 ? 'Health insurance: the marketplace credit starts at the poverty line. Check it at' : 'Health insurance at your income is cheaper than you think. Check it at', S.aca && S.aca.calculator ? S.aca.calculator.name : 'the marketplace subsidy calculator', S.aca && S.aca.calculator ? S.aca.calculator.url : 'https://www.kff.org/interactive/subsidy-calculator/', n.healthNote]);

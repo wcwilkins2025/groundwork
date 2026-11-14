@@ -80,6 +80,19 @@ check('stage 5 down payment = 5% of a modest place', near(s5.down, s5.setupTotal
 check('calculator input carries his income as work income', r2.calcInput.work_income === 9000 * 12);
 check('calculator input uses the county land value', r2.calcInput.price_per_acre > 0 && r2.calcInput.county === 'Fannin County');
 
+console.log('4b. Paying off what he owes');
+const dp = P.debtPlan([{ name: 'Card', bal: 3000, pay: 90, rate: 24 }, { name: 'Truck', bal: 8000, pay: 350, rate: 9 }], 500);
+check('smallest balance is paid first when there is money to spare', dp.order[0].name === 'Card' && dp.order[0].paidMonth < dp.order[1].paidMonth);
+check('order is listed by payoff month', P.debtPlan([{ name: 'Card', bal: 3000, pay: 90, rate: 24 }, { name: 'Truck', bal: 8000, pay: 350, rate: 9 }], 0).order[0].name === 'Truck');
+check('everything clears in a sane number of months', dp.months > 6 && dp.months < 24, dp.months);
+check('monthly budget = minimums + extra', dp.monthly === 90 + 350 + 500);
+check('interest is charged when a rate is given', dp.interest > 0);
+const dp0 = P.debtPlan([{ name: 'A', bal: 1200, pay: 100, rate: 0 }], 0);
+check('no interest: 1,200 at 100 a month clears in 12 months', dp0.months === 12 && dp0.interest === 0);
+const stuck = P.debtPlan([{ name: 'A', bal: 10000, pay: 50, rate: 30 }], 0);
+check('a payment below the interest is reported as stuck', stuck.stuck && stuck.months === null);
+check('no debts: nothing to pay', P.debtPlan([], 100).months === null && P.debtPlan([], 100).order.length === 0);
+
 console.log('5. Calculator engine still agrees with itself');
 const inp = r2.calcInput;
 const c = calc.compute(inp, D);
