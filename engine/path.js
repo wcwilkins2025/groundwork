@@ -255,7 +255,8 @@
 
     /* stage 5: land, with the FSA down payment program */
     var s5 = { key: 's5' };
-    var placeInp = Object.assign({}, inp, { house: 'existing', existing_house_price: 0 });
+    /* a modest place: a used mobile home unless his motorhome is the house */
+    var placeInp = Object.assign({}, inp, { house: p.place === 'motorhome' ? 'existing' : 'mobile_used', existing_house_price: 0 });
     var r5 = calc.compute(placeInp, data);
     var landLine = r5.setup.filter(function (l) { return l.key === 'land'; })[0];
     s5.acres = inp.acres; s5.pricePerAcre = inp.price_per_acre;
