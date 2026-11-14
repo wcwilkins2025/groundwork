@@ -636,7 +636,7 @@
     function figText(x) { return x.headline ? x.headline : x.figure > 0 ? money(rh(x.figure)) : (x.key === 'herd' ? 'Covered' : '\u2013'); }
     function unitText(x) { return x.headline ? '' : (x.unit || ''); }
     function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-    function reachText(x) { var m = x.reach.months; if (m == null) return 'when money in covers money out'; if (m === 0) return 'reachable now'; if (m < 12) return 'about ' + m + ' months out'; return 'about ' + Math.round(m / 12 * 10) / 10 + ' years out'; }
+    function reachText(x) { var m = x.reach.months; if (m == null) return 'when money in covers money out'; if (m === 0) return 'reachable now'; if (m < 12) return 'about ' + m + ' month' + (m === 1 ? '' : 's') + ' out'; var y = Math.round(m / 12 * 10) / 10; return 'about ' + y + ' year' + (y === 1 ? '' : 's') + ' out'; }
     var H = R.heroes;
     $('heroNow').textContent = H.now ? figText(H.now) : '\u2013'; $('heroNowSub').textContent = H.now ? H.now.title + (unitText(H.now) ? ', ' + unitText(H.now) : '') + '. ' + cap(reachText(H.now)) + '.' : '';
     if (H.next && H.next.five) { $('heroNext').textContent = H.next.head + ' cows'; $('heroNextSub').textContent = 'Your first cows on an FSA microloan, growing to about ' + H.next.five + ' in five years with the heifers kept. ' + cap(reachText(H.next)) + '.'; }

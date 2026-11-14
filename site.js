@@ -6,14 +6,18 @@
   var GW = {};
 
   /* ---------- the profile: fields, defaults, URL ---------- */
-  GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'rent', 'adults', 'kids', 'exp', 'place', 'move', 'state', 'county', 'hours', 'health', 'debts'];
-  GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, rent: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '' };
+  GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'rent', 'adults', 'kids', 'exp', 'place', 'live', 'move', 'state', 'county', 'hours', 'health', 'debts',
+    'has_rv', 'has_mobile', 'has_truck', 'has_trailer', 'has_tractor', 'has_panels', 'has_tools', 'horses_n', 'cows_n', 'grass_acres', 'grass_rate'];
+  GW.BOOLS = ['has_rv', 'has_mobile', 'has_truck', 'has_trailer', 'has_tractor', 'has_panels', 'has_tools'];
+  GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, rent: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '', live: 'same',
+    has_rv: 0, has_mobile: 0, has_truck: 0, has_trailer: 0, has_tractor: 0, has_panels: 0, has_tools: 0, horses_n: 0, cows_n: 0, grass_acres: 0, grass_rate: 0 };
 
   GW.readProfile = function () {
     var q = new URLSearchParams(location.search);
     var p = {};
     GW.FIELDS.forEach(function (k) { p[k] = q.has(k) ? q.get(k) : GW.DEFAULTS[k]; });
-    ['cash', 'debt', 'debtm', 'inc', 'spend', 'rent', 'adults', 'kids', 'hours'].forEach(function (k) { p[k] = Math.max(0, +p[k] || 0); });
+    ['cash', 'debt', 'debtm', 'inc', 'spend', 'rent', 'adults', 'kids', 'hours', 'horses_n', 'cows_n', 'grass_acres', 'grass_rate'].forEach(function (k) { p[k] = Math.max(0, +p[k] || 0); });
+    GW.BOOLS.forEach(function (k) { p[k] = /^(1|true|yes|on)$/i.test(String(p[k])) ? 1 : 0; });
     p.state = String(p.state || 'TX').toUpperCase();
     p.has = GW.FIELDS.some(function (k) { return q.has(k); });
     return p;

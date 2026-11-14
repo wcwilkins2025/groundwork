@@ -159,6 +159,8 @@ src("est_finish_carry", "Estimate: carrying a weaned calf a year to grass finish
 src("est_handling", "Estimate: handling setup on leased grass", "", "sources.md", "Twenty 12 ft panels at about $140 each (Priefert economy panel, retail), a used or economy squeeze chute ($3,000 to $5,800 at farm stores), a stock tank and mineral feeders. No manufacturer price list is published.", estimate=True)
 src("est_calf_value_high", "Estimate: top of the weaned calf range", "", "sources.md", "Low is the Texas A&M January 2025 budget (525 lb steer at $295 a cwt, $1,549). Typical is Iowa State June 2026 (550 lb at $4.92, $2,706). High allows a bit over the 2026 price.", estimate=True)
 src("est_share_high", "Estimate: top of the operator share", "", "sources.md", "Published splits run 60% (owner also supplies grass) to 65.9% (operator supplies grass). An operator who also supplies the bull and hauls to market can argue for 70%.", estimate=True)
+src("est_rv_lot", "Estimate: RV park lot rent", "", "sources.md", "No public table covers RV lot rent. Monthly rates at rural RV parks with water, power and sewer commonly run $400 to $900. Put in your own figure.", estimate=True)
+src("est_lease_pad", "Estimate: a pad for your own housing on leased land", "", "sources.md", "No published figure. Built from the page's own well, pump, power line, meter and septic items, which are sourced. Hauling water and a generator can stand in at the start; what you build stays with the owner's land, so the lease must say what happens to it.", estimate=True)
 
 I = {}
 
@@ -260,6 +262,9 @@ item("rent_monthly", "Rent for a house in the country", "$ per month", 985, 1370
 item("hay_ton", "Grass hay", "$ per ton", 125, 138, 161, "nass_cropvalues_2026")
 item("custom_bale", "Custom round baling", "$ per bale", 13.15, 15.75, 17.88, "isu_custom_2026")
 item("custom_mow_acre", "Custom pasture mowing or shredding", "$ per acre", 4.60, 27.05, 105.55, "isu_custom_2026")
+
+item("rv_lot_monthly", "RV park lot rent", "$ per month", 400, 650, 900, "est_rv_lot")
+item("holding_tank", "Holding tank or RV septic hookup", "$", 1000, 2500, 5000, "est_lease_pad")
 
 # Well depth defaults: USGS national medians, and per state the median of the county medians
 # from the USGS pull in data/counties.json (only states with 10 or more counties reporting).

@@ -76,6 +76,38 @@
           <select id="move"><option value="yes">Yes, when the time comes</option><option value="no">No, I need to stay where I am</option></select></div>
         <div class="field"><label for="hours">Hours a week you can give it now</label><input id="hours" type="number" min="0" max="80" step="1" inputmode="numeric"><span class="hint">Alongside whatever you do for money today.</span></div>
       </div>
+      <div class="field" style="margin-top:6px"><span class="hint" style="font-weight:600;color:var(--fg);font-size:17px">What you already have</span><span class="hint">Every box you tick takes a cost off the page and moves you up the path.</span></div>
+      <div class="field"><span class="hint" style="font-weight:500;color:var(--fg)">Housing you own</span>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="has_rv"> A motorhome, camper or trailer I can live in</label>
+          <label class="check"><input type="checkbox" id="has_mobile"> A mobile home I could move</label>
+        </div></div>
+      <div class="field"><label for="live">Where you will live while you run cattle</label>
+        <select id="live">
+          <option value="same">Where I am now</option>
+          <option value="lease">On the leased grass, in my own housing, if the owner allows</option>
+          <option value="rvpark">In an RV park</option>
+          <option value="rent">Renting a house</option>
+          <option value="family">With family</option>
+          <option value="house">A house I own</option>
+          <option value="land">Land I own</option>
+        </select><span class="hint" id="liveHint">On the lease means a pad, water, power and a septic or holding tank that stay with the owner's land. The lease has to say what happens to them.</span></div>
+      <div class="field"><span class="hint" style="font-weight:500;color:var(--fg)">Equipment you own</span>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="has_truck"> A truck that will pull a trailer</label>
+          <label class="check"><input type="checkbox" id="has_trailer"> A stock trailer</label>
+          <label class="check"><input type="checkbox" id="has_tractor"> A tractor</label>
+          <label class="check"><input type="checkbox" id="has_panels"> Panels and a chute</label>
+          <label class="check"><input type="checkbox" id="has_tools"> Fence tools and a post driver</label>
+        </div></div>
+      <div class="two">
+        <div class="field"><label for="horses_n">Horses you own</label><input id="horses_n" type="number" min="0" step="1" inputmode="numeric"></div>
+        <div class="field"><label for="cows_n">Cows you own already</label><input id="cows_n" type="number" min="0" step="1" inputmode="numeric"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label for="grass_acres">Grass already leased <span class="unit">acres</span></label><input id="grass_acres" type="number" min="0" step="10" inputmode="numeric"></div>
+        <div class="field"><label for="grass_rate">What you pay for it <span class="unit">$ per acre per year</span></label><input id="grass_rate" type="number" min="0" step="0.5" inputmode="decimal"><span class="hint">Leave 0 for the USDA average in your state.</span></div>
+      </div>
       <div class="field"><label for="health">Health insurance today</label>
         <select id="health">
           <option value="none">None</option>
@@ -120,16 +152,18 @@
   }
 
   function write(p) {
-    ['cash', 'inc', 'spend', 'rent', 'debt', 'debtm', 'hours'].forEach(function (k) { $(k).value = p[k]; });
-    ['from', 'adults', 'kids', 'move', 'health'].forEach(function (k) { $(k).value = String(p[k]); });
+    ['cash', 'inc', 'spend', 'rent', 'debt', 'debtm', 'hours', 'horses_n', 'cows_n', 'grass_acres', 'grass_rate'].forEach(function (k) { $(k).value = p[k]; });
+    ['from', 'adults', 'kids', 'move', 'health', 'live'].forEach(function (k) { $(k).value = String(p[k]); });
+    GW.BOOLS.forEach(function (k) { $(k).checked = !!p[k]; });
     $('state').value = names[p.state] ? p.state : 'TX';
     fillCounties($('state').value, p.county);
     ['exp', 'place'].forEach(function (k) { var el = document.querySelector('input[name=' + k + '][value="' + p[k] + '"]'); if (el) el.checked = true; });
   }
   function read() {
     var p = {};
-    ['cash', 'inc', 'spend', 'rent', 'debt', 'debtm', 'hours'].forEach(function (k) { p[k] = +$(k).value || 0; });
-    ['from', 'adults', 'kids', 'move', 'health', 'state', 'county'].forEach(function (k) { p[k] = $(k).value; });
+    ['cash', 'inc', 'spend', 'rent', 'debt', 'debtm', 'hours', 'horses_n', 'cows_n', 'grass_acres', 'grass_rate'].forEach(function (k) { p[k] = +$(k).value || 0; });
+    ['from', 'adults', 'kids', 'move', 'health', 'state', 'county', 'live'].forEach(function (k) { p[k] = $(k).value; });
+    GW.BOOLS.forEach(function (k) { p[k] = $(k).checked ? 1 : 0; });
     ['exp', 'place'].forEach(function (k) { var el = document.querySelector('input[name=' + k + ']:checked'); p[k] = el ? el.value : GW.DEFAULTS[k]; });
     return p;
   }

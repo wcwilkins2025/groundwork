@@ -92,6 +92,20 @@ const rv = P.path(Object.assign({}, man, { place: 'motorhome', inc: 9000, cash: 
 check('a motorhome is the house: no house line at stage 5', !rv.calcInput || rv.calcInput.house === 'existing');
 check('motorhome: stage 5 costs less than with a used mobile home', rv.stages[4].setupTotal < P.path(Object.assign({}, man, { place: 'rent', inc: 9000, cash: 30000, exp: 'own' }), D, calc).stages[4].setupTotal);
 
+const haves = Object.assign({}, man, { inc: 5000, cash: 30000, exp: 'two', has_rv: 1, has_truck: 1, has_trailer: 1, has_panels: 1, live: 'lease', grass_acres: 160, cows_n: 12, hours: 20 });
+const hv = P.path(haves, D, calc);
+check('what he has: no truck or trailer to buy, his housing is the house', hv.calcInput.truck === false && hv.calcInput.trailer === false && hv.calcInput.house === 'existing');
+check('what he has: panels he owns take the handling cost to zero', hv.stages[2].handling === 0);
+check('what he has: living on the lease adds a pad from the page\'s own well, power and tank items', hv.stages[2].pad === Math.round(items.well_per_ft.typ * hv.calcInput.well_depth + items.well_pump_package.typ + items.electric_line_per_ft.typ * 300 + items.electric_service.typ + items.holding_tank.typ));
+check('what he has: no rent line while living on the lease', hv.needs.rent === 0 && hv.needs.live === 'lease');
+check('what he has: 160 leased acres cap the head at 40', hv.stages[2].headByGrass === 40 && hv.stages[2].head === Math.min(40, hv.stages[2].headByHours));
+check('what he has: cows of his own put stage 3 behind him', hv.where.done.s3 && hv.where.current !== 's3');
+check('what he has: the herd ramp starts from his 12 cows', hv.stages[3].startHalf >= 12);
+const hr = P.rungs(haves, D, calc);
+check('what he has: the cows he has are a rung, reachable now on his grass', hr.rungs.find((x) => x.key === 'have') && hr.rungs.find((x) => x.key === 'have').reach.months === 0);
+check('RV park lot rent is the estimate unless he gives a figure', P.needs(Object.assign({}, man, { live: 'rvpark' }), D).rent === items.rv_lot_monthly.typ && P.needs(Object.assign({}, man, { live: 'rvpark', rent: 500 }), D).rent === 500);
+check('a mobile home he owns adds the moving cost to the place', P.path(Object.assign({}, man, { has_mobile: 1, inc: 9000, cash: 30000 }), D, calc).stages[4].movingMobile);
+
 console.log('4b. Paying off what he owes');
 const dp = P.debtPlan([{ name: 'Card', bal: 3000, pay: 90, rate: 24 }, { name: 'Truck', bal: 8000, pay: 350, rate: 9 }], 500);
 check('smallest balance is paid first when there is money to spare', dp.order[0].name === 'Card' && dp.order[0].paidMonth < dp.order[1].paidMonth);
@@ -107,7 +121,9 @@ check('no debts: nothing to pay', P.debtPlan([], 100).months === null && P.debtP
 
 console.log('4c. What he can get to');
 const rg = P.rungs(man, D, calc);
-check('rungs come in order: job, custom, share, own, herd, place', rg.rungs.map((x) => x.key).join(',') === 'job,custom,share,own,herd,place', rg.rungs.map((x) => x.key).join(','));
+check('rungs: the job first for a man short of income, the place last', rg.rungs[0].key === 'job' && rg.rungs[rg.rungs.length - 1].key === 'place', rg.rungs.map((x) => x.key).join(','));
+check('rungs: no job rung for a man whose income is already there', !P.rungs(Object.assign({}, man, { inc: 9000 }), D, calc).rungs.some((x) => x.key === 'job'));
+check('rungs: the cows he has come before rungs he cannot reach yet', hr.rungs.findIndex((x) => x.key === 'have') < hr.rungs.findIndex((x) => x.key === 'custom'));
 check('no rung shows a negative figure', rg.rungs.every((x) => x.figure >= 0));
 check('the job rung is reachable now and pays the BLS ranch hand wage', rg.rungs[0].reach.months === 0 && rg.rungs[0].figure === Math.round(D.stage.wages.ranch_hand.states.TX.median_hourly * 2080 / 12));
 const cu = rg.rungs.find((x) => x.key === 'custom');

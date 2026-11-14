@@ -105,6 +105,8 @@ The county table was built from the Brotherhood Land Finder's public county file
 | Grass hay (`hay_ton`) | 125 | 138 | 161 | $ per ton | nass_cropvalues_2026 |
 | Custom round baling (`custom_bale`) | 13.15 | 15.75 | 17.88 | $ per bale | isu_custom_2026 |
 | Custom pasture mowing or shredding (`custom_mow_acre`) | 4.6 | 27.05 | 105.55 | $ per acre | isu_custom_2026 |
+| RV park lot rent (`rv_lot_monthly`) | 400 | 650 | 900 | $ per month | est_rv_lot **estimate** |
+| Holding tank or RV septic hookup (`holding_tank`) | 1,000 | 2,500 | 5,000 | $ | est_lease_pad **estimate** |
 
 ## Source list
 
@@ -192,6 +194,8 @@ The county table was built from the Brotherhood Land Finder's public county file
 - **est_handling**: Estimate: handling setup on leased grass. Twenty 12 ft panels at about $140 each (Priefert economy panel, retail), a used or economy squeeze chute ($3,000 to $5,800 at farm stores), a stock tank and mineral feeders. No manufacturer price list is published.
 - **est_calf_value_high**: Estimate: top of the weaned calf range. Low is the Texas A&M January 2025 budget (525 lb steer at $295 a cwt, $1,549). Typical is Iowa State June 2026 (550 lb at $4.92, $2,706). High allows a bit over the 2026 price.
 - **est_share_high**: Estimate: top of the operator share. Published splits run 60% (owner also supplies grass) to 65.9% (operator supplies grass). An operator who also supplies the bull and hauls to market can argue for 70%.
+- **est_rv_lot**: Estimate: RV park lot rent. No public table covers RV lot rent. Monthly rates at rural RV parks with water, power and sewer commonly run $400 to $900. Put in your own figure.
+- **est_lease_pad**: Estimate: a pad for your own housing on leased land. No published figure. Built from the page's own well, pump, power line, meter and septic items, which are sourced. Hauling water and a generator can stand in at the start; what you build stays with the owner's land, so the lease must say what happens to it.
 
 ## Well depth defaults
 

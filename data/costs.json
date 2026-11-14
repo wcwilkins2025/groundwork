@@ -673,6 +673,22 @@
    "typ": 27.05,
    "high": 105.55,
    "source": "isu_custom_2026"
+  },
+  "rv_lot_monthly": {
+   "label": "RV park lot rent",
+   "unit": "$ per month",
+   "low": 400,
+   "typ": 650,
+   "high": 900,
+   "source": "est_rv_lot"
+  },
+  "holding_tank": {
+   "label": "Holding tank or RV septic hookup",
+   "unit": "$",
+   "low": 1000,
+   "typ": 2500,
+   "high": 5000,
+   "source": "est_lease_pad"
   }
  },
  "sources": {
@@ -1172,6 +1188,20 @@
    "date": "",
    "url": "sources.md",
    "basis": "Published splits run 60% (owner also supplies grass) to 65.9% (operator supplies grass). An operator who also supplies the bull and hauls to market can argue for 70%.",
+   "estimate": true
+  },
+  "est_rv_lot": {
+   "name": "Estimate: RV park lot rent",
+   "date": "",
+   "url": "sources.md",
+   "basis": "No public table covers RV lot rent. Monthly rates at rural RV parks with water, power and sewer commonly run $400 to $900. Put in your own figure.",
+   "estimate": true
+  },
+  "est_lease_pad": {
+   "name": "Estimate: a pad for your own housing on leased land",
+   "date": "",
+   "url": "sources.md",
+   "basis": "No published figure. Built from the page's own well, pump, power line, meter and septic items, which are sourced. Hauling water and a generator can stand in at the start; what you build stays with the owner's land, so the lease must say what happens to it.",
    "estimate": true
   }
  },
