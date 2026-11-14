@@ -271,6 +271,7 @@
     s5.monthsToDown = s5.cashShort === 0 ? 0 : surplus > 0 ? Math.ceil(s5.cashShort / surplus) : null;
     s5.months = where.done.s5 ? 0 : (s5.monthsToDown == null ? null : s5.monthsToDown);
     s5.experienceYears = (S.fsa && S.fsa.ownership_experience_years) || 3;
+    s5.motorhome = p.place === 'motorhome';
     out.stages.push(s5);
 
     /* stage 6: live off it */
@@ -323,7 +324,7 @@
       out.rungs.push({ key: 'custom', title: 'Caring for other men\'s pairs', figure: Math.max(0, Math.round(head * dc.net - upkeep)), unit: 'a year', head: head, acres: Math.round(head * dc.acres),
         what: head + ' pairs on about ' + fmt(head * dc.acres) + ' leased acres, ' + p.hours + ' hours a week, paid about $' + C.custom_care_day.typ.toFixed(2) + ' a head a day for the season. The owner pays the grass, mineral and vet.',
         takes: 'Panels, a chute and a tank, about $' + fmt(s3.handling) + (s3.handlingShort > 0 ? ' (you are $' + fmt(s3.handlingShort) + ' short of it above the cushion)' : ' (you have it)') + ', the lease on paper, and a man who trusts you with his cattle.',
-        leads: 'Nothing to buy, no price risk. It is the cheapest way to be running cattle, and the owner you care for is the man who leases you cows on shares next.',
+        leads: 'Nothing to buy, no price risk. It is the cheapest way to be running cattle, and the owner you care for is the man who leases you cows on shares next.' + (p.place === 'motorhome' ? ' Ask whether your motorhome can sit on the lease: a man living on the grass is worth more to the owner, and the lot rent goes away.' : ''),
         reach: when(handlingMonths == null ? null : Math.max(afterProving, handlingMonths), afterProving > 0 ? 'after stage 2' : 'when the setup money is there'), source: C.custom_care_day.source });
       /* rung 2: cows on shares */
       out.rungs.push({ key: 'share', title: 'Cows on shares', figure: Math.max(0, Math.round(head * ds.net - upkeep)), unit: 'a year', head: head, acres: Math.round(head * ds.acres),
@@ -364,8 +365,8 @@
     var rate = (s5.fsaOwnershipRate || 6.25) / 100 / 12, nper = 40 * 12;
     var payment = loan > 0 ? Math.round(loan * rate / (1 - Math.pow(1 + rate, -nper)) * 12) : 0;
     var downMonths = s5.monthsToDown;
-    out.rungs.push({ key: 'place', title: 'A place of your own', figure: s5.down, unit: 'down, ' + s5.downPct + '%', what: 'A modest place in ' + (inp.county || names[st]) + ': ' + s5.acres + ' acres at $' + fmt(s5.pricePerAcre) + ' with the house, well, septic and fence, about ' + money(rh(s5.setupTotal)) + ' all in. The FSA ownership programs lend the rest over 40 years at ' + (s5.fsaOwnershipRate || 6.25) + '%, about ' + money(rh(payment)) + ' a year.',
-      takes: s5.experienceYears + ' years of experience, the down payment' + (s5.cashShort > 0 ? ' (you are about ' + money(rh(s5.cashShort)) + ' short of it)' : ' (you have it)') + ', and the place found. Buy one with the house, well and septic already there.',
+    out.rungs.push({ key: 'place', title: 'A place of your own', figure: s5.down, unit: 'down, ' + s5.downPct + '%', what: (s5.motorhome ? 'Your motorhome is the house. ' + s5.acres + ' acres in ' + (inp.county || names[st]) + ' at $' + fmt(s5.pricePerAcre) + ' with a well, septic, power and fence, about ' + money(rh(s5.setupTotal)) + ' all in, and you park on it.' : 'A modest place in ' + (inp.county || names[st]) + ': ' + s5.acres + ' acres at $' + fmt(s5.pricePerAcre) + ' with the house, well, septic and fence, about ' + money(rh(s5.setupTotal)) + ' all in.') + '' The FSA ownership programs lend the rest over 40 years at ' + (s5.fsaOwnershipRate || 6.25) + '%, about ' + money(rh(payment)) + ' a year.',
+      takes: s5.experienceYears + ' years of experience, the down payment' + (s5.cashShort > 0 ? ' (you are about ' + money(rh(s5.cashShort)) + ' short of it)' : ' (you have it)') + ', and the place found. ' + (s5.motorhome ? 'Land with a well and power already on it saves the most; ask the lease owner first whether you can park on the grass and skip buying for now.' : 'Buy one with the house, well and septic already there.'),
       leads: 'Stage 6. The place, the cattle and what you keep cover the family.',
       reach: when(downMonths == null ? null : Math.max(afterProving + 12, downMonths), 'when the down payment is there'), source: C.fsa_operating_max.source, payment: payment, setup: s5.setupTotal });
 
@@ -388,7 +389,7 @@
     var wd = data.costs.well_depth_by_state[st];
     return {
       state: st, county: row ? row[1] : '', acres: 40, price_per_acre: price, tax_rate: tax, ag_exempt: true,
-      house: 'mobile_used', house_sqft: 1400, existing_house_price: 0,
+      house: p.place === 'motorhome' ? 'existing' : 'mobile_used', house_sqft: 1400, existing_house_price: 0,
       well: 'well', well_depth: wd ? wd.typ : data.costs.well_depth_default.typ, septic: 'conventional', power: 'grid', power_distance: 300,
       fence_type: 'barbed', fence_shape: '1', pastures: 2, fence_existing_pct: 0, barn_sqft: 0,
       tractor: false, trailer: true, truck: true, utv: false,

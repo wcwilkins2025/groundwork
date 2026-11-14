@@ -88,6 +88,10 @@ check('retiree: $1,000 short, health not charged', retiree.needs.gap === -1000 &
 check('retiree: the job is not the advice; the payments are', !retiree.stages[0].jobFits && retiree.stages[0].debtHeavy && retiree.stages[0].cashYears === 8.3);
 check('a man with no income is pointed at the job', P.path(Object.assign({}, man, { inc: 0 }), D, calc).stages[0].jobFits);
 
+const rv = P.path(Object.assign({}, man, { place: 'motorhome', inc: 9000, cash: 30000, exp: 'own' }), D, calc);
+check('a motorhome is the house: no house line at stage 5', !rv.calcInput || rv.calcInput.house === 'existing');
+check('motorhome: stage 5 costs less than with a used mobile home', rv.stages[4].setupTotal < P.path(Object.assign({}, man, { place: 'rent', inc: 9000, cash: 30000, exp: 'own' }), D, calc).stages[4].setupTotal);
+
 console.log('4b. Paying off what he owes');
 const dp = P.debtPlan([{ name: 'Card', bal: 3000, pay: 90, rate: 24 }, { name: 'Truck', bal: 8000, pay: 350, rate: 9 }], 500);
 check('smallest balance is paid first when there is money to spare', dp.order[0].name === 'Card' && dp.order[0].paidMonth < dp.order[1].paidMonth);

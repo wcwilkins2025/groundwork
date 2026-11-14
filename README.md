@@ -22,7 +22,7 @@ The plan rides in the link. Every page carries the answers in the query string, 
 
 ## The profile
 
-`cash`, `debt`, `debtm` (payments a month), `inc` (money in a month, after tax), `from` (none, job, own, pension, other), `spend` (a month, not counting rent, health or debt; 0 means the BLS average for the family size), `rent` (rent or lot rent a month; 0 means the HUD figure for the county), `adults`, `kids`, `exp` (none, some, two, own), `place` (rent, house, own), `move` (yes, no), `state`, `county`, `hours` (a week), `health` (none, work, marketplace, other), `debts` (name:balance:payment:rate, joined with |).
+`cash`, `debt`, `debtm` (payments a month), `inc` (money in a month, after tax), `from` (none, job, own, pension, other), `spend` (a month, not counting rent, health or debt; 0 means the BLS average for the family size), `rent` (rent or lot rent a month; 0 means the HUD figure for the county), `adults`, `kids`, `exp` (none, some, two, own), `place` (rent, motorhome, house, own), `move` (yes, no), `state`, `county`, `hours` (a week), `health` (none, work, marketplace, other), `debts` (name:balance:payment:rate, joined with |).
 
 Example: `path.html?cash=3000&debt=12000&debtm=350&inc=2400&from=job&adults=2&kids=2&exp=none&state=TX&county=Fannin&hours=10&health=none`
 
