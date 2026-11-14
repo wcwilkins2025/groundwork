@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Where you are</title>
+<meta name="description" content="Nine plain questions about where you stand today. Your path is built from the answers.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Pages">
+      <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
+      <a href="start.html" data-carry="start.html" aria-current="page">Where you are</a>
+      <a href="path.html" data-carry="path.html">Your path</a>
+      <a href="numbers.html" id="numbersLink">Your numbers</a>
+      <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+    <h1>Where you are</h1>
+    <p class="lede">Nine questions. Answer what you know, skip what you do not. Nothing is sent anywhere; your answers ride in the link, so bookmark the page that comes next.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <form id="form" class="card" autocomplete="off">
+    <div class="fields">
+      <div class="two">
+        <div class="field"><label for="cash">Cash you could put in today <span class="unit">$</span></label><input id="cash" type="number" min="0" step="100" inputmode="numeric"><span class="hint">Savings you could spend without borrowing. 0 is an honest answer.</span></div>
+        <div class="field"><label for="inc">Money coming in now, per month <span class="unit">$ after tax</span></label><input id="inc" type="number" min="0" step="100" inputmode="numeric"><span class="hint">Take-home pay, pension, disability, anything steady.</span></div>
+      </div>
+      <div class="field"><label for="spend">What you spend a month now, not counting rent, health insurance or debt <span class="unit">$</span></label><input id="spend" type="number" min="0" step="50" inputmode="numeric"><span class="hint" id="spendHint">Groceries, fuel, phone, clothes, everything else. Leave at 0 and the page uses the government average for your family size.</span></div>
+      <div class="field"><label for="from">Where it comes from</label>
+        <select id="from">
+          <option value="none">Nothing steady right now</option>
+          <option value="job">A job</option>
+          <option value="own">My own work or business</option>
+          <option value="pension">Pension, retirement or disability</option>
+          <option value="other">Something else</option>
+        </select></div>
+      <div class="two">
+        <div class="field"><label for="debt">What you owe, all of it <span class="unit">$</span></label><input id="debt" type="number" min="0" step="100" inputmode="numeric"><span class="hint">Cards, truck, loans, back bills. Not a mortgage on a place you are keeping.</span></div>
+        <div class="field"><label for="debtm">Payments on it, per month <span class="unit">$</span></label><input id="debtm" type="number" min="0" step="10" inputmode="numeric"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label for="adults">Adults coming with you, counting you</label>
+          <select id="adults"><option value="1">Just me</option><option value="2">Me and my wife</option><option value="3">Three adults</option></select></div>
+        <div class="field"><label for="kids">Kids</label>
+          <select id="kids"><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 or more</option></select></div>
+      </div>
+      <div class="field"><span class="hint" style="font-weight:500;color:var(--fg)">Have you worked cattle?</span>
+        <div class="choice" role="radiogroup" aria-label="Have you worked cattle">
+          <label><input type="radio" name="exp" value="none" checked> Never</label>
+          <label><input type="radio" name="exp" value="some"> Some, under two years</label>
+          <label><input type="radio" name="exp" value="two"> Two years or more, for someone else</label>
+          <label><input type="radio" name="exp" value="own"> I have run my own</label>
+        </div></div>
+      <div class="field"><span class="hint" style="font-weight:500;color:var(--fg)">Where do you live now?</span>
+        <div class="choice" role="radiogroup" aria-label="Where you live now">
+          <label><input type="radio" name="place" value="rent" checked> Renting, or staying with family</label>
+          <label><input type="radio" name="place" value="house"> I own a house in town</label>
+          <label><input type="radio" name="place" value="own"> I own land in the country already</label>
+        </div></div>
+      <div class="two">
+        <div class="field"><label for="state">State you are headed for</label><select id="state"></select><span class="hint">Where you want to end up, or where you are if you need to stay.</span></div>
+        <div class="field"><label for="county">County, if you know it</label><select id="county"><option value="">Not sure yet</option></select></div>
+      </div>
+      <div class="two">
+        <div class="field"><label for="move">Can you move?</label>
+          <select id="move"><option value="yes">Yes, when the time comes</option><option value="no">No, I need to stay where I am</option></select></div>
+        <div class="field"><label for="hours">Hours a week you can give it now</label><input id="hours" type="number" min="0" max="80" step="1" inputmode="numeric"><span class="hint">Alongside whatever you do for money today.</span></div>
+      </div>
+      <div class="field"><label for="health">Health insurance today</label>
+        <select id="health">
+          <option value="none">None</option>
+          <option value="work">Through my job</option>
+          <option value="marketplace">Marketplace plan I pay for</option>
+          <option value="other">Medicare, VA, Medicaid or other</option>
+        </select></div>
+    </div>
+    <div class="actions">
+      <button class="btn" type="submit">See my path</button>
+      <button class="btn ghost" type="button" id="resetBtn">Clear</button>
+    </div>
+    <p class="flash" id="flash"></p>
+  </form>
+</main>
+
+<footer><div class="wrap">
+  <p>Your answers stay in the link on this page and the next. Nothing is stored anywhere else. Every figure on the path traces to a public source or is marked estimate.</p>
+</div></footer>
+
+<script src="data/bundle.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = GW.$, D = window.HC;
+  GW.initTheme();
+  var p = GW.readProfile();
+
+  /* states and counties */
+  var names = D.land.state_names;
+  var codes = Object.keys(names).sort(function (a, b) { return names[a] < names[b] ? -1 : 1; });
+  codes.forEach(function (c) { var o = document.createElement('option'); o.value = c; o.textContent = names[c]; $('state').appendChild(o); });
+  function fillCounties(st, keep) {
+    var sel = $('county');
+    while (sel.options.length > 1) sel.remove(1);
+    (D.counties.states[st] || []).forEach(function (r) { var o = document.createElement('option'); o.value = r[1].replace(/ County$/, ''); o.textContent = r[1]; sel.appendChild(o); });
+    sel.value = keep || '';
+    if (keep && sel.value !== keep) sel.value = '';
+  }
+
+  function write(p) {
+    ['cash', 'inc', 'spend', 'debt', 'debtm', 'hours'].forEach(function (k) { $(k).value = p[k]; });
+    ['from', 'adults', 'kids', 'move', 'health'].forEach(function (k) { $(k).value = String(p[k]); });
+    $('state').value = names[p.state] ? p.state : 'TX';
+    fillCounties($('state').value, p.county);
+    ['exp', 'place'].forEach(function (k) { var el = document.querySelector('input[name=' + k + '][value="' + p[k] + '"]'); if (el) el.checked = true; });
+  }
+  function read() {
+    var p = {};
+    ['cash', 'inc', 'spend', 'debt', 'debtm', 'hours'].forEach(function (k) { p[k] = +$(k).value || 0; });
+    ['from', 'adults', 'kids', 'move', 'health', 'state', 'county'].forEach(function (k) { p[k] = $(k).value; });
+    ['exp', 'place'].forEach(function (k) { var el = document.querySelector('input[name=' + k + ']:checked'); p[k] = el ? el.value : GW.DEFAULTS[k]; });
+    return p;
+  }
+  write(p);
+  GW.carry(p);
+  $('state').addEventListener('change', function () { fillCounties($('state').value, ''); });
+  $('form').addEventListener('input', function () { var q = read(); GW.carry(q); $('numbersLink').href = 'path.html?' + GW.profileQuery(q); });
+  $('form').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    location.href = GW.link('path.html', read());
+  });
+  $('resetBtn').addEventListener('click', function () { write(GW.DEFAULTS); GW.carry(GW.DEFAULTS); });
+  $('numbersLink').href = GW.link('path.html', p);
+})();
+</script>
+</body>
+</html>

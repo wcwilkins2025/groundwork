@@ -1,0 +1,1364 @@
+{
+ "built": "2026-11-13",
+ "note": "Every item has low / typ / high and a source id. Sources marked estimate have no published figure behind them; basis says how the number was reached. Dollar figures are as published, not adjusted for inflation unless the basis says so.",
+ "items": {
+  "land_spread": {
+   "label": "Spread around your land price",
+   "unit": "x price",
+   "low": 0.85,
+   "typ": 1.0,
+   "high": 1.2,
+   "source": "est_land_spread"
+  },
+  "closing_pct": {
+   "label": "Closing costs",
+   "unit": "share of land price",
+   "low": 0.01,
+   "typ": 0.015,
+   "high": 0.02,
+   "source": "closingcorp_2021"
+  },
+  "survey": {
+   "label": "Boundary survey",
+   "unit": "$",
+   "low": 2500,
+   "typ": 3500,
+   "high": 6000,
+   "source": "survey_cost"
+  },
+  "house_build_sqft": {
+   "label": "Site-built house",
+   "unit": "$ per sq ft",
+   "low": 130,
+   "typ": 162,
+   "high": 195,
+   "source": "nahb_2024"
+  },
+  "house_barndo_sqft": {
+   "label": "Barndominium, finished",
+   "unit": "$ per sq ft",
+   "low": 125,
+   "typ": 150,
+   "high": 200,
+   "source": "fbi_barndo_2024"
+  },
+  "house_mobile_new": {
+   "label": "New manufactured home",
+   "unit": "$",
+   "low": 85600,
+   "typ": 127200,
+   "high": 157100,
+   "source": "census_mhs_2025"
+  },
+  "house_mobile_used": {
+   "label": "Used mobile home",
+   "unit": "$",
+   "low": 20000,
+   "typ": 40000,
+   "high": 70000,
+   "source": "est_mobile_used"
+  },
+  "mobile_setup": {
+   "label": "Delivery, pad, tie-downs, skirting, hookups",
+   "unit": "$",
+   "low": 8000,
+   "typ": 15000,
+   "high": 25000,
+   "source": "est_mobile_setup"
+  },
+  "well_per_ft": {
+   "label": "Well drilling and casing",
+   "unit": "$ per ft",
+   "low": 24,
+   "typ": 30,
+   "high": 45,
+   "source": "ngwa_2021"
+  },
+  "well_pump_package": {
+   "label": "Pump, pressure tank, wiring, trench",
+   "unit": "$",
+   "low": 3000,
+   "typ": 4500,
+   "high": 7000,
+   "source": "est_well_pump"
+  },
+  "septic_conventional": {
+   "label": "Conventional septic",
+   "unit": "$",
+   "low": 3000,
+   "typ": 9000,
+   "high": 15000,
+   "source": "epa_septic_2018"
+  },
+  "septic_aerobic": {
+   "label": "Aerobic septic",
+   "unit": "$",
+   "low": 10000,
+   "typ": 15000,
+   "high": 30000,
+   "source": "epa_septic_2018"
+  },
+  "electric_line_per_ft": {
+   "label": "Power line extension",
+   "unit": "$ per ft",
+   "low": 5,
+   "typ": 13,
+   "high": 20,
+   "source": "coop_line_ext"
+  },
+  "electric_service": {
+   "label": "Meter pole and hookup",
+   "unit": "$",
+   "low": 1500,
+   "typ": 2500,
+   "high": 4000,
+   "source": "est_electric_service"
+  },
+  "solar_offgrid": {
+   "label": "Off-grid solar with batteries",
+   "unit": "$",
+   "low": 35000,
+   "typ": 60000,
+   "high": 116000,
+   "source": "energysage_offgrid_2026"
+  },
+  "fence_barbed_per_ft": {
+   "label": "5-strand barbed wire, built",
+   "unit": "$ per ft",
+   "low": 1.99,
+   "typ": 2.5,
+   "high": 3.03,
+   "source": "mu_fence_2026"
+  },
+  "fence_woven_per_ft": {
+   "label": "Woven wire, built",
+   "unit": "$ per ft",
+   "low": 2.34,
+   "typ": 3.15,
+   "high": 3.94,
+   "source": "mu_fence_2026"
+  },
+  "fence_hightensile_per_ft": {
+   "label": "High-tensile electric, built",
+   "unit": "$ per ft",
+   "low": 1.21,
+   "typ": 1.85,
+   "high": 2.51,
+   "source": "mu_fence_2026"
+  },
+  "barn_sqft": {
+   "label": "Pole barn, built",
+   "unit": "$ per sq ft",
+   "low": 25,
+   "typ": 40,
+   "high": 60,
+   "source": "pole_barn_prices"
+  },
+  "tractor_used": {
+   "label": "Used tractor with loader",
+   "unit": "$",
+   "low": 20000,
+   "typ": 30000,
+   "high": 45000,
+   "source": "est_tractor"
+  },
+  "trailer_stock": {
+   "label": "Stock trailer",
+   "unit": "$",
+   "low": 8000,
+   "typ": 14000,
+   "high": 25000,
+   "source": "est_trailer"
+  },
+  "truck_used": {
+   "label": "Used 3/4-ton truck",
+   "unit": "$",
+   "low": 20000,
+   "typ": 35000,
+   "high": 55000,
+   "source": "est_truck"
+  },
+  "utv": {
+   "label": "Side-by-side",
+   "unit": "$",
+   "low": 14000,
+   "typ": 18000,
+   "high": 25500,
+   "source": "utv_2024"
+  },
+  "cow_bred": {
+   "label": "Bred cow",
+   "unit": "$ per head",
+   "low": 1900,
+   "typ": 2600,
+   "high": 3100,
+   "source": "ams_cattle_2026"
+  },
+  "bull": {
+   "label": "Bull",
+   "unit": "$",
+   "low": 5000,
+   "typ": 7600,
+   "high": 14000,
+   "source": "bull_sales_2025"
+  },
+  "horse": {
+   "label": "Using horse",
+   "unit": "$ per head",
+   "low": 2500,
+   "typ": 5000,
+   "high": 10000,
+   "source": "est_horse"
+  },
+  "goat_doe": {
+   "label": "Meat goat doe",
+   "unit": "$ per head",
+   "low": 210,
+   "typ": 326,
+   "high": 400,
+   "source": "mu_goat_2027"
+  },
+  "goat_buck": {
+   "label": "Buck",
+   "unit": "$",
+   "low": 270,
+   "typ": 460,
+   "high": 651,
+   "source": "mu_goat_2027"
+  },
+  "pullet": {
+   "label": "Started pullet",
+   "unit": "$ per bird",
+   "low": 6,
+   "typ": 25,
+   "high": 40,
+   "source": "est_pullet"
+  },
+  "coop": {
+   "label": "Coop, run, feeder, waterer",
+   "unit": "$",
+   "low": 500,
+   "typ": 725,
+   "high": 1500,
+   "source": "umd_layers_2026"
+  },
+  "garden_startup": {
+   "label": "Garden start-up",
+   "unit": "$",
+   "low": 1000,
+   "typ": 2500,
+   "high": 5000,
+   "source": "ncsu_garden_2017"
+  },
+  "fruit_tree": {
+   "label": "Fruit tree, planted",
+   "unit": "$ per tree",
+   "low": 25,
+   "typ": 47,
+   "high": 70,
+   "source": "uky_apple_2020"
+  },
+  "surprises_pct": {
+   "label": "Surprises",
+   "unit": "share of setup",
+   "low": 0.05,
+   "typ": 0.1,
+   "high": 0.15,
+   "source": "est_surprises"
+  },
+  "ag_valuation_share": {
+   "label": "Ag valuation share of market value",
+   "unit": "share",
+   "low": 0.1,
+   "typ": 0.15,
+   "high": 0.25,
+   "source": "est_ag_share"
+  },
+  "acres_per_cow": {
+   "label": "Acres per cow",
+   "unit": "acres",
+   "low": 3,
+   "typ": 4,
+   "high": 8,
+   "source": "tpwd_stocking"
+  },
+  "insurance_annual": {
+   "label": "Insurance, house, buildings, liability",
+   "unit": "$ per year",
+   "low": 1731,
+   "typ": 2500,
+   "high": 4000,
+   "source": "naic_home_2023"
+  },
+  "cow_annual": {
+   "label": "Keeping a cow",
+   "unit": "$ per head per year",
+   "low": 330,
+   "typ": 510,
+   "high": 690,
+   "source": "tamu_cowcalf_2025"
+  },
+  "horse_annual": {
+   "label": "Keeping a horse",
+   "unit": "$ per head per year",
+   "low": 1800,
+   "typ": 2430,
+   "high": 3600,
+   "source": "ext_horses"
+  },
+  "goat_annual": {
+   "label": "Keeping a doe",
+   "unit": "$ per head per year",
+   "low": 220,
+   "typ": 300,
+   "high": 400,
+   "source": "mu_goat_2027"
+  },
+  "hen_annual": {
+   "label": "Keeping a hen",
+   "unit": "$ per bird per year",
+   "low": 30,
+   "typ": 36,
+   "high": 45,
+   "source": "umd_layers_2026"
+  },
+  "fence_upkeep_pct": {
+   "label": "Fence repair",
+   "unit": "share of fence cost per year",
+   "low": 0.01,
+   "typ": 0.02,
+   "high": 0.04,
+   "source": "est_fence_upkeep"
+  },
+  "equipment_upkeep_pct": {
+   "label": "Equipment fuel and repairs",
+   "unit": "share of equipment cost per year",
+   "low": 0.05,
+   "typ": 0.08,
+   "high": 0.12,
+   "source": "est_equip_upkeep"
+  },
+  "septic_annual": {
+   "label": "Septic pumping and upkeep",
+   "unit": "$ per year",
+   "low": 25,
+   "typ": 60,
+   "high": 150,
+   "source": "mu_septic_2017"
+  },
+  "well_annual": {
+   "label": "Well upkeep",
+   "unit": "$ per year",
+   "low": 200,
+   "typ": 400,
+   "high": 700,
+   "source": "est_well_annual"
+  },
+  "solar_annual": {
+   "label": "Solar upkeep",
+   "unit": "$ per year",
+   "low": 1000,
+   "typ": 2500,
+   "high": 4000,
+   "source": "est_solar_annual"
+  },
+  "electric_bill_annual": {
+   "label": "Electric bill",
+   "unit": "$ per year",
+   "low": 1550,
+   "typ": 1707,
+   "high": 2100,
+   "source": "eia_bill_2024"
+  },
+  "garden_annual": {
+   "label": "Garden seed and supplies",
+   "unit": "$ per year",
+   "low": 238,
+   "typ": 350,
+   "high": 600,
+   "source": "joe_garden_2014"
+  },
+  "household_spending": {
+   "label": "Household spending, US average",
+   "unit": "$ per year",
+   "low": 78535,
+   "typ": 81905,
+   "high": 81905,
+   "source": "bls_ces_2025"
+  },
+  "household_spending_rural": {
+   "label": "Household spending less housing and healthcare",
+   "unit": "$ per year",
+   "low": 47645,
+   "typ": 47645,
+   "high": 47645,
+   "source": "bls_ces_2025"
+  },
+  "health_family_monthly": {
+   "label": "Health insurance, family, full price",
+   "unit": "$ per month",
+   "low": 625,
+   "typ": 2249,
+   "high": 2249,
+   "source": "kff_premiums_2025"
+  },
+  "calf_sale": {
+   "label": "Calves and culls sold",
+   "unit": "$ per cow per year",
+   "low": 925,
+   "typ": 1120,
+   "high": 1417,
+   "source": "ers_cowcalf_2025"
+  },
+  "kid_sale": {
+   "label": "Kids and culls sold",
+   "unit": "$ per doe per year",
+   "low": 305,
+   "typ": 381,
+   "high": 460,
+   "source": "mu_goat_2027"
+  },
+  "eggs_dozen_per_hen": {
+   "label": "Eggs laid",
+   "unit": "dozen per hen per year",
+   "low": 15,
+   "typ": 17.4,
+   "high": 20,
+   "source": "umd_layers_2026"
+  },
+  "egg_dozen_value": {
+   "label": "Store value of a dozen eggs",
+   "unit": "$ per dozen",
+   "low": 3.37,
+   "typ": 4.0,
+   "high": 6.0,
+   "source": "est_egg_value"
+  },
+  "garden_food_value": {
+   "label": "Food from a big garden",
+   "unit": "$ per year",
+   "low": 677,
+   "typ": 915,
+   "high": 1200,
+   "source": "joe_garden_2014"
+  },
+  "lease_rate_us": {
+   "label": "Pasture cash rent",
+   "unit": "$ per acre per year",
+   "low": 7.7,
+   "typ": 15.5,
+   "high": 38.5,
+   "source": "nass_rent_2025"
+  },
+  "lease_months": {
+   "label": "Grazing season",
+   "unit": "months",
+   "low": 5,
+   "typ": 9,
+   "high": 12,
+   "source": "osu_cr216_2021"
+  },
+  "lease_apc": {
+   "label": "Acres per cow on leased grass",
+   "unit": "acres",
+   "low": 3,
+   "typ": 4,
+   "high": 9.4,
+   "source": "osu_cr216_2021"
+  },
+  "labor_hours_cow": {
+   "label": "Labor per cow",
+   "unit": "hours per year",
+   "low": 3.72,
+   "typ": 5.65,
+   "high": 12,
+   "source": "est_labor_small"
+  },
+  "calf_crop": {
+   "label": "Calves weaned per cow",
+   "unit": "share",
+   "low": 0.8,
+   "typ": 0.85,
+   "high": 0.9,
+   "source": "est_calf_crop"
+  },
+  "cull_rate": {
+   "label": "Cows culled each year",
+   "unit": "share",
+   "low": 0.1,
+   "typ": 0.12,
+   "high": 0.15,
+   "source": "tamu_cowcalf_2025"
+  },
+  "calf_income_share": {
+   "label": "Share of a cow's yearly income that is calves, not culls",
+   "unit": "share",
+   "low": 0.8,
+   "typ": 0.87,
+   "high": 0.9,
+   "source": "est_calf_crop"
+  },
+  "cow_share_operator": {
+   "label": "Operator share of calf money on leased cows",
+   "unit": "share",
+   "low": 0.6,
+   "typ": 0.66,
+   "high": 0.7,
+   "source": "est_share_high"
+  },
+  "custom_care_day": {
+   "label": "Care for other men's pairs",
+   "unit": "$ per head per day",
+   "low": 0.43,
+   "typ": 1.0,
+   "high": 1.56,
+   "source": "unl_custom_2025"
+  },
+  "pair_rent_month": {
+   "label": "Pasture rent per pair per month",
+   "unit": "$ per pair per month",
+   "low": 56.45,
+   "typ": 67,
+   "high": 82.1,
+   "source": "unl_realestate_2026"
+  },
+  "stocker_in": {
+   "label": "Stocker calf bought",
+   "unit": "$ per head",
+   "low": 1440,
+   "typ": 1500,
+   "high": 1550,
+   "source": "tamu_stocker_2025"
+  },
+  "stocker_net": {
+   "label": "Stocker returns to management",
+   "unit": "$ per head per season",
+   "low": 11,
+   "typ": 60,
+   "high": 108,
+   "source": "tamu_stocker_2025"
+  },
+  "stocker_grazing_budget": {
+   "label": "Grazing cost built into the stocker budget",
+   "unit": "$ per head per season",
+   "low": 50,
+   "typ": 70,
+   "high": 70,
+   "source": "tamu_stocker_2025"
+  },
+  "stocker_acres": {
+   "label": "Acres per stocker for the season",
+   "unit": "acres",
+   "low": 4,
+   "typ": 5,
+   "high": 6,
+   "source": "tamu_stocker_2025"
+  },
+  "stocker_hours": {
+   "label": "Labor per stocker",
+   "unit": "hours per season",
+   "low": 0.5,
+   "typ": 1,
+   "high": 2,
+   "source": "tamu_stocker_2025"
+  },
+  "handling_setup": {
+   "label": "Panels, chute, tank, mineral feeders",
+   "unit": "$",
+   "low": 3000,
+   "typ": 6000,
+   "high": 10000,
+   "source": "est_handling"
+  },
+  "beef_hanging_price": {
+   "label": "Beef sold by the half or quarter",
+   "unit": "$ per lb hanging weight",
+   "low": 4.25,
+   "typ": 5.9,
+   "high": 6.95,
+   "source": "ams_grassfed_2026"
+  },
+  "beef_hanging_wt": {
+   "label": "Grass-finished carcass",
+   "unit": "lb hanging",
+   "low": 500,
+   "typ": 560,
+   "high": 650,
+   "source": "uaex_fsa3143_2021"
+  },
+  "calf_weaned_value": {
+   "label": "Weaned steer calf at the sale barn",
+   "unit": "$ per head",
+   "low": 1549,
+   "typ": 2706,
+   "high": 2900,
+   "source": "est_calf_value_high"
+  },
+  "finish_carry": {
+   "label": "Carrying a calf a year to finish, not counting grass",
+   "unit": "$ per head",
+   "low": 200,
+   "typ": 255,
+   "high": 345,
+   "source": "est_finish_carry"
+  },
+  "processing_hanging": {
+   "label": "Processing paid by the customer",
+   "unit": "$ per lb hanging",
+   "low": 0.57,
+   "typ": 0.94,
+   "high": 1.25,
+   "source": "ams_grassfed_2026"
+  },
+  "fsa_microloan_max": {
+   "label": "FSA operating microloan limit",
+   "unit": "$",
+   "low": 50000,
+   "typ": 50000,
+   "high": 50000,
+   "source": "fsa_chart_2025"
+  },
+  "fsa_operating_max": {
+   "label": "FSA direct operating loan limit",
+   "unit": "$",
+   "low": 400000,
+   "typ": 400000,
+   "high": 400000,
+   "source": "fsa_chart_2025"
+  },
+  "fsa_operating_rate": {
+   "label": "FSA operating loan rate",
+   "unit": "% per year",
+   "low": 5.0,
+   "typ": 5.625,
+   "high": 5.625,
+   "source": "fsa_rates_2026"
+  },
+  "fsa_operating_years": {
+   "label": "FSA operating loan term",
+   "unit": "years",
+   "low": 1,
+   "typ": 7,
+   "high": 7,
+   "source": "fsa_chart_2025"
+  },
+  "rent_monthly": {
+   "label": "Rent for a house in the country",
+   "unit": "$ per month",
+   "low": 985,
+   "typ": 1370,
+   "high": 1652,
+   "source": "hud_fmr_2026"
+  },
+  "hay_ton": {
+   "label": "Grass hay",
+   "unit": "$ per ton",
+   "low": 125,
+   "typ": 138,
+   "high": 161,
+   "source": "nass_cropvalues_2026"
+  },
+  "custom_bale": {
+   "label": "Custom round baling",
+   "unit": "$ per bale",
+   "low": 13.15,
+   "typ": 15.75,
+   "high": 17.88,
+   "source": "isu_custom_2026"
+  },
+  "custom_mow_acre": {
+   "label": "Custom pasture mowing or shredding",
+   "unit": "$ per acre",
+   "low": 4.6,
+   "typ": 27.05,
+   "high": 105.55,
+   "source": "isu_custom_2026"
+  }
+ },
+ "sources": {
+  "ngwa_2021": {
+   "name": "National Ground Water Association, Well Owners Guide",
+   "date": "2021",
+   "url": "https://wellowner.org/wp-content/uploads/2021/04/2021-WellOwners-Guide.pdf",
+   "basis": "Drilling ran about $24 a foot for a 4-inch well and $30 for a 6-inch well, casing extra. A household submersible pump ran $3,000 to $3,200. The high figure here adds casing and five years of price rises."
+  },
+  "umn_well_2022": {
+   "name": "University of Minnesota Extension, Digging or expanding a well",
+   "date": "reviewed 2022",
+   "url": "https://extension.umn.edu/vegetable-growing-guides-farmers/digging-or-expanding-well",
+   "basis": "A new well for a 5 to 20 acre farm: $5,000 to $30,000."
+  },
+  "usgs_well_depth_2021": {
+   "name": "USGS Scientific Investigations Report 2021-5069, depth of groundwater used for drinking water",
+   "date": "2021",
+   "url": "https://www.usgs.gov/publications/depth-groundwater-used-drinking-water-supplies-united-states",
+   "basis": "Median depth of US domestic wells is 142 ft; public supply wells 202 ft."
+  },
+  "epa_septic_2018": {
+   "name": "US EPA Water Finance Clearinghouse, Financing Septic Systems",
+   "date": "September 2018",
+   "url": "https://clearinghouse.epa.gov/ords/wfc/r/wfc/files/static/v744/Financing_Septic_Systems_508.pdf",
+   "basis": "Conventional system installed, with permits: $3,000 to $15,000. Alternative and advanced systems: $10,000 to $30,000. State examples ran $4,000 to $18,000."
+  },
+  "mu_septic_2017": {
+   "name": "University of Missouri Extension EQM104F, Household Wastewater",
+   "date": "September 2017",
+   "url": "https://extension.missouri.edu/publications/eqm104f",
+   "basis": "Pumping a tank: $100 to $250, every 3 to 5 years. High figure allows for an aerobic service contract."
+  },
+  "coop_line_ext": {
+   "name": "Rural electric co-op line extension policies: Webster Electric (MO) 2025, Upper Cumberland EMC (TN) 2025, Cullman Electric (AL) 2023, Missouri PSC comparison 2015",
+   "date": "2015-2025",
+   "url": "https://www.websterec.com/webster-electric-cooperative-line-extension-policy/",
+   "basis": "Webster: first 200 ft free, then $5 a foot overhead. Cullman: first 400 ft free, then $13 overhead, $20 underground. UCEMC: $17 a foot overhead. Missouri PSC survey: $15 overhead, $23 underground. Texas and Oklahoma co-ops publish a free allowance ($1,950 to $7,500) and charge the rest at cost."
+  },
+  "eia_bill_2024": {
+   "name": "US EIA, Table 5.A, 2024 average monthly residential electric bill by state",
+   "date": "October 2025",
+   "url": "https://www.eia.gov/electricity/sales_revenue_price/",
+   "basis": "US $142 a month. Missouri $129, Arkansas $129, Oklahoma $132, Kentucky $134, Tennessee $143, Texas $164, Alabama $174."
+  },
+  "nrel_solar_2025": {
+   "name": "US DOE SETO and NREL, Solar Photovoltaic System Cost Benchmarks, Q1 2025",
+   "date": "2025",
+   "url": "https://www.energy.gov/eere/solar/solar-photovoltaic-system-cost-benchmarks",
+   "basis": "An 8 kW home system with a 13.5 kWh battery: $4.33 to $4.59 a watt installed, about $35,000 to $37,000. Off-grid needs more battery."
+  },
+  "energysage_offgrid_2026": {
+   "name": "EnergySage, Off-Grid Solar: Costs, Process, and Best Products, and Solar Battery Cost",
+   "date": "June and July 2026",
+   "url": "https://www.energysage.com/solar/what-does-it-mean-to-go-off-the-grid/",
+   "basis": "A full off-grid system for an average house often runs $115,000 or more. A 13.5 kWh battery runs about $15,600 installed. Low here is the NREL 8 kW system with one battery ($35,000); typical adds two more batteries, sized for a modest house that uses less than average."
+  },
+  "isu_fence_2024": {
+   "name": "Iowa State University Extension, Ag Decision Maker B1-75, Estimated Costs for Livestock Fencing",
+   "date": "December 2024",
+   "url": "https://www.extension.iastate.edu/agdm/livestock/pdf/b1-75.pdf",
+   "basis": "Per foot built, labor at $20 an hour, no gates: woven wire $2.34, 5-strand barbed $1.99, high-tensile electric $1.21."
+  },
+  "mu_fence_2026": {
+   "name": "University of Missouri Extension G1193, Pasture Fence Construction Budget",
+   "date": "April 2026",
+   "url": "https://extension.missouri.edu/publications/g1193",
+   "basis": "Per foot built, with a gate: woven wire $3.94, 5-strand barbed $3.03, electric high-tensile $2.51. Low here is the Iowa State 2024 figure for the same fence; typical is the middle of the two."
+  },
+  "pole_barn_prices": {
+   "name": "Morton Buildings (2022) and FBi Buildings (2021) published shell pricing; Hansen Pole Buildings kit prices (2026)",
+   "date": "2021-2026",
+   "url": "https://mortonbuildings.com/blog/what-does-a-morton-garage-hobby-building-or-workshop-cost",
+   "basis": "Erected shell $25 to $55 a square foot depending on size; kit materials only $9 to $13; concrete and finish add $50 or more. Typical here is a 30 x 40 erected shell with a slab."
+  },
+  "nahb_2024": {
+   "name": "NAHB, Cost of Constructing a Home 2024",
+   "date": "January 2025",
+   "url": "https://nahb.org/-/media/AB4EFC742624475A97A0A62189986FF8.ashx",
+   "basis": "Average construction cost $428,215 for 2,647 sq ft, about $162 a square foot, not counting the lot. Low and high here spread 20% either side."
+  },
+  "fbi_barndo_2024": {
+   "name": "FBi Buildings, How Much Does a 1,500 Square Foot Barndominium Cost",
+   "date": "June 2024",
+   "url": "https://info.fbibuildings.com/blog/1500-barndominium-cost",
+   "basis": "Shell $45 to $75 a square foot; finished $125 basic, $150 to $400 with upgrades."
+  },
+  "census_mhs_2025": {
+   "name": "US Census Bureau, Manufactured Housing Survey, average sales price of new manufactured homes, 2025",
+   "date": "June 2026",
+   "url": "https://www.census.gov/programs-surveys/mhs/data/annual-data.html",
+   "basis": "Single-section $85,600, double-section $157,100, all homes $127,200. Factory price, before delivery and setup."
+  },
+  "closingcorp_2021": {
+   "name": "CoreLogic ClosingCorp, Purchase Mortgage Closing Cost Report 2021",
+   "date": "April 2022",
+   "url": "https://newslink.mba.org/?p=164773",
+   "basis": "Closing costs averaged 1.01% of price without transfer taxes and 1.81% with. Cash land deals skip lender fees; land loans add origination."
+  },
+  "survey_cost": {
+   "name": "University of Missouri Extension G5055 (2017, reviewed 2026) and LandThink, Tips on Rural Land Surveys (2019)",
+   "date": "2017-2026",
+   "url": "https://extension.missouri.edu/publications/g5055",
+   "basis": "$2,500 for a boundary survey on a 100-acre example; $3,000 to $6,000 for an 80-acre tract."
+  },
+  "naic_home_2023": {
+   "name": "NAIC, Homeowners Insurance Report, data for 2023, Table 4",
+   "date": "2026",
+   "url": "https://content.naic.org/sites/default/files/publication-hmr-zu-homeowners-report.pdf",
+   "basis": "Average owner-occupied home premium: US $1,731, Texas $2,762, Oklahoma $2,398, Arkansas $1,868, Missouri $1,675, Tennessee $1,644, Kentucky $1,484. A farm or ranch policy adds barns, fence, equipment and liability; no published average for that, so the typical and high here are an estimate above the home figure.",
+   "estimate": true
+  },
+  "tamu_cowcalf_2025": {
+   "name": "Texas A&M AgriLife Extension, 2025 cow-calf budgets, North Texas District 4, improved and native pasture",
+   "date": "March 2025",
+   "url": "https://agecoext.tamu.edu/wp-content/uploads/2025/03/2025D4CowCalfImprove.pdf",
+   "basis": "Cash costs per cow with your own labor taken out: about $330 on improved pasture, $510 on native pasture (hay $159 to $318, marketing $40, mineral $19, vet $25, supplement, fuel, repairs, interest). High is the USDA ERS 2024 US operating cost of $690."
+  },
+  "ers_cowcalf_2025": {
+   "name": "USDA ERS, Commodity Costs and Returns, cow-calf, US total, dollars per cow",
+   "date": "October 2026",
+   "url": "https://www.ers.usda.gov/data-products/commodity-costs-and-returns/",
+   "basis": "Operating costs per cow: $716 (2023), $690 (2024), $676 (2025). Gross value of production per cow, calves and culls: $925 (2023), $1,120 (2024), $1,417 (2025)."
+  },
+  "isu_livestock_2026": {
+   "name": "Iowa State University Extension, Ag Decision Maker B1-21, Livestock Enterprise Budgets for Iowa 2026",
+   "date": "2026",
+   "url": "https://www.extension.iastate.edu/agdm/livestock/pdf/b1-21.pdf",
+   "basis": "Figures a beef cow at $2,300, a bull at $5,000 over 25 cows, a utility tractor at $30,000, 2.1 tons of hay per cow per year, 0.9 calf weaned per cow."
+  },
+  "tpwd_stocking": {
+   "name": "Texas Parks and Wildlife, Post Oak Savannah and Blackland Prairie habitat management, livestock",
+   "date": "current",
+   "url": "https://tpwd.texas.gov/landwater/land/habitats/post_oak/habitat_management/cow",
+   "basis": "One cow with calf per 3 to 6 acres on bermuda or bahia pasture, 8 to 15 acres on native grass. Texas A&M budgets figure 2.1 to 3.1 acres on North Texas improved and native pasture."
+  },
+  "ams_cattle_2026": {
+   "name": "USDA AMS, Texas Weekly Cattle Auction Summary, week of November 8 to 14, 2026, and Oklahoma National Stockyards, November 10, 2026",
+   "date": "November 2026",
+   "url": "https://www.ams.usda.gov/mnreports/ams_1955.pdf",
+   "basis": "Bred cows, medium and large frame, 5 to 8 years old: $1,882 to $2,570 average in Texas, $3,058 in Oklahoma City. Younger bred cows $2,809. Pairs $3,250. One week of sales, not a yearly average."
+  },
+  "bull_sales_2025": {
+   "name": "UGA Calhoun Bull Evaluation Sale summary (December 2025) and Iowa State 2026 budget assumption",
+   "date": "2025-2026",
+   "url": "https://beef.caes.uga.edu/files/2025/12/2025-Calhoun-Bull-Sale-Summary.pdf",
+   "basis": "71 tested bulls averaged $7,634, high $14,000. Iowa State budgets figure a bull at $5,000."
+  },
+  "mu_goat_2027": {
+   "name": "University of Missouri Extension G691 and G690, Meat Goat Planning Budgets, 2027 and 2024",
+   "date": "October 2026",
+   "url": "https://extension.missouri.edu/media/wysiwyg/Extensiondata/Pub/pdf/agguides/agecon/g00691.pdf",
+   "basis": "Replacement doe $326 (2027 budget) and $210 (2024 budget); buck $651 and $270. Operating cost per doe $222 (2024) to $398 (2027, with $106 of labor). Income per doe $381 (2027). About one doe per acre."
+  },
+  "ext_horses": {
+   "name": "Extension Horses (horses.extension.org), Cost of Horse Ownership and The Real Cost of Owning a Horse",
+   "date": "2019-2020",
+   "url": "https://horses.extension.org/cost-of-horse-ownership/",
+   "basis": "Feed and operating about $2,427 a year per horse; feeding $100 to $250 a month, farrier $25 to $50 every 6 to 8 weeks, vaccines $75 to $125 twice a year, dewormer $50. Older prices; the high here allows for that."
+  },
+  "umd_layers_2026": {
+   "name": "University of Maryland and University of Delaware Extension, FS-2025-0783, Backyard Layer Flock Economics",
+   "date": "August 2026",
+   "url": "https://www.udel.edu/content/dam/udelImages/canr/pdfs/extension/factsheets/Backyard-Layer-Flock-Economics-a.pdf",
+   "basis": "10 birds over 3 years: $1,759 all in, 522 dozen eggs, $3.37 a dozen. Simple coop and run $500; feeder, waterer, storage and heater $225. Chicks $6. Running cost works out to about $36 a bird a year and 17 dozen eggs a bird."
+  },
+  "ncsu_garden_2017": {
+   "name": "NC State Extension AG-806, Community Food Gardening Handbook, funding section",
+   "date": "August 2017",
+   "url": "https://content.ces.ncsu.edu/funding-and-resources",
+   "basis": "Start-up for a basic quarter-acre garden: roughly $1,000 to $5,000, fence and water the biggest costs."
+  },
+  "joe_garden_2014": {
+   "name": "Journal of Extension 52(2), Langellotto, Economic Costs and Benefits of Home Vegetable Gardens",
+   "date": "2014",
+   "url": "https://commons.joe.org/joe/vol52/iss2/14",
+   "basis": "Home gardens produced about $677 of food beyond $238 of supplies, so about $915 of food a year at 2014 prices. The typical and high here allow for price rises since."
+  },
+  "uky_apple_2020": {
+   "name": "University of Kentucky Center for Crop Diversification, Apple Economics",
+   "date": "March 2020",
+   "url": "https://ccd.uky.edu/resources/budgets/apple-economics",
+   "basis": "Establishing an orchard: $7,225 an acre for 155 semi-dwarf trees, about $47 a tree with prep and irrigation; $23 a tree at 340 trees an acre. A few trees bought retail cost more each."
+  },
+  "utv_2024": {
+   "name": "DTN Progressive Farmer, Polaris 2025 Ranger line pricing",
+   "date": "April 2024",
+   "url": "https://www.dtnpf.com/agriculture/web/ag/equipment/article/2024/04/10/polaris-introduces-full-line-2025",
+   "basis": "Ranger 1000 from $13,999; Crew XP 1000 from $25,499."
+  },
+  "bls_ces_2025": {
+   "name": "BLS, Consumer Expenditures 2025",
+   "date": "October 29, 2026",
+   "url": "https://www.bls.gov/news.release/cesan.nr0.htm",
+   "basis": "Average household spent $81,905 in 2025: housing $27,790, transportation $13,492, food $10,633, healthcare $6,470. Spending out there is figured as the total less housing and healthcare, which the calculator counts on their own lines."
+  },
+  "kff_premiums_2025": {
+   "name": "KFF, 2025 Employer Health Benefits Survey, and Marketplace Average Benchmark Premiums",
+   "date": "October 2025",
+   "url": "https://www.kff.org/health-costs/press-release/2025-employer-health-benefits-survey/",
+   "basis": "Employer family coverage averaged $26,993 a year, about $2,250 a month, which is roughly what COBRA costs when you leave. Marketplace benchmark plan for one 40-year-old: $625 a month in 2026, before any subsidy."
+  },
+  "est_land_spread": {
+   "name": "Estimate: price spread",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Low is 15% under your price, high 20% over. Land is what the seller takes.",
+   "estimate": true
+  },
+  "est_mobile_used": {
+   "name": "Estimate: used mobile home price",
+   "date": "",
+   "url": "sources.md",
+   "basis": "No published average for used manufactured homes exists (Census tracks new homes only; new single-section averaged $85,600 in 2025). Clean used single-wides commonly change hands for a quarter to half of that; double-wides more.",
+   "estimate": true
+  },
+  "est_mobile_setup": {
+   "name": "Estimate: delivery and setup of a manufactured home",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Transport, pad or piers, tie-downs, skirting, steps, utility hookups. No published average; figures are what movers and installers commonly quote.",
+   "estimate": true
+  },
+  "est_well_pump": {
+   "name": "Estimate: pump package",
+   "date": "",
+   "url": "sources.md",
+   "basis": "NGWA puts a household submersible pump at $3,000 to $3,200 (2021). Pressure tank, wiring, trench and line to the house are added as an estimate.",
+   "estimate": true
+  },
+  "est_well_annual": {
+   "name": "Estimate: well upkeep",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Pump power plus a fund to replace a $3,000 pump every 10 to 15 years.",
+   "estimate": true
+  },
+  "est_electric_service": {
+   "name": "Estimate: meter pole and hookup",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Meter pole, meter loop and a 200-amp panel set by an electrician. Co-ops often cover the transformer within their free allowance.",
+   "estimate": true
+  },
+  "est_solar_annual": {
+   "name": "Estimate: solar upkeep",
+   "date": "",
+   "url": "sources.md",
+   "basis": "A battery fund (a $15,600 battery lasts 10 to 15 years) plus cleaning and an inverter fund.",
+   "estimate": true
+  },
+  "est_fence_upkeep": {
+   "name": "Estimate: fence repair",
+   "date": "",
+   "url": "sources.md",
+   "basis": "1% to 4% of what the fence cost, each year, for staples, posts, wire and a stretcher day.",
+   "estimate": true
+  },
+  "est_equip_upkeep": {
+   "name": "Estimate: equipment fuel and repairs",
+   "date": "",
+   "url": "sources.md",
+   "basis": "5% to 12% of what the equipment cost, each year, for fuel, oil, tires, batteries and repairs.",
+   "estimate": true
+  },
+  "est_tractor": {
+   "name": "Estimate: used tractor",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Iowa State 2026 budgets figure a utility tractor at $30,000. A used 40 to 75 hp tractor with a loader, 10 to 20 years old, runs from about $20,000 to $45,000 at dealers and auctions.",
+   "estimate": true
+  },
+  "est_trailer": {
+   "name": "Estimate: stock trailer",
+   "date": "",
+   "url": "sources.md",
+   "basis": "No published price report. A used 16 ft bumper-pull runs about $8,000, a new one $12,000 to $16,000, a gooseneck $18,000 to $25,000 at dealers.",
+   "estimate": true
+  },
+  "est_truck": {
+   "name": "Estimate: used 3/4-ton truck",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Edmunds put the average 3-year-old used vehicle at $30,699 in late 2025. Three-quarter-ton trucks hold value and run higher; an older one with miles runs lower.",
+   "estimate": true
+  },
+  "est_horse": {
+   "name": "Estimate: using horse",
+   "date": "",
+   "url": "sources.md",
+   "basis": "No published average. Sound, broke using horses commonly sell from $2,500 to $10,000 at ranch horse sales.",
+   "estimate": true
+  },
+  "est_pullet": {
+   "name": "Estimate: started pullets",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Chicks run $6 (Maryland Extension, 2026). Started pullets near laying age cost more because someone fed them for four months.",
+   "estimate": true
+  },
+  "est_egg_value": {
+   "name": "Estimate: store value of a dozen eggs",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Maryland Extension figures the cost to raise a dozen at $3.37. Store eggs ran $3 to $6 a dozen in 2025.",
+   "estimate": true
+  },
+  "est_surprises": {
+   "name": "Estimate: cushion for surprises",
+   "date": "",
+   "url": "sources.md",
+   "basis": "5% to 15% on top of everything. Rock in the trench, a bad culvert, a second load of gravel.",
+   "estimate": true
+  },
+  "est_ag_share": {
+   "name": "Estimate: ag valuation share",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Where land qualifies for agricultural use valuation, it is taxed on a fraction of market value, commonly a tenth to a quarter. Varies by state and county; ask the appraisal district.",
+   "estimate": true
+  },
+  "nass_rent_2025": {
+   "name": "USDA NASS Quick Stats, cash rent for pastureland by state, 2025",
+   "date": "August 2025",
+   "url": "https://quickstats.nass.usda.gov/",
+   "basis": "Pasture cash rent per acre, 2025: US $15.50, Texas $7.70, Oklahoma $18, Arkansas $22, Tennessee $26, Kentucky $35, Missouri $38.50. State averages lean on big native-range leases; improved pasture near town rents higher."
+  },
+  "isu_rent_2026": {
+   "name": "Iowa State University Extension, Ag Decision Maker C2-10, Cash Rental Rates for Iowa 2026 Survey",
+   "date": "May 2026",
+   "url": "https://www.extension.iastate.edu/agdm/wholefarm/pdf/c2-10.pdf",
+   "basis": "Pasture $27 per animal unit month. Improved pasture $102 an acre, poor pasture $63 an acre, statewide, 1,450 responses."
+  },
+  "unl_realestate_2026": {
+   "name": "University of Nebraska, Nebraska Farm Real Estate Market Highlights 2025-2026, Table 11",
+   "date": "June 2026",
+   "url": "https://cap.unl.edu/realestate/",
+   "basis": "Pasture rent per cow-calf pair per month, 2026, by district: $56.45 to $82.10. Stocker calf $32 to $51 a month. The monthly rate is traditionally multiplied by a five-month season."
+  },
+  "osu_cr216_2021": {
+   "name": "Oklahoma State University Extension CR-216, Oklahoma Pasture Rental Rates 2020-21",
+   "date": "March 2021",
+   "url": "https://extension.okstate.edu/fact-sheets/oklahoma-pasture-rental-rates-2020-21.html",
+   "basis": "Native pasture $15.42 an acre, bermudagrass $20.22. Grazing season 9.1 months. 9.4 acres per cow on native range. Of 623 leases, the livestock owner paid for mineral in 98%, fence labor in 85%, fence materials in 73%, water in 75%."
+  },
+  "ncfmec03_2011": {
+   "name": "North Central Farm Management Extension Committee, NCFMEC-03, Pasture Rental Arrangements for Your Farm",
+   "date": "December 2011",
+   "url": "https://www.agmanager.info/sites/default/files/NCFMEC-03.pdf",
+   "basis": "Sample lease assigns fence repair, water, mineral, checking cattle, vet calls and fly control to landlord or tenant by checkbox. Yearling example $25 a month for a four-month season."
+  },
+  "ncfmec06_2013": {
+   "name": "North Central Farm Management Extension Committee, NCFMEC-06, Beef Cow Rental Arrangements for Your Farm",
+   "date": "February 2013",
+   "url": "https://ag.purdue.edu/commercialag/home/wp-content/uploads/2013/02/201302_NCFMEC_BeefCowRentalalArrangementsForYourFarm.pdf",
+   "basis": "Worked example: the operator who supplies grass, hay, labor and management contributes 65.9% of the cost and takes 65.9% of the calf money; the cow owner 34.1%. The owner keeps all cull cow sales. Labor 5.65 hours per cow per year. Leased bulls run $700 or more a season."
+  },
+  "isu_c2_33_2011": {
+   "name": "Iowa State University Extension, Ag Decision Maker C2-33, Beef Cow Joint Agreements",
+   "date": "September 2011",
+   "url": "https://www.extension.iastate.edu/agdm/wholefarm/html/c2-36.html",
+   "basis": "When the owner supplies the cows and the pasture, calf income splits 40% owner, 60% operator. A labor-only party earns 20% to 25% of the calf crop."
+  },
+  "unl_custom_2025": {
+   "name": "University of Nebraska, Custom Service Rates Related to Livestock Production in Nebraska 2025",
+   "date": "June 2025",
+   "url": "https://cap.unl.edu/sites/unl.edu.ianr.agecon.center-for-ag-profitability/files/media/file/nebraska-custom-rates-livestock-2025_ada.pdf",
+   "basis": "Care for cow-calf pairs on summer pasture, not counting pasture rent or feed: $1.00 per head per day. Wintering cows $1.56 a day, range $0.83 to $2.40."
+  },
+  "ksu_bluestem_2025": {
+   "name": "Kansas State University and Kansas Department of Agriculture, Bluestem Pasture Release 2025",
+   "date": "May 2025",
+   "url": "https://www.agmanager.info/sites/default/files/pdf/BluestemReport_2025.pdf",
+   "basis": "A 1,250 lb cow-calf pair for the full summer: $276.25 with care, $210.84 without, so care is worth about $65 a pair a season. 600 lb stocker $133.75 with care. 8.1 acres per pair."
+  },
+  "tamu_stocker_2025": {
+   "name": "Texas A&M AgriLife Extension, 2025 stocker budgets, District 8 native pasture and District 11 Coastal Bend",
+   "date": "March and April 2025",
+   "url": "https://agecoext.tamu.edu/wp-content/uploads/2025/03/2025D8StockersNative.pdf",
+   "basis": "District 8: buy a 400 lb calf at $360 a cwt ($1,440), sell at 750 lb and $255, grazing 5 acres at $14, labor $15.83, returns to management $107.63 a head. District 11: buy 500 lb at $310 ($1,550), 160 days grazing, returns $10.99 a head."
+  },
+  "ams_grassfed_2026": {
+   "name": "USDA AMS, National Grass Fed Beef Report, 2026 Quarter 3",
+   "date": "September 2026",
+   "url": "https://www.ams.usda.gov/mnreports/lsmngfbeef.pdf",
+   "basis": "Direct sales by hanging weight, processing not included: whole $4.00 to $7.90 (average $5.90), half average $5.76, quarter $6.23. Processing paid by the customer: $0.94 a pound hanging plus a $125 slaughter fee. 84 producers."
+  },
+  "msu_freezer_2026": {
+   "name": "Michigan State University Extension, How to price freezer beef",
+   "date": "April 2026",
+   "url": "https://www.canr.msu.edu/news/how-to-price-freezer-beef",
+   "basis": "Dressing percentage: beef-type cattle 62% to 64%, grass-fed steers 50% to 60%. Example 1,400 lb steer, 882 lb carcass, $3.80 a pound hanging, breakeven $3.73."
+  },
+  "uaex_fsa3143_2021": {
+   "name": "University of Arkansas Extension FSA3143, Raising Calves for Slaughter",
+   "date": "2021",
+   "url": "https://www.uaex.uada.edu/publications/pdf/FSA-3143.pdf",
+   "basis": "Forage-finished calves are often slaughtered near 1,000 lb live. Growing a 500 lb calf to 1,000 lb on forage takes about 367 days at 1.5 lb a day. Dressing 58% to 66%."
+  },
+  "isu_b1_21_2026": {
+   "name": "Iowa State University Extension, Ag Decision Maker B1-21, Livestock Enterprise Budgets for Iowa 2026",
+   "date": "June 2026",
+   "url": "https://www.extension.iastate.edu/agdm/livestock/pdf/b1-21.pdf",
+   "basis": "A 550 lb steer calf valued at $4.92 a pound, $2,706. Finishing it to 1,350 lb takes nine months, 69 bushels of corn, total cost $3,581."
+  },
+  "sare_grassfed_2026": {
+   "name": "SARE, Enterprise Budgets for Diversified Farms, Case Study 3, Bottom Line Profitability for Grassfed Steers",
+   "date": "2026",
+   "url": "https://www.sare.org/publications/enterprise-budgets-for-diversified-farms/case-study-3/",
+   "basis": "Steers finished at about 24 months. Net return selling locker beef by the half: minus $358 a head; selling boxed cuts: plus $154 a head, with a $30,000 cold storage room."
+  },
+  "mu_g204_2026": {
+   "name": "University of Missouri Extension G204, Evaluating Direct-to-Consumer Marketing Opportunities for Local Beef",
+   "date": "January 2026",
+   "url": "https://www.extension.missouri.edu/publications/g204",
+   "basis": "Processing into retail cuts $847 an animal. Half beef priced at $2.78 a pound live, quarter $2.93, live sale $2.38."
+  },
+  "nebguide_g2364_2024": {
+   "name": "University of Nebraska NebGuide G2364, Development of a Direct Marketing Beef Program: Custom vs. Inspected",
+   "date": "July 2024",
+   "url": "https://extensionpubs.unl.edu/publication/g2364/2024/pdf/view/g2364-2024.pdf",
+   "basis": "Custom-exempt beef must be sold as a live animal before slaughter and is marked not for sale; retail cuts need a USDA-inspected plant and freezers. Small processors book 6 to 24 months out."
+  },
+  "fsa_rates_2026": {
+   "name": "USDA Farm Service Agency, Current FSA Loan Interest Rates",
+   "date": "November 1, 2026",
+   "url": "https://www.fsa.usda.gov/tools/informational/rates/current-fsa-loan-interest-rates",
+   "basis": "Farm operating, direct and microloan: 5.625%. Farm ownership direct: 6.25%. Down payment loan: 2.25%."
+  },
+  "fsa_chart_2025": {
+   "name": "USDA Farm Service Agency, Farm Loan Information Chart",
+   "date": "October 2025",
+   "url": "https://www.fsa.usda.gov/sites/default/files/2025-11/FSA_farm_loan_info_chart%20%282%29.pdf",
+   "basis": "Direct operating loan up to $400,000, 1 to 7 years, for livestock and equipment. Operating microloan up to $50,000, rate capped at 5% for beginning and veteran farmers. Farm ownership up to $600,000 over 40 years. A beginning farmer is anyone under ten years in."
+  },
+  "isu_custom_2026": {
+   "name": "Iowa State University Extension, Ag Decision Maker A3-10, 2026 Iowa Farm Custom Rate Survey",
+   "date": "March 2026",
+   "url": "https://www.extension.iastate.edu/agdm/crops/pdf/a3-10.pdf",
+   "basis": "Large round bales $13.15 each without wrap, $15.75 with. Mowing $15.45 an acre, raking $9.90. Mowing pasture $27.05 an acre, chopping brush $105.55. Hauling cattle by semi $4.70 a loaded mile. Fence building labor $42.70 an hour."
+  },
+  "unl_custom_2026": {
+   "name": "University of Nebraska, 2026 Nebraska Agricultural Custom Rates Report",
+   "date": "June 2026",
+   "url": "https://cap.unl.edu/sites/unl.edu.ianr.agecon.center-for-ag-profitability/files/media/file/2026-nebraska-custom-rates-report_ada.pdf",
+   "basis": "Baling large round bales with net wrap $17.88 a bale. Building four-strand barbed wire fence, labor only, $1.60 a foot. Mowing pasture $4.60 an acre."
+  },
+  "nass_cropvalues_2026": {
+   "name": "USDA NASS, Crop Values 2025 Summary",
+   "date": "February 2026",
+   "url": "https://esmis.nal.usda.gov/sites/default/release-files/795791/cpvl0226.pdf",
+   "basis": "All other hay, 2025 marketing year, dollars a ton: US $138, Texas $136, Oklahoma $161, Missouri $125."
+  },
+  "hud_fmr_2026": {
+   "name": "HUD, FY 2026 Fair Market Rents, Texas nonmetropolitan counties",
+   "date": "October 2025",
+   "url": "https://www.huduser.gov/portal/datasets/fmr.html",
+   "basis": "Fannin County, TX: 2 bedroom $985, 3 bedroom $1,370, 4 bedroom $1,652 a month. Look up any county at huduser.gov."
+  },
+  "est_labor_small": {
+   "name": "Estimate: hours per cow for a small herd",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Texas A&M budgets 3.72 hours a cow a year on a 200-cow ranch; the NCFMEC cow-lease worksheet uses 5.65. A man with 20 cows and no help spends more per cow; the high figure allows for that.",
+   "estimate": true
+  },
+  "est_calf_crop": {
+   "name": "Estimate: calf crop and share of cow income from calves",
+   "date": "",
+   "url": "sources.md",
+   "basis": "The Texas A&M 2025 budget sells 0.655 calves per cow after keeping replacement heifers and culls 12% of cows, which implies about 85 calves weaned per 100 cows. Cull cows are about 13% of a cow's yearly income in that budget.",
+   "estimate": true
+  },
+  "est_finish_carry": {
+   "name": "Estimate: carrying a weaned calf a year to grass finish",
+   "date": "",
+   "url": "sources.md",
+   "basis": "No published budget for grass-finishing a calf on leased pasture. Half the keep-a-cow line covers hay, mineral and vet; grazing is added at the lease rate for 0.7 of a cow's acres.",
+   "estimate": true
+  },
+  "est_handling": {
+   "name": "Estimate: handling setup on leased grass",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Twenty 12 ft panels at about $140 each (Priefert economy panel, retail), a used or economy squeeze chute ($3,000 to $5,800 at farm stores), a stock tank and mineral feeders. No manufacturer price list is published.",
+   "estimate": true
+  },
+  "est_calf_value_high": {
+   "name": "Estimate: top of the weaned calf range",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Low is the Texas A&M January 2025 budget (525 lb steer at $295 a cwt, $1,549). Typical is Iowa State June 2026 (550 lb at $4.92, $2,706). High allows a bit over the 2026 price.",
+   "estimate": true
+  },
+  "est_share_high": {
+   "name": "Estimate: top of the operator share",
+   "date": "",
+   "url": "sources.md",
+   "basis": "Published splits run 60% (owner also supplies grass) to 65.9% (operator supplies grass). An operator who also supplies the bull and hauls to market can argue for 70%.",
+   "estimate": true
+  }
+ },
+ "well_depth_default": {
+  "typ": 200,
+  "note": "USGS: half of US house wells are shallower than 142 ft, public supply wells 202 ft. 200 ft is a planning middle."
+ },
+ "well_depth_by_state": {
+  "AL": {
+   "typ": 160,
+   "note": "USGS-recorded wells across AL counties run a median of 160 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "AK": {
+   "typ": 60,
+   "note": "USGS-recorded wells across AK counties run a median of 60 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "AZ": {
+   "typ": 200,
+   "note": "USGS-recorded wells across AZ counties run a median of 200 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "AR": {
+   "typ": 100,
+   "note": "USGS-recorded wells across AR counties run a median of 100 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "CA": {
+   "typ": 160,
+   "note": "USGS-recorded wells across CA counties run a median of 160 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "CO": {
+   "typ": 80,
+   "note": "USGS-recorded wells across CO counties run a median of 80 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "FL": {
+   "typ": 150,
+   "note": "USGS-recorded wells across FL counties run a median of 150 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "GA": {
+   "typ": 260,
+   "note": "USGS-recorded wells across GA counties run a median of 260 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "ID": {
+   "typ": 150,
+   "note": "USGS-recorded wells across ID counties run a median of 150 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "IL": {
+   "typ": 120,
+   "note": "USGS-recorded wells across IL counties run a median of 120 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "IN": {
+   "typ": 90,
+   "note": "USGS-recorded wells across IN counties run a median of 90 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "IA": {
+   "typ": 180,
+   "note": "USGS-recorded wells across IA counties run a median of 180 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "KS": {
+   "typ": 60,
+   "note": "USGS-recorded wells across KS counties run a median of 60 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "KY": {
+   "typ": 70,
+   "note": "USGS-recorded wells across KY counties run a median of 70 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "LA": {
+   "typ": 210,
+   "note": "USGS-recorded wells across LA counties run a median of 210 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "ME": {
+   "typ": 60,
+   "note": "USGS-recorded wells across ME counties run a median of 60 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MD": {
+   "typ": 140,
+   "note": "USGS-recorded wells across MD counties run a median of 140 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MA": {
+   "typ": 50,
+   "note": "USGS-recorded wells across MA counties run a median of 50 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MI": {
+   "typ": 110,
+   "note": "USGS-recorded wells across MI counties run a median of 110 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MN": {
+   "typ": 110,
+   "note": "USGS-recorded wells across MN counties run a median of 110 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MS": {
+   "typ": 170,
+   "note": "USGS-recorded wells across MS counties run a median of 170 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MO": {
+   "typ": 280,
+   "note": "USGS-recorded wells across MO counties run a median of 280 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "MT": {
+   "typ": 80,
+   "note": "USGS-recorded wells across MT counties run a median of 80 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NE": {
+   "typ": 130,
+   "note": "USGS-recorded wells across NE counties run a median of 130 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NV": {
+   "typ": 170,
+   "note": "USGS-recorded wells across NV counties run a median of 170 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NH": {
+   "typ": 250,
+   "note": "USGS-recorded wells across NH counties run a median of 250 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NJ": {
+   "typ": 120,
+   "note": "USGS-recorded wells across NJ counties run a median of 120 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NM": {
+   "typ": 170,
+   "note": "USGS-recorded wells across NM counties run a median of 170 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NY": {
+   "typ": 90,
+   "note": "USGS-recorded wells across NY counties run a median of 90 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "NC": {
+   "typ": 120,
+   "note": "USGS-recorded wells across NC counties run a median of 120 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "ND": {
+   "typ": 90,
+   "note": "USGS-recorded wells across ND counties run a median of 90 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "OH": {
+   "typ": 90,
+   "note": "USGS-recorded wells across OH counties run a median of 90 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "OK": {
+   "typ": 60,
+   "note": "USGS-recorded wells across OK counties run a median of 60 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "OR": {
+   "typ": 250,
+   "note": "USGS-recorded wells across OR counties run a median of 250 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "PA": {
+   "typ": 130,
+   "note": "USGS-recorded wells across PA counties run a median of 130 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "SC": {
+   "typ": 220,
+   "note": "USGS-recorded wells across SC counties run a median of 220 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "SD": {
+   "typ": 110,
+   "note": "USGS-recorded wells across SD counties run a median of 110 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "TN": {
+   "typ": 160,
+   "note": "USGS-recorded wells across TN counties run a median of 160 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "TX": {
+   "typ": 360,
+   "note": "USGS-recorded wells across TX counties run a median of 360 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "UT": {
+   "typ": 150,
+   "note": "USGS-recorded wells across UT counties run a median of 150 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "VA": {
+   "typ": 260,
+   "note": "USGS-recorded wells across VA counties run a median of 260 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "WA": {
+   "typ": 120,
+   "note": "USGS-recorded wells across WA counties run a median of 120 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "WV": {
+   "typ": 80,
+   "note": "USGS-recorded wells across WV counties run a median of 80 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "WI": {
+   "typ": 130,
+   "note": "USGS-recorded wells across WI counties run a median of 130 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  },
+  "WY": {
+   "typ": 120,
+   "note": "USGS-recorded wells across WY counties run a median of 120 ft; those skew toward deep irrigation and test wells, so a house well is often shallower. Ask a local driller."
+  }
+ }
+}

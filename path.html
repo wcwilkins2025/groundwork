@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your path</title>
+<meta name="description" content="Your six stages from where you stand to a place of your own, with the gate, this month's steps, and the figures for each.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Pages">
+      <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
+      <a href="start.html" data-carry="start.html">Where you are</a>
+      <a href="path.html" data-carry="path.html" aria-current="page">Your path</a>
+      <a href="numbers.html" id="numbersLink">Your numbers</a>
+      <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+    <h1>Your path</h1>
+    <p class="lede" id="lede"></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="printonly" id="printHead"></p>
+  <div class="heroes">
+    <div class="hero"><p class="lbl">Where you are</p><p class="val" id="heroStage">&ndash;</p><p class="rng" id="heroStageSub"></p></div>
+    <div class="hero"><p class="lbl">Each month, in and out</p><p class="val" id="heroGap">&ndash;</p><p class="rng" id="heroGapSub"></p></div>
+    <div class="hero"><p class="lbl">To living off a place</p><p class="val" id="heroTime">&ndash;</p><p class="rng" id="heroTimeSub"></p></div>
+  </div>
+
+  <div class="card noprint" id="noProfile" hidden>
+    <p>This path is built on the defaults: no cash, no income, one man, never worked cattle, headed for Texas. <a href="start.html" data-carry="start.html">Answer the nine questions</a> and it becomes yours.</p>
+  </div>
+
+  <div class="card">
+    <h3>What the family needs each month</h3>
+    <p class="sub" id="needsSub"></p>
+    <div class="tablewrap"><table id="needsTable"><thead><tr><th>Line</th><th class="n">Per month</th><th>Where the figure comes from</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <ol class="stages" id="stages"></ol>
+
+  <div class="card noprint" style="margin-top:16px">
+    <div class="actions">
+      <a class="btn" id="numbersBtn" href="numbers.html">Run your numbers</a>
+      <button class="btn ghost" type="button" id="printBtn">Print this plan</button>
+      <button class="btn ghost" type="button" id="linkBtn">Copy the link to this plan</button>
+    </div>
+    <p class="flash" id="flash" aria-live="polite"></p>
+  </div>
+
+  <div class="card" style="margin-top:16px" id="helpCard" hidden>
+    <h3 id="helpTitle">Help where you are headed</h3>
+    <p class="sub">Courses, the people to call, and programs that match new operators with landowners. Each read from its own page on the date shown.</p>
+    <div class="tablewrap"><table id="helpTable"><thead><tr><th>What</th><th>Who</th><th>Cost</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Sources on this page</h3>
+    <ol id="sourceList" style="padding-left:20px;font-size:14.5px"></ol>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <p>Planning figures, not quotes and not advice from a licensed anyone. Every line shows where it came from; a line marked <span class="est">estimate</span> has no published figure behind it. Rates and prices change; check the dated source before you act on a number.</p>
+</div></footer>
+
+<script src="data/bundle.js"></script>
+<script src="engine/calc.js"></script>
+<script src="engine/path.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = GW.$, D = window.HC, calc = window.HCcalc, P = window.GWpath;
+  var money = GW.money, fmt = GW.fmt, rh = GW.rh, el = GW.el;
+  GW.initTheme();
+  var p = GW.readProfile();
+  GW.carry(p);
+  var C = D.costs.items, S = D.stage || {}, SRC = D.costs.sources;
+  var used = {};  /* source id -> true, for the list at the bottom */
+  function cite(id) { if (id && SRC[id]) used[id] = true; return id && SRC[id] ? SRC[id].name : (id || ''); }
+  function stageSrc(key) { var s = S.sources && S.sources[key]; if (s) used['stage:' + key] = s; return s ? s.name : ''; }
+
+  var r = P.path(p, D, calc);
+  var n = r.needs, w = r.where;
+  var names = D.land.state_names;
+  var placeName = (p.county ? p.county + ' County, ' : '') + (names[p.state] || p.state);
+  if (!p.has) $('noProfile').hidden = false;
+
+  /* lede and heroes */
+  var stageDef = P.STAGES[w.index];
+  $('lede').textContent = 'Six stages from where you stand to a place of your own in ' + placeName + '. Figured from your answers and public tables. Change an answer and the path changes.';
+  $('heroStage').textContent = 'Stage ' + (w.index + 1);
+  $('heroStageSub').textContent = stageDef.name + '. ' + stageDef.short;
+  $('heroGap').textContent = (n.gap >= 0 ? '+' : '-') + money(Math.abs(n.gap)).replace('-', '');
+  $('heroGapSub').textContent = money(n.income) + ' in, ' + money(n.outgo) + ' out, for ' + (n.family === 1 ? 'one man' : n.family + ' people') + '.';
+  if (r.monthsUnknown) { $('heroTime').textContent = 'Not yet'; $('heroTimeSub').textContent = 'Some stages cannot be timed until money coming in covers money going out. Stage 1 fixes that.'; }
+  else { var yrs = r.months / 12; $('heroTime').textContent = r.months === 0 ? 'Now' : yrs < 1 ? r.months + ' months' : 'about ' + Math.round(yrs) + ' years'; $('heroTimeSub').textContent = 'On your numbers, saving every spare dollar, from stage ' + (w.index + 1) + ' on.'; }
+  $('printHead').textContent = 'Groundwork plan. ' + placeName + '. ' + new Date().toLocaleDateString();
+
+  /* needs table */
+  $('needsSub').textContent = 'Where you are now' + (p.place === 'own' ? ', on your own land' : ', renting') + '. This is the number every stage is measured against.';
+  var tb = $('needsTable').querySelector('tbody');
+  n.parts.forEach(function (part) {
+    var tr = el('tr');
+    var td1 = el('td'); td1.textContent = part.label; if (part.note) { td1.appendChild(el('span', 'muted', ' ' + part.note)); } tr.appendChild(td1);
+    tr.appendChild(el('td', 'n', money(part.monthly)));
+    tr.appendChild(el('td', 'muted', part.source === 'you' ? 'You' : (S.sources && S.sources[part.source]) ? stageSrc(part.source) : cite(part.source)));
+    tb.appendChild(tr);
+  });
+  var trT = el('tr'); trT.appendChild(el('td', null, 'Out each month')); var tdT = el('td', 'n', money(n.outgo)); tdT.style.fontWeight = '600'; trT.appendChild(tdT); trT.appendChild(el('td', 'muted', 'Cash to keep in hand: ' + n.runwayMonths + ' months of this, ' + money(n.runwayTarget) + (n.runwaySource ? ' (' + stageSrc('runway') + ')' : ''))); tb.appendChild(trT);
+
+  /* stages */
+  var list = $('stages');
+  function stage(key, title, why, gate, figs, month, sources) {
+    var i = P.STAGES.map(function (s) { return s.key; }).indexOf(key);
+    var li = el('li', 'stage' + (w.done[key] ? ' done' : '') + (w.current === key ? ' now' : ''));
+    li.appendChild(el('p', 'state', w.done[key] ? 'Done' : w.current === key ? 'You are here' : 'Ahead'));
+    li.appendChild(el('h3', null, title));
+    li.appendChild(el('p', 'why', why));
+    var g = el('div', 'gate'); var gb = el('b', null, 'The gate: '); g.appendChild(gb); g.appendChild(document.createTextNode(gate)); li.appendChild(g);
+    if (figs.length) { var fd = el('div', 'figs'); figs.forEach(function (f) { var d = el('div', 'fig'); d.appendChild(el('span', 'n', f[0])); d.appendChild(el('span', 'l', f[1])); fd.appendChild(d); }); li.appendChild(fd); }
+    if (month.length) { var m = el('div', 'month'); m.appendChild(el('h4', null, w.current === key ? 'This month' : 'When you get here')); var ul = el('ul'); month.forEach(function (t) { var li2 = el('li'); if (typeof t === 'string') li2.textContent = t; else { li2.textContent = t[0] + ' '; var a = el('a', null, t[1]); a.href = t[2]; a.rel = 'noopener'; li2.appendChild(a); if (t[3]) li2.appendChild(document.createTextNode(' ' + t[3])); } ul.appendChild(li2); }); m.appendChild(ul); li.appendChild(m); }
+    if (sources.length) li.appendChild(el('p', 'src', 'Sources: ' + sources.filter(Boolean).join('; ') + '.'));
+    list.appendChild(li);
+  }
+  function months(m) { if (m == null) return 'not yet'; if (m === 0) return 'done'; if (m < 12) return m + ' month' + (m === 1 ? '' : 's'); return 'about ' + Math.round(m / 12 * 10) / 10 + ' years'; }
+
+  var s1 = r.stages[0], s2 = r.stages[1], s3 = r.stages[2], s4 = r.stages[3], s5 = r.stages[4], s6 = r.stages[5];
+  var surplus = Math.max(0, n.gap);
+
+  /* 1 */
+  var f1 = [[money(Math.abs(n.gap)) + (n.gap >= 0 ? ' spare' : ' short'), 'each month now'], [money(n.runwayTarget), n.runwayMonths + ' months in hand, the target'], [months(s1.months), 'to get there' + (surplus > 0 ? ' at ' + money(surplus) + ' a month' : '')]];
+  var m1 = [];
+  if (n.gap < 0 || n.income === 0) {
+    if (s1.ranchMonthly) m1.push('Get money coming in first. A ranch hand job pays about $' + s1.ranchHourly.toFixed(2) + ' an hour' + (s1.wageState ? ' in ' + names[p.state] : '') + ', about ' + money(s1.ranchMonthly) + ' a month full time, and it is the schooling for stage 2.' );
+    else m1.push('Get money coming in first. Ranch hand, fence crew, custom haying, sale barn, feedlot. A year on another man\'s place is the schooling for stage 2, and it is paid.');
+    if (S.jobs && S.jobs.length) m1.push(['Where the jobs are listed:', S.jobs[0].name, S.jobs[0].url, S.jobs.length > 1 ? 'and ' + S.jobs.slice(1).map(function (j) { return j.name; }).join(', ') + '.' : '']);
+  } else {
+    m1.push('Money in covers money out. Now the cushion: put ' + money(surplus) + ' a month away until you have ' + money(n.runwayTarget) + ' in hand. That is ' + months(s1.monthsToRunway) + '.');
+  }
+  m1.push('Write the budget on one sheet: what comes in, what goes out, the gap. Every month, the same sheet.' + (S.budget && S.budget.url ? '' : ''));
+  if (S.budget && S.budget.url) m1.push(['A free budget sheet and debt payoff plan:', S.budget.name, S.budget.url, '']);
+  if (s1.debt > 0) m1.push('List what you owe, smallest to largest, and pay the smallest off first while paying the minimum on the rest. At ' + money(n.debt + surplus) + ' a month, ' + money(s1.debt) + ' is gone in ' + months(s1.debtMonths) + '.');
+  if (p.health === 'none' || p.health === 'marketplace') m1.push([n.pctFpl != null && n.pctFpl < 100 ? 'Health insurance: the marketplace credit starts at the poverty line. Check it at' : 'Health insurance at your income is cheaper than you think. Check it at', S.aca && S.aca.calculator ? S.aca.calculator.name : 'the marketplace subsidy calculator', S.aca && S.aca.calculator ? S.aca.calculator.url : 'https://www.kff.org/interactive/subsidy-calculator/', n.healthNote]);
+  if (p.health === 'work') m1.push('Keep the job with health insurance as long as you can. It is the biggest line a man adds when he quits.');
+  stage('s1', 'Get steady', 'Nothing else on this page works until money coming in covers money going out and there is a cushion in the bank. This stage is not about cattle. It is about getting your feet under you.', 'Money in covers money out, and you have ' + n.runwayMonths + ' months of it in hand.', f1, m1,
+    [s1.wageSource ? stageSrc('wages') : '', stageSrc('household'), n.rentFound ? 'HUD FY2026 Fair Market Rent for your county' : cite(C.rent_monthly.source), stageSrc('aca'), stageSrc('runway')]);
+
+  /* 2 */
+  var f2 = [[s2.monthsNeeded === 0 ? 'Done' : s2.monthsNeeded + ' months', 'working cattle for someone else'], [money(s2.savedDuring), 'saved meanwhile at ' + money(surplus) + ' a month']];
+  var m2 = [];
+  if (p.exp === 'none' || p.exp === 'some') {
+    m2.push('Work for a rancher. Day work, a hand job, a feedlot, a sale barn. It is where every lease and every cow on shares comes from. Nobody leases grass or cows to a stranger.');
+    if (s2.fsaExperience) m2.push(s2.fsaExperience);
+    if (S.courses && S.courses.national) S.courses.national.slice(0, 2).forEach(function (c) { m2.push(['Take the free course:', c.name, c.url, c.cost ? '(' + c.cost + ')' : '']); });
+    if (S.courses && S.courses.states && S.courses.states[p.state]) S.courses.states[p.state].slice(0, 2).forEach(function (c) { m2.push(['In ' + names[p.state] + ':', c.name, c.url, c.cost ? '(' + c.cost + ')' : '']); });
+    m2.push('Keep the budget sheet going. The cushion keeps growing while you learn.');
+  } else {
+    m2.push('You have the years. Write them down with dates and the men you worked for; the FSA will ask, and so will the man whose grass you want to lease.');
+  }
+  stage('s2', 'Prove yourself', 'Experience is the one thing you cannot borrow or buy. Two years working another man\'s cattle is the schooling, it is paid, and it is the reference that opens every door in stage 3.', 'Two years working cattle for someone else, written down with dates.', f2, m2, [stageSrc('fsa'), stageSrc('courses')]);
+
+  /* 3 */
+  var dc = s3.deals.custom, ds = s3.deals.share;
+  var f3 = [[s3.headByHours + ' head', 'what ' + p.hours + ' hours a week can handle, at ' + s3.hoursPerCow + ' hours a cow a year'], [money(dc.yearly), 'a year caring for pairs, on ' + fmt(dc.acresNeeded) + ' acres'], [money(ds.yearly), 'a year with cows on shares'], [money(s3.handling), 'panels, chute, tank']];
+  var m3 = ['Find the grass. Pasture rents about $' + (+r.leaseRate).toFixed(2) + ' an acre a year in ' + names[p.state] + ' on the USDA average; ask what the neighbors pay. The lease goes on paper: who fixes fence, who hauls water, who buys mineral.',
+    'Ask the man you worked for, and the men he knows, who is slowing down. That is where cows on shares come from: he keeps his cows and about a third of the calf check, you supply the grass and the work.',
+    'Caring for other men\'s pairs pays about $' + C.custom_care_day.typ.toFixed(2) + ' a head a day and needs nothing but the panels and a chute. It is a job, not a business, and it is the cheapest way to be running cattle this year.',
+    s3.monthsToHandling === 0 ? 'You have the ' + money(s3.handling) + ' for the handling setup above your cushion.' : 'Save ' + money(s3.handlingShort) + ' more for the handling setup' + (s3.monthsToHandling ? ', ' + months(s3.monthsToHandling) + ' at ' + money(surplus) + ' a month' : '') + '. Borrow a chute before you buy one.',
+    'If you want your own cows now: an FSA microloan lends beginning farmers up to ' + money(s3.fsa.microMax) + ' at ' + s3.fsa.ratePct + '%, about ' + money(rh(s3.fsa.microPayment)) + ' a year for ' + s3.fsa.years + ' years. That buys about ' + s3.cowsPerMicro + ' bred cows that clear about ' + money(s3.ownNet) + ' a head a year on leased grass.'];
+  stage('s3', 'First cattle without capital', 'You do not need to own a cow to be in the cattle business. Other men own cows and need grass and hands. Leased grass plus panels and a chute puts you in, while the job keeps paying the bills.', 'Running cattle on leased grass, yours or another man\'s, while the job continues.', f3, m3, [cite(C.custom_care_day.source), cite(C.cow_share_operator.source), cite(C.lease_rate_us.source), cite(C.handling_setup.source), cite(C.fsa_microloan_max.source), cite(C.fsa_operating_rate.source)]);
+
+  /* 4 */
+  var f4 = [[money(rh(s4.gapYear)), 'a year the cattle must cover, renting a house']];
+  if (s4.own && s4.own.head) { f4.push([s4.own.head + ' cows', 'on ' + fmt(s4.own.acres) + ' leased acres, owned outright']); f4.push([money(rh(s4.own.cashToStart)), 'to start, with ' + n.runwayMonths + ' months in hand']); f4.push([s4.rampYears + ' years', 'from ' + s4.startHalf + ' cows keeping heifers']); }
+  var m4 = [];
+  if (s4.gapYear <= 0) m4.push('What you keep from work already covers the family. Every cow from here is money in the bank or a smaller job.');
+  else if (s4.own && s4.own.head) {
+    m4.push('Keep every heifer calf. At an ' + Math.round(C.calf_crop.typ * 100) + '% calf crop and ' + Math.round(C.cull_rate.typ * 100) + '% culled, the herd grows about ' + Math.round(s4.growth * 100) + '% a year on its own.');
+    m4.push('Add grass as the herd grows: ' + C.lease_apc.typ + ' acres a cow on decent pasture. The cheapest acres are the ones next to the ones you already lease.');
+    m4.push('Own more of the herd each year. Buy cows from the man you share with when he is ready to sell, with calf checks and an FSA operating loan (up to ' + money(s3.fsa.operatingMax) + ' at ' + s3.fsa.standardPct + '%).');
+    m4.push(['See the whole picture, every deal, on your numbers:', 'Your numbers', GW.link('numbers.html', p) + '#pay', '']);
+  } else m4.push('At your lease rate owning cows loses money per head; see Your numbers for the deals that work in your county.');
+  stage('s4', 'Grow', 'A herd grows itself if you let it. Keep the heifers, add grass, buy a few more cows each year with calf money. This is the stage that takes years, and the one where most men quit too early.', 'The cattle and what you keep from work cover the family, renting a house.', f4, m4, [cite(C.calf_crop.source), cite(C.cull_rate.source), cite(C.cow_bred.source), cite(C.calf_sale.source), cite(C.fsa_operating_max.source)]);
+
+  /* 5 */
+  var f5 = [[money(rh(s5.setupTotal)), 'a modest place: ' + s5.acres + ' acres at $' + fmt(s5.pricePerAcre) + ', well, septic, power, fence'], [money(rh(s5.down)), s5.downPct + '% down for the FSA program'], [months(s5.months), 'to the down payment at ' + money(surplus) + ' a month']];
+  var m5 = ['Buy a place with the house, well and septic already on it. Used improvements never bring what new ones cost, and you skip a year of contractors.',
+    'The FSA down payment program lends a beginning farmer with ' + s5.experienceYears + ' years of experience at ' + (s5.downRate != null ? s5.downRate + '%' : 'a low rate') + ' with ' + s5.downPct + '% down, and the direct farm ownership loan goes 40 years at ' + s5.fsaOwnershipRate + '%. Start the paperwork a year before you want to buy.',
+    'File for ag valuation the day you close. Land running cattle is taxed on what it produces, not what it sells for.',
+    ['What that place costs to set up and run in ' + placeName + ', every line:', 'Your numbers', GW.link('numbers.html', p), '']];
+  stage('s5', 'Land', 'Land comes last, not first. By now you have the experience the loan programs want, a herd that pays, and a cushion. The government lends forty years to a man like that.', s5.experienceYears + ' years of experience for the FSA ownership programs, the down payment in hand, and the place found.', f5, m5, [cite(C.fsa_operating_max.source), cite(C.fsa_operating_rate.source), cite(C.closing_pct.source), p.county ? 'USDA 2022 county land value' : cite(C.lease_rate_us.source)]);
+
+  /* 6 */
+  var f6 = [[money(rh(s6.setup)), 'to set the place up'], [money(rh(s6.yearly)), 'a year to live there'], s6.solve && s6.solve.head ? [s6.solve.head + ' cows', 'on ' + fmt(s6.solve.acres) + ' acres to cover it with cattle alone'] : ['Covered', 'by what you keep from work']];
+  var m6 = ['This is the calculator\'s picture for a modest place in ' + placeName + '. Change anything on Your numbers: the house, the well, the fence, the deal, the herd.',
+    'Most men who live off a place do three things at once: the cattle, something they keep from work, and a household that runs lean. The page shows all three.'];
+  stage('s6', 'Live off it', 'The place, the cattle and what you keep from work cover the family, with the health insurance line fixed and the household running lean.', 'Needs covered by the place, the cattle and what you keep.', f6, m6, ['the cost calculator tables']);
+
+  /* help where he is headed */
+  if (S.courses) {
+    var rows = (S.courses.states && S.courses.states[p.state] || []).concat(S.courses.national || []);
+    if (rows.length) {
+      $('helpCard').hidden = false;
+      $('helpTitle').textContent = 'Help in ' + (names[p.state] || p.state) + ', and everywhere';
+      var hb = $('helpTable').querySelector('tbody');
+      rows.forEach(function (c2) {
+        var tr = el('tr');
+        var td = el('td'); var a = el('a', null, c2.name); a.href = c2.url; a.rel = 'noopener'; td.appendChild(a);
+        if (c2.what) td.appendChild(el('span', 'muted', ' ' + c2.what)); tr.appendChild(td);
+        tr.appendChild(el('td', 'muted', c2.who + (c2.date ? ' (' + c2.date + ')' : '')));
+        tr.appendChild(el('td', null, c2.cost || ''));
+        hb.appendChild(tr);
+      });
+      used['stage:courses'] = S.sources.courses;
+    }
+  }
+
+  /* sources list */
+  var ol = $('sourceList');
+  Object.keys(used).forEach(function (k) {
+    var li = el('li');
+    if (k.indexOf('stage:') === 0) { var s = used[k]; var a = el('a', null, s.name); a.href = s.url; a.rel = 'noopener'; li.appendChild(a); li.appendChild(document.createTextNode(s.date ? ' (' + s.date + ')' : '')); }
+    else { var src = SRC[k]; var a2 = el('a', null, src.name); a2.href = src.url; a2.rel = 'noopener'; li.appendChild(a2); li.appendChild(document.createTextNode((src.date ? ' (' + src.date + ')' : '') + (src.estimate ? '. Estimate: ' + src.basis : ''))); }
+    ol.appendChild(li);
+  });
+
+  /* buttons */
+  $('numbersLink').href = $('numbersBtn').href = GW.link('numbers.html', p);
+  $('printBtn').addEventListener('click', function () { window.print(); });
+  $('linkBtn').addEventListener('click', function () { GW.copyText(location.href, 'Link copied. That link is your plan.'); });
+})();
+</script>
+</body>
+</html>

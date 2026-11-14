@@ -1,0 +1,625 @@
+{
+ "wages": {
+  "ranch_hand": {
+   "label": "Ranch hand (farmworkers, farm, ranch and aquacultural animals)",
+   "median_hourly": 17.63,
+   "median_annual": 36670,
+   "states": {
+    "TX": {
+     "median_hourly": 16.31,
+     "median_annual": 33920
+    },
+    "OK": {
+     "median_hourly": 16.19,
+     "median_annual": 33670
+    },
+    "MO": {
+     "median_hourly": 15.84,
+     "median_annual": 32950
+    }
+   },
+   "source": "wages"
+  },
+  "fence": {
+   "label": "Fence erector",
+   "median_hourly": 23.07,
+   "median_annual": 47980,
+   "states": {
+    "TX": {
+     "median_hourly": 17.92
+    },
+    "OK": {
+     "median_hourly": 18.21
+    },
+    "MO": {
+     "median_hourly": 20.81
+    }
+   },
+   "source": "wages"
+  },
+  "equipment": {
+   "label": "Agricultural equipment operator",
+   "median_hourly": 20.06,
+   "median_annual": 41730,
+   "states": {
+    "TX": {
+     "median_hourly": 16.47
+    },
+    "OK": {
+     "median_hourly": 16.78
+    },
+    "MO": {
+     "median_hourly": 22.35
+    }
+   },
+   "source": "wages"
+  },
+  "truck": {
+   "label": "Truck driver, CDL",
+   "median_hourly": 28.19,
+   "median_annual": 58640,
+   "states": {
+    "TX": {
+     "median_hourly": 27.06
+    },
+    "OK": {
+     "median_hourly": 26.16
+    },
+    "MO": {
+     "median_hourly": 26.23
+    }
+   },
+   "source": "wages"
+  }
+ },
+ "household_by_size": {
+  "items": {
+   "1": 25769,
+   "2": 48050,
+   "3": 59945,
+   "4": 65720,
+   "5": 72990
+  },
+  "note": "Average yearly spending for a household of that size, less housing and healthcare, which the path counts on their own lines. Averages; a lean household spends less.",
+  "source": "household"
+ },
+ "aca": {
+  "fpl": {
+   "1": 15960,
+   "2": 21640,
+   "3": 27320,
+   "4": 33000,
+   "5": 38680,
+   "6": 44360,
+   "7": 50040,
+   "8": 55720
+  },
+  "applicable_pct": [
+   [
+    0,
+    133,
+    2.1,
+    2.1
+   ],
+   [
+    133,
+    150,
+    3.14,
+    4.19
+   ],
+   [
+    150,
+    200,
+    4.19,
+    6.6
+   ],
+   [
+    200,
+    250,
+    6.6,
+    8.44
+   ],
+   [
+    250,
+    300,
+    8.44,
+    9.96
+   ],
+   [
+    300,
+    400.0001,
+    9.96,
+    9.96
+   ]
+  ],
+  "benchmark_single": {
+   "US": 625,
+   "TX": 661,
+   "OK": 604,
+   "MO": 605
+  },
+  "calculator": {
+   "name": "KFF health insurance marketplace subsidy calculator",
+   "url": "https://www.kff.org/interactive/subsidy-calculator/"
+  },
+  "note": "At 100% to 400% of the poverty line a household pays no more than the applicable share of income for the benchmark plan; above 400% there is no credit in 2026.",
+  "source": "aca"
+ },
+ "food": {
+  "single_male_monthly": 338.04,
+  "family_four_monthly": 1024.6,
+  "note": "USDA Thrifty Food Plan, October 2026: a man 20 to 50 living alone $281.70 a month plus the 20% one-person adjustment; a family of four $1,024.60.",
+  "source": "food"
+ },
+ "budget": {
+  "name": "PowerPay, Utah State University Extension",
+  "url": "https://extension.usu.edu/powerpay",
+  "what": "Free debt payoff planner: list what you owe, it orders the payments and shows the payoff date.",
+  "source": "budget"
+ },
+ "jobs": [
+  {
+   "name": "RanchWork.com",
+   "url": "https://ranchwork.com/",
+   "what": "Ranch and outfitter jobs, hand-checked listings, free to browse. Ranch hand jobs in Texas and Oklahoma often come with housing."
+  },
+  {
+   "name": "AgCareers.com",
+   "url": "https://www.agcareers.com/",
+   "what": "The big agriculture job board, livestock listings included."
+  },
+  {
+   "name": "King Ranch Institute job board",
+   "url": "https://krirm.tamuk.edu/?p=1407",
+   "what": "Ranch manager and foreman jobs, free, for later in the path."
+  },
+  {
+   "name": "WorkInTexas.com",
+   "url": "https://www.workintexas.com/",
+   "what": "The Texas Workforce Commission's free statewide job site."
+  }
+ ],
+ "fsa": {
+  "experience": "FSA counts a beginning farmer as anyone under ten years in. The direct farm ownership loan wants three years in the business of a farm out of the last ten; a year as a hand with real management duties, a farm management course, military service, or a mentor through SCORE can each stand in for a year of it, and the hand year plus a mentor together waive the rule. Operating loans and microloans ask for less. Write your years down with dates and the men you worked for.",
+  "ownership_experience_years": 3,
+  "ownership_rate": 6.25,
+  "down_payment_rate": 2.25,
+  "down_payment_pct": 5,
+  "source": "fsa"
+ },
+ "runway": {
+  "months": 3,
+  "source": "runway"
+ },
+ "courses": {
+  "national": [
+   {
+    "name": "Beef Quality Assurance online certification",
+    "who": "Beef Checkoff and NCBA",
+    "url": "https://www.bqa.org/beef-quality-assurance-certification",
+    "what": "Two to three hours online, a certificate every buyer and lease owner recognizes.",
+    "cost": "free online",
+    "date": "2026"
+   },
+   {
+    "name": "farmers.gov, Beginning farmers",
+    "who": "USDA",
+    "url": "https://www.farmers.gov/your-business/beginning-farmers",
+    "what": "The six steps, the loan tool, and the beginning farmer coordinator for your state.",
+    "cost": "free",
+    "date": "December 2025"
+   },
+   {
+    "name": "State beginning farmer and rancher coordinators",
+    "who": "USDA",
+    "url": "https://www.farmers.gov/your-business/beginning-farmers/coordinators",
+    "what": "A name, email and phone number in every state. Call them.",
+    "cost": "free",
+    "date": ""
+   },
+   {
+    "name": "Find your USDA service center",
+    "who": "USDA",
+    "url": "https://www.farmers.gov/working-with-us/service-center-locator",
+    "what": "The FSA and NRCS offices for your county.",
+    "cost": "free",
+    "date": ""
+   },
+   {
+    "name": "Farm Answers",
+    "who": "University of Minnesota and USDA NIFA",
+    "url": "https://farmanswers.org/",
+    "what": "A searchable library of beginning farmer training, budgets and a program finder.",
+    "cost": "free",
+    "date": "November 2026"
+   },
+   {
+    "name": "Farm Link Finder",
+    "who": "American Farmland Trust",
+    "url": "https://farmlandinfo.org/farm-link-finder/",
+    "what": "Every land-link program in the country: landowners looking for a new operator.",
+    "cost": "free",
+    "date": "2026"
+   },
+   {
+    "name": "Write your business plan",
+    "who": "U.S. Small Business Administration",
+    "url": "https://www.sba.gov/business-guide/plan-your-business/write-your-business-plan",
+    "what": "Free templates, a startup cost worksheet, and free counseling.",
+    "cost": "free",
+    "date": ""
+   },
+   {
+    "name": "Grazing Essentials",
+    "who": "Noble Research Institute, Ardmore, Oklahoma",
+    "url": "https://www.noble.org/grazing-essentials/",
+    "what": "Three days on grazing management, with a follow-up consultation.",
+    "cost": "$595",
+    "date": "2026"
+   },
+   {
+    "name": "Ranching for Profit School",
+    "who": "Ranch Management Consultants",
+    "url": "https://ranchingforprofit.com/ranching-for-profit-school/",
+    "what": "Six days on running a ranch as a business. The one the good operators talk about.",
+    "cost": "deposit $500; tuition on request",
+    "date": "2026"
+   }
+  ],
+  "states": {
+   "TX": [
+    {
+     "name": "Beginning Beef Cattle Operations, online",
+     "who": "Texas A&M AgriLife Extension",
+     "url": "https://agrilifeextension.tamu.edu/asset-external/beginning-beef-cattle-operations-battleground-to-breaking-ground/",
+     "what": "Self-paced introduction to running a beef operation.",
+     "cost": "free",
+     "date": "February 2026"
+    },
+    {
+     "name": "Ranch Management University",
+     "who": "Texas A&M AgriLife Extension",
+     "url": "https://forages.tamu.edu/rmu/",
+     "what": "Four and a half days in College Station for new landowners, April and October.",
+     "cost": "$525; $325 for veterans and first responders",
+     "date": "2026"
+    },
+    {
+     "name": "Generation Next: Our Turn to Ranch",
+     "who": "Texas A&M AgriLife Extension",
+     "url": "https://generationnext.tamu.edu/",
+     "what": "Twelve-week online business plan course for new landowners.",
+     "cost": "$300",
+     "date": "January 2027"
+    },
+    {
+     "name": "Beef Cattle Short Course",
+     "who": "Texas A&M AgriLife",
+     "url": "https://agrilifetoday.tamu.edu/2026/05/14/registration-open-for-texas-am-beef-cattle-short-course-aug-3-5/",
+     "what": "Three days every August in College Station.",
+     "cost": "$300 in person, $99 online",
+     "date": "August 2026"
+    },
+    {
+     "name": "Texas and Southwestern Cattle Raisers Association",
+     "who": "TSCRA",
+     "url": "https://tscra.org/",
+     "what": "Ranching 101 classes and the men who will hire you.",
+     "cost": "",
+     "date": "2026"
+    },
+    {
+     "name": "Your county AgriLife office",
+     "who": "Texas A&M AgriLife Extension",
+     "url": "https://counties.agrilife.org/",
+     "what": "The county agent knows every rancher in the county.",
+     "cost": "free",
+     "date": ""
+    }
+   ],
+   "OK": [
+    {
+     "name": "Master Cattleman",
+     "who": "Oklahoma State University Extension",
+     "url": "https://agweb2.agec.okstate.edu/cattleman/index.asp",
+     "what": "County-delivered certification course on the Oklahoma Beef Cattle Manual.",
+     "cost": "$175",
+     "date": ""
+    },
+    {
+     "name": "Cow-Calf Boot Camp",
+     "who": "Oklahoma State University Extension",
+     "url": "https://ag-events.okstate.edu/event/cow-calf-boot-camp-5157",
+     "what": "Three hands-on days in Ada every April, fifty seats.",
+     "cost": "$150 with meals",
+     "date": "April 2026"
+    },
+    {
+     "name": "Oklahoma Cattlemen's Association",
+     "who": "OCA",
+     "url": "https://www.okcattlemen.org/",
+     "what": "Fall gatherings, leadership academy, convention.",
+     "cost": "",
+     "date": "2026"
+    },
+    {
+     "name": "Your county extension office",
+     "who": "Oklahoma State University Extension",
+     "url": "https://extension.okstate.edu/county/",
+     "what": "The county educator knows every rancher in the county.",
+     "cost": "free",
+     "date": ""
+    }
+   ],
+   "MO": [
+    {
+     "name": "Grow Your Farm",
+     "who": "University of Missouri Extension",
+     "url": "https://extension.missouri.edu/programs/beginning-farmers-ranchers/training-opportunities",
+     "what": "Eight evening classes and farm tours, plus the ABCs of USDA workshop and internships.",
+     "cost": "",
+     "date": "November 2026"
+    },
+    {
+     "name": "LandLINK",
+     "who": "FCS Financial",
+     "url": "https://info.myfcsfinancial.com/landlink-young-farmer",
+     "what": "Matches beginning farmers under ten years in with landowners selling or leasing.",
+     "cost": "free",
+     "date": ""
+    },
+    {
+     "name": "Beginning Farmer Loan Program",
+     "who": "Missouri Department of Agriculture, MASBDA",
+     "url": "https://agriculture.mo.gov/abd/financial/masbda/loan.html",
+     "what": "Tax-exempt bond loans through your lender, and a tax deduction for a landowner who sells or leases to a beginning farmer.",
+     "cost": "",
+     "date": ""
+    },
+    {
+     "name": "Missouri Cattlemen's Association",
+     "who": "MCA",
+     "url": "https://www.mocattle.org/",
+     "what": "Membership and the Leadership College.",
+     "cost": "",
+     "date": "October 2026"
+    },
+    {
+     "name": "Your county extension office",
+     "who": "University of Missouri Extension",
+     "url": "https://extension.missouri.edu/counties",
+     "what": "",
+     "cost": "free",
+     "date": "2026"
+    }
+   ],
+   "AR": [
+    {
+     "name": "Beginning Farmer and Rancher Development Program",
+     "who": "University of Arkansas at Pine Bluff",
+     "url": "https://uapb.edu/academics/safhs/1890-cooperative-extension/small-farm-program/",
+     "what": "Education, mentoring and technical help for producers under ten years in, twenty counties.",
+     "cost": "",
+     "date": "2026"
+    },
+    {
+     "name": "Arkansas Cattlemen's Association",
+     "who": "ACA",
+     "url": "https://arbeef.org/",
+     "what": "Education programs, directories, convention.",
+     "cost": "",
+     "date": "2025"
+    },
+    {
+     "name": "Your county extension office",
+     "who": "University of Arkansas Division of Agriculture",
+     "url": "https://www.uaex.uada.edu/counties/",
+     "what": "",
+     "cost": "free",
+     "date": ""
+    }
+   ],
+   "TN": [
+    {
+     "name": "Tennessee Master Beef Producer",
+     "who": "UT Extension, Beef and Forage Center",
+     "url": "https://utbeef.tennessee.edu/tennessee-master-beef-producer-program/",
+     "what": "County beef course; finishing it qualifies you for state cost-share.",
+     "cost": "set by county",
+     "date": ""
+    },
+    {
+     "name": "TN Farm Link",
+     "who": "Appalachian RC&D Council with the Tennessee Department of Agriculture",
+     "url": "https://tnfarmlink.org/",
+     "what": "Statewide matching of land seekers and landowners.",
+     "cost": "free",
+     "date": "2025"
+    },
+    {
+     "name": "Tennessee Cattlemen's Association",
+     "who": "TCA",
+     "url": "https://tncattle.org/",
+     "what": "BQA and the Young Cattlemen's Leadership Program.",
+     "cost": "",
+     "date": "2026"
+    },
+    {
+     "name": "Your county extension office",
+     "who": "UT Extension",
+     "url": "https://utextension.tennessee.edu/office-locations-departments-centers/",
+     "what": "",
+     "cost": "free",
+     "date": ""
+    }
+   ],
+   "KY": [
+    {
+     "name": "Kentucky Beef Network",
+     "who": "Kentucky Cattlemen's Association",
+     "url": "https://www.kybeefnetwork.com/",
+     "what": "BQCA certification and producer resources; ask your county office about Master Cattleman.",
+     "cost": "",
+     "date": ""
+    },
+    {
+     "name": "Beginning Farmer Loan Program",
+     "who": "Kentucky Agricultural Finance Corporation",
+     "url": "https://www.kyagr.com/Content.aspx?PageId=9",
+     "what": "Loans through local lenders for livestock, equipment and land.",
+     "cost": "",
+     "date": ""
+    },
+    {
+     "name": "Kentucky Cattlemen's Association",
+     "who": "KCA",
+     "url": "https://www.kycattle.org/",
+     "what": "County chapters and membership.",
+     "cost": "about $35 a year",
+     "date": ""
+    },
+    {
+     "name": "Your county extension office",
+     "who": "University of Kentucky Extension",
+     "url": "https://extension.mgcafe.uky.edu/county",
+     "what": "",
+     "cost": "free",
+     "date": "2026"
+    }
+   ],
+   "KS": [
+    {
+     "name": "AgKansitions, Kansas LandLink",
+     "who": "Kansas State University",
+     "url": "https://agkansitions.org/",
+     "what": "Land-link matching, one-on-one help and beginning farmer classes.",
+     "cost": "",
+     "date": "2025"
+    },
+    {
+     "name": "Farm Beginnings",
+     "who": "Kansas Rural Center",
+     "url": "https://kansasruralcenter.org/farmbeginnings",
+     "what": "Eight-week course, January to March, refundable on completion.",
+     "cost": "$300 a farm",
+     "date": "January 2027"
+    },
+    {
+     "name": "Beginning Farmer Loan Program",
+     "who": "Kansas Development Finance Authority",
+     "url": "https://kdfa.org/activities/beginning-farmer/",
+     "what": "Tax-exempt bond loans through lenders.",
+     "cost": "",
+     "date": "January 2026"
+    },
+    {
+     "name": "Kansas Livestock Association",
+     "who": "KLA",
+     "url": "https://www.kla.org/",
+     "what": "Membership and convention.",
+     "cost": "",
+     "date": "2026"
+    },
+    {
+     "name": "Your county extension office",
+     "who": "K-State Research and Extension",
+     "url": "http://extension.k-state.edu/about/statewide-locations/",
+     "what": "",
+     "cost": "free",
+     "date": "July 2026"
+    }
+   ],
+   "NE": [
+    {
+     "name": "Nebraska Land Link",
+     "who": "Nebraska Extension, Center for Agricultural Profitability",
+     "url": "https://cap.unl.edu/landlink/",
+     "what": "Matches beginning ranchers with retiring landowners.",
+     "cost": "free",
+     "date": "2026"
+    },
+    {
+     "name": "Beef Cow Basics-Plus Online",
+     "who": "Nebraska Extension",
+     "url": "https://beef.unl.edu/producer-education/beef-basics-online-classes/",
+     "what": "Twelve-chapter online course.",
+     "cost": "$20 to $120",
+     "date": "2026"
+    },
+    {
+     "name": "NextGen Beginning Farmer Tax Credit",
+     "who": "Nebraska Department of Agriculture",
+     "url": "https://nextgen.nebraska.gov/",
+     "what": "A tax credit for owners who lease land or livestock three years or more to a beginner. Use it when you ask for the lease.",
+     "cost": "",
+     "date": "October 2025"
+    },
+    {
+     "name": "Nebraska Cattlemen",
+     "who": "NC",
+     "url": "https://nebraskacattlemen.org/",
+     "what": "Cattle Edge webinars and leadership training.",
+     "cost": "",
+     "date": "2026"
+    },
+    {
+     "name": "Your county extension office",
+     "who": "Nebraska Extension",
+     "url": "https://epd.unl.edu/counties",
+     "what": "",
+     "cost": "free",
+     "date": "2025"
+    }
+   ]
+  }
+ },
+ "sources": {
+  "fsa": {
+   "name": "USDA Farm Service Agency, Farm Loan Information Chart (October 2025) and Current FSA Loan Interest Rates (November 1, 2026)",
+   "date": "November 2026",
+   "url": "https://www.fsa.usda.gov/sites/default/files/2025-11/FSA_farm_loan_info_chart%20%282%29.pdf"
+  },
+  "runway": {
+   "name": "Estimate: months of expenses to keep in hand",
+   "date": "",
+   "url": "",
+   "estimate": true,
+   "basis": "Extension family-finance guides commonly advise three to six months of expenses in reserve; three is the floor used here."
+  },
+  "wages": {
+   "name": "BLS Occupational Employment and Wage Statistics, May 2025, occupation 45-2093 Farmworkers, Farm, Ranch, and Aquacultural Animals (and 47-4031 Fence Erectors, 45-2091 Agricultural Equipment Operators, 53-3032 Heavy and Tractor-Trailer Truck Drivers)",
+   "date": "2026",
+   "url": "https://data.bls.gov/oes/#/area/0000000/2025"
+  },
+  "household": {
+   "name": "BLS Consumer Expenditure Surveys, Table 1400, Size of consumer unit, 2025 (average annual expenditures less housing and healthcare, which the path counts on their own lines)",
+   "date": "October 29, 2026",
+   "url": "https://www.bls.gov/cex/tables/calendar-year/mean-item-share-average-standard-error/cu-size-2025.xlsx"
+  },
+  "aca": {
+   "name": "HHS 2026 Poverty Guidelines; IRS Rev. Proc. 2025-25 applicable percentage table for 2026; KFF average marketplace benchmark premiums 2026; KFF subsidy calculator",
+   "date": "January 2026 and November 2026",
+   "url": "https://www.kff.org/interactive/subsidy-calculator/"
+  },
+  "food": {
+   "name": "USDA Food and Nutrition Service, Official USDA Thrifty Food Plan, U.S. average, October 2026",
+   "date": "October 2026",
+   "url": "https://www.fns.usda.gov/sites/default/files/resource-files/CostofFoodOct2026Thrifty.pdf"
+  },
+  "budget": {
+   "name": "Utah State University Extension, PowerPay debt reduction tool",
+   "date": "2025",
+   "url": "https://extension.usu.edu/powerpay"
+  },
+  "jobs": {
+   "name": "Ranch and farm job boards, read November 14, 2026",
+   "date": "November 2026",
+   "url": "https://ranchwork.com/"
+  },
+  "courses": {
+   "name": "Beginning farmer and rancher programs, courses and land-link listings by state, read from each program's own page",
+   "date": "November 14, 2026",
+   "url": "https://farmanswers.org/"
+  }
+ }
+}
