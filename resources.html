@@ -23,6 +23,7 @@
       <a href="steady.html" data-carry="steady.html">Get steady</a>
       <a href="numbers.html" data-carry="numbers.html">What you can get to</a>
       <a href="resources.html" data-carry="resources.html" aria-current="page">Resources</a>
+      <span class="acct" id="account"></span>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <h1>Resources</h1>
@@ -59,6 +60,8 @@
 </div></footer>
 
 <script src="data/bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script src="site.js"></script>
 <script>
 (function () {
@@ -67,6 +70,7 @@
   GW.initTheme();
   var p = GW.readProfile();
   GW.carry(p);
+  GW.initAccount(p);
   var codes = Object.keys(names).sort(function (a, b) { return names[a] < names[b] ? -1 : 1; });
   codes.forEach(function (c) { var o = el('option', null, names[c] + (S.courses && S.courses.states && S.courses.states[c] ? '' : ' (national only)')); o.value = c; $('state').appendChild(o); });
   $('state').value = names[p.state] ? p.state : 'TX';

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your account</title>
+<meta name="description" content="Sign in with your email to keep your plan on every phone and computer. One row that only you can read, until you delete it.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+  .field input[type=email] { font: inherit; font-size: 17px; color: var(--fg); background: var(--field); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; min-height: 48px; width: 100%; }
+  .danger { border-color: var(--warn); }
+  .danger h3 { color: var(--warn); }
+  .btn.warn { background: var(--warn); border-color: var(--warn); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Pages">
+      <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
+      <a href="start.html" data-carry="start.html">Where you are</a>
+      <a href="path.html" data-carry="path.html">Your path</a>
+      <a href="steady.html" data-carry="steady.html">Get steady</a>
+      <a href="numbers.html" data-carry="numbers.html">What you can get to</a>
+      <a href="resources.html" data-carry="resources.html">Resources</a>
+      <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+    <h1>Your account</h1>
+    <p class="lede">Your plan already lives in the link. Signing in only adds a place to keep it, so it is there on your phone, your computer, and the library's computer. One row, yours alone, until you delete it.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card" id="setupMissing" hidden>
+    <p>Keeping plans is not switched on yet. The link still works: bookmark it.</p>
+  </div>
+
+  <div class="card" id="signedOut" hidden>
+    <h3>Sign in with your email</h3>
+    <p class="sub">No password. We send a link; you click it; you are in. The email is used for nothing else.</p>
+    <form id="signinForm" class="fields" autocomplete="on">
+      <div class="field"><label for="email">Your email</label><input id="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
+      <div class="actions"><button class="btn" type="submit" id="sendBtn">Send me the link</button></div>
+    </form>
+    <p class="flash" id="flash" aria-live="polite"></p>
+  </div>
+
+  <div class="card" id="signedIn" hidden>
+    <h3>Signed in</h3>
+    <p id="who"></p>
+    <div id="planState"></div>
+    <div class="actions">
+      <button class="btn" type="button" id="saveNow">Save the plan in this link</button>
+      <a class="btn ghost" id="openSaved" href="path.html" hidden>Open my saved plan</a>
+      <button class="btn ghost" type="button" id="signOut">Sign out</button>
+    </div>
+    <p class="flash" id="flash2" aria-live="polite"></p>
+  </div>
+
+  <div class="card danger" id="dangerCard" hidden>
+    <h3>Delete my account</h3>
+    <p>This removes your sign-in and your saved plan, today, for good. The link you have still works on its own; nothing in it is kept by us.</p>
+    <div class="actions"><button class="btn warn" type="button" id="deleteBtn">Delete my account</button></div>
+  </div>
+
+  <div class="card">
+    <h3>What is kept</h3>
+    <p>Your email, and the answers in your plan: the numbers and choices from Where you are and the debt list from Get steady. Nothing else. No name, no address, no account numbers, no documents. No one but you can read the row, and no one at all gets a report from it. <a href="privacy.html">The whole of it, in plain words.</a></p>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <p>If the sign-in link does not arrive in a few minutes, check the junk folder, then try again. Links expire after an hour.</p>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = GW.$;
+  GW.initTheme();
+  var p = GW.readProfile();
+  GW.carry(p);
+  if (!GW.supa()) { $('setupMissing').hidden = false; return; }
+
+  function flash(msg, id) { var f = $(id || 'flash'); if (f) { f.textContent = msg; } }
+  function show(session) {
+    $('signedOut').hidden = !!session;
+    $('signedIn').hidden = !session;
+    $('dangerCard').hidden = !session;
+    if (!session) return;
+    $('who').textContent = 'As ' + session.user.email + '.';
+    GW.loadPlan().then(function (row) {
+      var ps = $('planState'); ps.textContent = '';
+      if (row && row.profile && Object.keys(row.profile).length) {
+        var d = new Date(row.updated_at);
+        ps.appendChild(GW.el('p', null, 'A plan is saved, last changed ' + d.toLocaleDateString() + '.'));
+        $('openSaved').hidden = false; $('openSaved').href = GW.link('path.html', row.profile);
+      } else {
+        ps.appendChild(GW.el('p', 'muted', 'Nothing saved yet.'));
+      }
+      if (!p.has) { $('saveNow').hidden = true; } else { $('saveNow').hidden = false; }
+    }).catch(function (e) { flash('Could not read your plan: ' + (e.message || e) + '. If the table is not set up yet, the link still works.', 'flash2'); });
+  }
+
+  GW.session().then(show);
+  GW.supa().auth.onAuthStateChange(function (ev, session) { show(session); });
+
+  $('signinForm').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var email = $('email').value.trim();
+    if (!email) return;
+    $('sendBtn').disabled = true;
+    GW.signIn(email).then(function (r) {
+      if (r.error) throw r.error;
+      flash('Sent. Open the email on this device and click the link. Your plan in this link will be waiting to save.');
+      try { sessionStorage.setItem('gw-pending', GW.profileQuery(p)); } catch (e) {}
+    }).catch(function (e) { flash('Could not send: ' + (e.message || e)); }).then(function () { $('sendBtn').disabled = false; });
+  });
+  $('saveNow').addEventListener('click', function () {
+    GW.savePlan(p).then(function () { flash('Saved.', 'flash2'); GW.session().then(show); }, function (e) { flash('Could not save: ' + (e.message || e), 'flash2'); });
+  });
+  $('signOut').addEventListener('click', function () { GW.signOut().then(function () { location.href = GW.link('account.html', p); }); });
+  $('deleteBtn').addEventListener('click', function () {
+    if (!confirm('Delete your account and your saved plan? This cannot be undone.')) return;
+    GW.deleteMe().then(function () { alert('Deleted. Your link still works on its own.'); location.href = 'index.html'; }, function (e) { flash('Could not delete: ' + (e.message || e), 'flash2'); });
+  });
+
+  /* back from the email link with a plan waiting in the session: carry it */
+  try {
+    var pending = sessionStorage.getItem('gw-pending');
+    if (pending && !p.has) { sessionStorage.removeItem('gw-pending'); location.replace('account.html?' + pending); }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

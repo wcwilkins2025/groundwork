@@ -18,6 +18,7 @@
       <a href="steady.html" data-carry="steady.html">Get steady</a>
       <a href="numbers.html" id="numbersLink">What you can get to</a>
       <a href="resources.html" data-carry="resources.html">Resources</a>
+      <span class="acct" id="account"></span>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <h1>Where you are</h1>
@@ -94,6 +95,8 @@
 </div></footer>
 
 <script src="data/bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script src="site.js"></script>
 <script>
 (function () {
@@ -130,6 +133,7 @@
   }
   write(p);
   GW.carry(p);
+  GW.initAccount(p);
   $('state').addEventListener('change', function () { fillCounties($('state').value, ''); });
   $('form').addEventListener('input', function () { var q = read(); GW.carry(q); $('numbersLink').href = 'path.html?' + GW.profileQuery(q); });
   $('form').addEventListener('submit', function (ev) {

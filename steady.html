@@ -29,6 +29,7 @@
       <a href="steady.html" data-carry="steady.html" aria-current="page">Get steady</a>
       <a href="numbers.html" data-carry="numbers.html">What you can get to</a>
       <a href="resources.html" data-carry="resources.html">Resources</a>
+      <span class="acct" id="account"></span>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <h1>Get steady</h1>
@@ -87,6 +88,7 @@
   <div class="card noprint">
     <div class="actions">
       <a class="btn" id="pathBtn" href="path.html">Back to your path</a>
+      <button class="btn" type="button" id="saveBtn" hidden>Save my plan</button>
       <button class="btn ghost" type="button" id="printBtn">Print this sheet</button>
       <button class="btn ghost" type="button" id="linkBtn">Copy the link</button>
     </div>
@@ -106,6 +108,8 @@
 <script src="data/bundle.js"></script>
 <script src="engine/calc.js"></script>
 <script src="engine/path.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script src="site.js"></script>
 <script>
 (function () {
@@ -114,6 +118,7 @@
   GW.initTheme();
   var C = D.costs.items, S = D.stage || {}, SRC = D.costs.sources, names = D.land.state_names;
   var p = GW.readProfile();
+  GW.initAccount(p);
   var debts = GW.parseDebts(p.debts);
   if (!debts.length && p.debt > 0) debts = [{ name: 'What I owe', bal: p.debt, pay: p.debtm, rate: 0 }];
   var used = {};

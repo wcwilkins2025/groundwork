@@ -15,7 +15,10 @@ Grows out of the [Brotherhood Homestead Cost Calculator](https://github.com/wcwi
 | `steady.html` | Get steady: the budget sheet, what you owe and the payoff order (smallest first, payments roll on), health insurance at your income with the Medicaid and marketplace rules, and the jobs that pay while you learn. Printable. |
 | `resources.html` | Courses, the people to call, land-link programs, loans, job boards and the subsidy calculator, by state. |
 
-The plan rides in the link. Every page carries the answers in the query string, so a bookmark or a pasted link is the saved plan. Accounts come in a later milestone.
+| `account.html` | Sign in with an email link to keep the plan; save, open, sign out, delete my account. |
+| `privacy.html` | What is kept and what is not, in plain words. |
+
+The plan rides in the link. Every page carries the answers in the query string, so a bookmark or a pasted link is the saved plan. Signing in only adds a place to keep it: one row per man in a Supabase table that only he can read or write (`supabase/schema.sql`). `config.js` holds the project URL and the publishable key, which are made to be public; the secret key is never in the repo.
 
 ## The profile
 

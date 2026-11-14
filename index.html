@@ -18,6 +18,7 @@
       <a href="steady.html" data-carry="steady.html">Get steady</a>
       <a href="numbers.html" data-carry="numbers.html">What you can get to</a>
       <a href="resources.html" data-carry="resources.html">Resources</a>
+      <span class="acct" id="account"></span>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <h1>A place of your own. From wherever you are.</h1>
@@ -38,7 +39,7 @@
       <li><span class="k">1</span><span><b>Say where you are.</b> Nine plain questions: cash, debt, money coming in, who is coming with you, whether you have worked cattle. Skip what you do not know.</span></li>
       <li><span class="k">2</span><span><b>See your path.</b> Six stages from where you stand to living off a place. Which one you are in, the gate to the next, what to do this month, how long each one takes on your numbers.</span></li>
       <li><span class="k">3</span><span><b>Run your numbers.</b> What a place costs to set up and run in your county, and what it takes to live off it with cattle on leased grass. Change anything.</span></li>
-      <li><span class="k">4</span><span><b>Keep it.</b> Your plan rides in the link. Bookmark it, print it, paste it in a post. Nothing is stored anywhere else and no one can see it.</span></li>
+      <li><span class="k">4</span><span><b>Keep it.</b> Your plan rides in the link. Bookmark it, print it, paste it in a post. If you want it on every phone and computer, sign in with your email and it is kept for you, one row that only you can read, until you delete it. <a href="privacy.html">What is kept and what is not.</a></span></li>
     </ol>
     <div class="actions">
       <a class="btn" href="start.html" data-carry="start.html">Start your plan</a>
@@ -63,7 +64,9 @@
   <p>Planning figures from USDA, FSA, BLS, HUD, extension services and other public tables, with dates and links on every page. Not advice from a licensed anyone. Get three bids on anything over a few thousand dollars, and talk to the county before you buy. Built on the <a href="https://wcwilkins2025.github.io/homestead-cost-calculator/" rel="noopener">Brotherhood Homestead Cost Calculator</a> and the <a href="https://wcwilkins2025.github.io/brotherhood-land-finder/" rel="noopener">Land Finder</a>.</p>
 </div></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script src="site.js"></script>
-<script>GW.initTheme(); GW.carry(GW.readProfile());</script>
+<script>GW.initTheme(); GW.carry(GW.readProfile()); GW.initAccount(GW.readProfile());</script>
 </body>
 </html>
