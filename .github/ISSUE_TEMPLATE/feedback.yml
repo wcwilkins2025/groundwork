@@ -1,0 +1,12 @@
+name: Feedback or an idea
+description: A stage that is missing a step, a program worth adding, a word that is wrong, or anything else.
+title: "[Idea] "
+labels: ["feedback"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your feedback
+      description: Plain words are fine. If it is a program or a data source, paste the link. Nothing about your own money or family, please; this is public.
+    validations:
+      required: true

@@ -1,0 +1,43 @@
+name: A figure or a rule is wrong
+description: A cost, wage, rent, land price, program rule or stage gate is wrong or out of date.
+title: "[Figure] "
+labels: ["figures"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks. The fastest fix is a link to the public page that shows the right number.
+        This is a public page. Do not paste your plan link or anything about your own money or family.
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which page
+      options:
+        - Home
+        - Start (the questions)
+        - Your path (the stages)
+        - Steady income
+        - The numbers (cost calculator)
+        - Resources
+        - Account
+        - Privacy
+    validations:
+      required: true
+  - type: input
+    id: figure
+    attributes:
+      label: Which figure or rule
+      placeholder: Fannin County rent, 3 bedroom
+    validations:
+      required: true
+  - type: textarea
+    id: whats_wrong
+    attributes:
+      label: What the page says, and what is correct
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Link to the public page that shows the right answer
+      placeholder: https://

@@ -66,6 +66,15 @@ Serve the folder with any static server, or open the pages from the file:
 python -m http.server 8789
 ```
 
+## Bugs, wrong figures and feedback
+
+Issue forms: https://github.com/wcwilkins2025/groundwork/issues/new/choose
+
+Every page ends with three buttons: Report a bug, A figure is wrong, Send
+feedback. Each opens the matching form with the page name filled in. Posting
+needs a free GitHub account. The report link never carries the query string,
+which is the man's plan, and the forms tell him not to paste it.
+
 ## Honest limits
 
 These are planning figures, not quotes and not advice from a licensed anyone. Rents, wages, premiums and loan rates all carry a date; check the source before acting on a number. The path assumes a man saves every spare dollar, which no one does every month.

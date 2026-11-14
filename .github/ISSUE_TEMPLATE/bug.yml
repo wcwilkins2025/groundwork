@@ -1,0 +1,36 @@
+name: Something on the page is broken
+description: A button, the sign-in link, saving, printing or a page does not work right.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a public page. Do not paste your plan link; it carries your answers. Describe the problem in words.
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which page
+      options:
+        - Home
+        - Start (the questions)
+        - Your path (the stages)
+        - Steady income
+        - The numbers (cost calculator)
+        - Resources
+        - Account
+        - Privacy
+    validations:
+      required: true
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Phone or computer, and which browser
+      placeholder: Android, Chrome

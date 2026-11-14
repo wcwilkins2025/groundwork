@@ -152,5 +152,34 @@
   };
   GW.flash = function (msg) { var f = document.getElementById('flash'); if (f) { f.textContent = msg; setTimeout(function () { f.textContent = ''; }, 5000); } };
 
+  /* ---------- bug reports and feedback: GitHub issue forms, added to every footer.
+     The link carries the page name only. Never the query string, which is the man's plan. */
+  var ISSUES = 'https://github.com/wcwilkins2025/groundwork/issues/new';
+  var PAGE_NAMES = { 'index.html': 'Home', 'start.html': 'Start (the questions)', 'path.html': 'Your path (the stages)', 'steady.html': 'Steady income',
+    'numbers.html': 'The numbers (cost calculator)', 'resources.html': 'Resources', 'account.html': 'Account', 'privacy.html': 'Privacy' };
+  GW.issueUrl = function (template) {
+    var file = (location.pathname.split('/').pop() || 'index.html');
+    var q = new URLSearchParams({ template: template });
+    if (PAGE_NAMES[file]) q.set('page', PAGE_NAMES[file]);
+    return ISSUES + '?' + q.toString();
+  };
+  GW.initFeedback = function () {
+    var wrap = document.querySelector('footer .wrap');
+    if (!wrap || document.getElementById('feedback')) return;
+    var box = GW.el('div', 'feedback'); box.id = 'feedback';
+    box.appendChild(GW.el('strong', null, 'Found a problem or have an idea?'));
+    var row = GW.el('div', 'buttons');
+    [['bug.yml', 'Report a bug', 'a button, sign-in, saving or printing'],
+     ['wrong-figure.yml', 'A figure is wrong', 'a cost, rate, rule or table'],
+     ['feedback.yml', 'Send feedback', 'a missing step, a program, anything']].forEach(function (t) {
+      var a = GW.el('a', 'btn ghost', t[1]); a.href = GW.issueUrl(t[0]); a.target = '_blank'; a.rel = 'noopener';
+      a.appendChild(GW.el('small', null, t[2])); row.appendChild(a);
+    });
+    box.appendChild(row);
+    box.appendChild(GW.el('p', null, "Reports go to the project's public issue page on GitHub, so you need a free GitHub account to post one. The report link carries only the page name, never your plan. Do not paste your plan link into a report. No GitHub? Say it in the Brotherhood group instead."));
+    wrap.appendChild(box);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', GW.initFeedback); else GW.initFeedback();
+
   window.GW = GW;
 })();
