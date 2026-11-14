@@ -262,6 +262,12 @@
     s4.cowsNow = num(p.cows_n);
     s4.startHalf = s4.own && s4.own.head ? Math.max(s4.cowsNow, s4.own.startHalf) : null;
     s4.rampYears = s4.own && s4.own.head ? (s4.startHalf >= s4.own.head ? 0 : Math.round(calc.rampYears(s4.startHalf, s4.own.head, data))) : null;
+    if (s4.gapYear <= 0 || (s4.own && s4.own.head && s4.cowsNow >= s4.own.head)) {
+      where.done.s4 = true;
+      where.current = 's6';
+      for (var k = 0; k < STAGES.length; k++) { if (!where.done[STAGES[k].key]) { where.current = STAGES[k].key; break; } }
+      where.index = STAGES.map(function (s) { return s.key; }).indexOf(where.current);
+    }
     s4.months = where.done.s4 ? 0 : (s4.rampYears ? s4.rampYears * 12 : (s4.gapYear <= 0 ? 0 : null));
     out.stages.push(s4);
 

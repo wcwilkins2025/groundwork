@@ -191,7 +191,7 @@
   stage('s3', 'First cattle without capital', 'You do not need to own a cow to be in the cattle business. Other men own cows and need grass and hands. Leased grass plus panels and a chute puts you in, while the job keeps paying the bills.', 'Running cattle on leased grass, yours or another man\'s, while the job continues.', f3, m3, [cite(C.custom_care_day.source), cite(C.cow_share_operator.source), cite(C.lease_rate_us.source), cite(C.handling_setup.source), cite(C.fsa_microloan_max.source), cite(C.fsa_operating_rate.source)]);
 
   /* 4 */
-  var f4 = [[money(rh(s4.gapYear)), 'a year the cattle must cover, renting a house']];
+  var f4 = s4.gapYear <= 0 ? [['Covered', 'what you keep from work covers the family, renting a house']] : [[money(rh(s4.gapYear)), 'a year the cattle must cover, renting a house']];
   if (s4.own && s4.own.head) { f4.push([s4.own.head + ' cows', 'on ' + fmt(s4.own.acres) + ' leased acres, owned outright']); f4.push([money(rh(s4.own.cashToStart)), 'to start, with ' + n.runwayMonths + ' months in hand']); f4.push([s4.rampYears + ' years', 'from ' + s4.startHalf + ' cows keeping heifers']); }
   var m4 = [];
   if (s4.gapYear <= 0) m4.push('What you keep from work already covers the family. Every cow from here is money in the bank or a smaller job.');

@@ -100,6 +100,8 @@ check('what he has: living on the lease adds a pad from the page\'s own well, po
 check('what he has: no rent line while living on the lease', hv.needs.rent === 0 && hv.needs.live === 'lease');
 check('what he has: 160 leased acres cap the head at 40', hv.stages[2].headByGrass === 40 && hv.stages[2].head === Math.min(40, hv.stages[2].headByHours));
 check('what he has: cows of his own put stage 3 behind him', hv.where.done.s3 && hv.where.current !== 's3');
+const covered = P.path(Object.assign({}, man, { inc: 15000, cash: 100000, exp: 'own', spend: 4000, health: 'other' }), D, calc);
+check('income that covers the family marks stage 4 done and puts him at stage 5', covered.where.done.s4 && covered.where.current === 's5', covered.where.current);
 check('what he has: the herd ramp starts from his 12 cows', hv.stages[3].startHalf >= 12);
 const hr = P.rungs(haves, D, calc);
 check('what he has: the cows he has are a rung, reachable now on his grass', hr.rungs.find((x) => x.key === 'have') && hr.rungs.find((x) => x.key === 'have').reach.months === 0);
