@@ -103,7 +103,15 @@ check('what he has: 160 leased acres cap the head at 40', hv.stages[2].headByGra
 check('what he has: cows of his own put stage 3 behind him', hv.where.done.s3 && hv.where.current !== 's3');
 const covered = P.path(Object.assign({}, man, { inc: 15000, cash: 100000, exp: 'own', spend: 4000, health: 'other' }), D, calc);
 check('income that covers the family marks stage 4 done and puts him at stage 5', covered.where.done.s4 && covered.where.current === 's5', covered.where.current);
-check('what he has: the herd ramp starts from his 12 cows', hv.stages[3].startHalf >= 12);
+check('what he has: the herd starts from his 12 cows', hv.stages[3].start >= Math.min(12, hv.stages[3].own.head) && /12 you have/.test(hv.stages[3].startText), hv.stages[3].startText);
+check('what he has: his 12 cows on the lease count as money coming in', hv.needs.cattle > 0 && hv.needs.income === 5000 + hv.needs.cattle, hv.needs.cattle);
+check('cows with no grass yet are not counted as income', P.needs(Object.assign({}, man, { cows_n: 8 }), D, calc).cattle === 0);
+check('a hand already earning the ranch wage is not sent to a ranch hand job', !P.path(Object.assign({}, man, { inc: 2800, from: 'job', state: 'MO' }), D, calc).stages[0].jobFits);
+check('a disabled man with five hours a week is not sent to a full-time job', !P.path(Object.assign({}, man, { inc: 1400, from: 'pension', hours: 5 }), D, calc).stages[0].jobFits);
+check('stage 4 is not done for a man with no cattle, even when work covers the family', !P.path(Object.assign({}, man, { inc: 9000, cash: 30000, exp: 'two' }), D, calc).where.done.s4);
+check('shares that lose money at the state lease rate are not a rung', !P.rungs(Object.assign({}, man, { state: 'MO' }), D, calc).rungs.some((x) => x.key === 'share') && P.path(Object.assign({}, man, { state: 'MO' }), D, calc).stages[2].shareWorks === false);
+check('stage 5 takes a year at the least when it is ahead', P.path(steady, D, calc).stages[4].months >= 12);
+check('horses he owns are kept, not bought', !calc.compute(P.calcInput(Object.assign({}, man, { horses_n: 2 }), P.needs(man, D, calc), D), D).setup.some((l) => l.key === 'horses'));
 const hr = P.rungs(haves, D, calc);
 check('what he has: the cows he has are a rung, reachable now on his grass', hr.rungs.find((x) => x.key === 'have') && hr.rungs.find((x) => x.key === 'have').reach.months === 0);
 check('RV park lot rent is the estimate unless he gives a figure', P.needs(Object.assign({}, man, { live: 'rvpark' }), D).rent === items.rv_lot_monthly.typ && P.needs(Object.assign({}, man, { live: 'rvpark', rent: 500 }), D).rent === 500);

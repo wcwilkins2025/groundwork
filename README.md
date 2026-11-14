@@ -50,6 +50,7 @@ data/stage.json       wages, poverty line and subsidy scale, household by family
 data/bundle.js        all of the above in one script so the pages work from a plain file open
 scripts/              make_costs.py, make_stage.py, build_counties.py, bundle_data.py, make_sources.py
 tests/run_tests.js    checks the bundle, the path rules and the engine (Node)
+tests/scenarios.js    36 men at 36 starting points, run through the path, the rungs and the rendered page; prints each one and checks the rules that hold for all
 ```
 
 After editing any JSON or script:
@@ -58,6 +59,7 @@ After editing any JSON or script:
 python scripts/make_stage.py
 python scripts/bundle_data.py
 node tests/run_tests.js
+node tests/scenarios.js
 ```
 
 Serve the folder with any static server, or open the pages from the file:

@@ -137,7 +137,7 @@
 
   function render() {
     var q = Object.assign({}, p, { debts: debts });
-    var n = P.needs(q, D);
+    var n = P.needs(q, D, window.HCcalc);
     var surplus = Math.max(0, n.gap);
     $('heroIn').textContent = money(n.income); $('heroInSub').textContent = 'After tax.';
     $('heroOut').textContent = money(n.outgo); $('heroOutSub').textContent = 'For ' + (n.family === 1 ? 'one man' : n.family + ' people') + (p.county ? ' in ' + p.county + ' County' : ' in ' + names[p.state]) + '.';

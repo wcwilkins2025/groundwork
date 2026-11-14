@@ -118,7 +118,7 @@
       line(setup, 'cows', 'Bred cows', scale(item('cow_bred'), cows), src('cow_bred'), '', cows + ' head');
       if (inp.bull && cows >= 1) line(setup, 'bull', 'Bull', item('bull'), src('bull'), 'One bull covers up to 25 cows.');
     }
-    if (horses > 0) line(setup, 'horses', 'Horses', scale(item('horse'), horses), src('horse'), 'Sound, broke using horses.', horses + ' head');
+    if (horses > 0 && !inp.horses_owned) line(setup, 'horses', 'Horses', scale(item('horse'), horses), src('horse'), 'Sound, broke using horses.', horses + ' head');
     if (goats > 0) {
       line(setup, 'goats', 'Goat does', scale(item('goat_doe'), goats), src('goat_doe'), '', goats + ' head');
       line(setup, 'goat_buck', 'Buck', item('goat_buck'), src('goat_buck'));

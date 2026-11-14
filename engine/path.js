@@ -38,7 +38,7 @@
   }
 
   /* ---------- what the family needs each month, where he is now ---------- */
-  function needs(p, data) {
+  function needs(p, data, calc) {
     var C = data.costs.items, S = data.stage || {}, out = { parts: [] };
     var family = Math.max(1, num(p.adults, 1)) + num(p.kids, 0);
     out.family = family;
@@ -70,6 +70,19 @@
     var rentLabel = { lease: 'Rent (your own housing on the leased grass)', rvpark: 'RV lot rent', rent: 'Rent', family: 'Rent (with family)', house: 'Rent (a house you own)', land: 'Rent (land you own)' }[live] || 'Rent';
     out.parts.push({ key: 'rent', label: out.rentOwn ? 'Rent or lot rent' : rentLabel, monthly: out.rent, source: rentSrc, note: out.rentOwn ? 'Your figure.' : (live === 'rvpark' ? 'No public table for RV lots; put in your own figure on Where you are.' : '') });
 
+    /* cows he already owns on grass he already has: their calf money is money coming in, at typical prices */
+    out.cattle = 0; out.cattleNote = '';
+    var cowsNow = num(p.cows_n), grassAcres = num(p.grass_acres);
+    if (cowsNow > 0 && (grassAcres > 0 || p.place === 'own')) {
+      var land0 = (data.land.states && data.land.states[p.state]) || {};
+      var rate0 = grassAcres > 0 ? (num(p.grass_rate) > 0 ? num(p.grass_rate) : (land0.pasture_rent || C.lease_rate_us.typ)) : 0;
+      var netCow = C.calf_sale.typ - C.cow_annual.typ - C.lease_apc.typ * rate0;
+      var upkeep0 = grassAcres > 0 && calc ? calc.fenceFeet(grassAcres, 1, 1).perimeter * C.fence_barbed_per_ft.typ * C.fence_upkeep_pct.typ : 0;
+      out.cattle = Math.max(0, Math.round((cowsNow * netCow - upkeep0) / 12));
+      out.cattleNote = (cowsNow === 1 ? 'one cow' : cowsNow + ' cows') + ' at the typical calf price, after the keep' + (rate0 > 0 ? ' and the grass' : '') + (upkeep0 > 0 ? ' and the fence' : '') + '.';
+    }
+    out.incomeWork = Math.round(num(p.inc));
+    out.income = out.incomeWork + out.cattle;
     /* health insurance: through work is counted in his pay; otherwise the marketplace, capped by the subsidy rule when we have it */
     var health = 0, healthNote = '', healthSrc = C.health_family_monthly.source;
     if (p.health === 'work') { health = 0; healthNote = 'Through your job today. If you leave it, this line comes back.'; }
@@ -79,21 +92,23 @@
       var full = family === 1 ? (bench || C.health_family_monthly.low) : C.health_family_monthly.typ;
       health = full;
       healthNote = family === 1 ? 'One man on the marketplace, full price, before any subsidy.' : 'A family on the marketplace, full price, before any subsidy.';
-      if (S.aca && S.aca.fpl && S.aca.applicable_pct && num(p.inc) > 0) {
+      if (S.aca && S.aca.fpl && S.aca.applicable_pct) {
         var fpl = S.aca.fpl[String(Math.min(family, 8))];
+        var incAll = out.income;
         if (fpl) {
-          var pctFpl = (num(p.inc) * 12) / fpl * 100;
+          var pctFpl = (incAll * 12) / fpl * 100;
+          var below = incAll > 0 ? 'Below the poverty line (' + Math.round(pctFpl) + '% of it at your income)' : 'With nothing coming in you are below the poverty line';
           var cap = pctFpl >= 100 ? capShare(S.aca.applicable_pct, pctFpl) : null;
           out.pctFpl = Math.round(pctFpl);
           if (pctFpl < 100) {
             out.fplIncomeMonthly = Math.ceil(fpl / 12);
             var expanded = S.medicaid ? S.medicaid.not_expanded.indexOf(p.state) < 0 : null;
-            if (expanded === true) { health = 0; healthNote = 'Below the poverty line (' + Math.round(pctFpl) + '% of it at your income). Your state expanded Medicaid, so you qualify for it up to ' + S.medicaid.limit_pct + '% of the line. Apply.'; }
-            else healthNote = 'Below the poverty line (' + Math.round(pctFpl) + '% of it at your income) the marketplace credit does not apply' + (expanded === false ? ', and your state did not expand Medicaid, so there is no help at this income' : '') + '. Income of $' + fmt(out.fplIncomeMonthly) + ' a month opens the credit, which caps the plan at ' + S.aca.applicable_pct[0][2].toFixed(1) + '% of income.';
+            if (expanded === true) { health = 0; healthNote = below + '. Your state expanded Medicaid, so you qualify for it up to ' + S.medicaid.limit_pct + '% of the line. Apply.'; }
+            else healthNote = below + (incAll > 0 ? ' the marketplace credit does not apply' : ', where the marketplace credit does not apply') + (expanded === false ? ', and your state did not expand Medicaid, so there is no help at this income' : '') + '. Income of $' + fmt(out.fplIncomeMonthly) + ' a month opens the credit, which caps the plan at ' + S.aca.applicable_pct[0][2].toFixed(1) + '% of income.';
           }
           if (cap != null && S.medicaid && S.medicaid.not_expanded.indexOf(p.state) < 0 && pctFpl <= S.medicaid.limit_pct) { health = 0; healthNote = 'At ' + Math.round(pctFpl) + '% of the poverty line in a state that expanded Medicaid, you qualify for Medicaid (up to ' + S.medicaid.limit_pct + '%). Apply.'; cap = null; }
           if (cap != null) {
-            var capped = Math.round(num(p.inc) * cap / 100);
+            var capped = Math.round(incAll * cap / 100);
             if (capped < health) { health = capped; healthNote = 'Marketplace plan capped at ' + cap.toFixed(1) + '% of income at your income (' + Math.round(pctFpl) + '% of the poverty line). Check it at the subsidy calculator.'; }
             out.pctFpl = Math.round(pctFpl);
           }
@@ -109,7 +124,6 @@
     /* a spending figure as big as the income is almost always rent, insurance or debt counted twice */
     out.spendWarning = own && num(p.inc) > 0 && num(p.spend) >= num(p.inc) * 0.6 ? 'Your spending figure, $' + fmt(num(p.spend)) + ' a month, is most of what comes in. It should not include rent, health insurance or debt payments; those are counted on their own lines. Check it on Where you are.' : '';
     out.outgo = out.household + out.rent + out.health + out.debt;
-    out.income = Math.round(num(p.inc));
     out.gap = out.income - out.outgo;
     var runwayMonths = (S.runway && S.runway.months) || 3;
     out.runwayMonths = runwayMonths;
@@ -178,7 +192,7 @@
   /* ---------- the whole path ---------- */
   function path(p, data, calc) {
     var C = data.costs.items, S = data.stage || {};
-    var n = needs(p, data);
+    var n = needs(p, data, calc);
     n.cash = Math.round(num(p.cash));
     var where = place(p, n);
     var st = p.state, land = (data.land.states && data.land.states[st]) || {};
@@ -208,7 +222,9 @@
       s1.debtMonths = pay > 0 ? Math.ceil(s1.debt / pay) : null;
     }
     /* what stage 1 is about for this man: no money coming in, payments eating it, spending above it, or a cushion still to build */
-    s1.jobFits = n.income === 0 || (s1.ranchMonthly ? n.income < s1.ranchMonthly * 1.5 : n.income < 4000);
+    var earner = p.from === 'job' || p.from === 'own';   /* already working: a hand job is a sideways move unless it pays more */
+    var canWork = !(p.from === 'pension' && num(p.hours) < 20);   /* retired or disabled with few hours: not sent to a full-time job */
+    s1.jobFits = n.income === 0 || (canWork && (s1.ranchMonthly ? n.income < s1.ranchMonthly * (earner ? 0.9 : 1.5) : n.income < (earner ? 2500 : 4000)));
     s1.debtHeavy = n.income > 0 && n.debt >= n.income * 0.3;
     s1.spendHeavy = n.householdAverage > 0 && n.household > n.householdAverage * 1.25;
     s1.cashYears = n.gap < 0 && n.cash > 0 ? Math.round(n.cash / (-n.gap) / 12 * 10) / 10 : null;
@@ -240,6 +256,7 @@
       var x = calc.dealPerHead(d, inp, data);
       s3.deals[d] = { net: Math.round(x.net), capital: Math.round(x.capital), acres: x.acres, hours: x.hours, name: x.name, yearly: Math.round(x.net * s3.headByHours), acresNeeded: Math.round(x.acres * s3.headByHours) };
     });
+    s3.shareWorks = s3.deals.share.net > 0;
     s3.handling = p.has_panels ? 0 : C.handling_setup.typ;
     s3.setupNeeded = s3.handling + s3.pad;
     s3.handlingShort = Math.max(0, s3.setupNeeded - Math.max(0, n.cash - n.runwayTarget));
@@ -260,15 +277,24 @@
     s4.own = rp.solve.own; s4.share = rp.solve.share; s4.custom = rp.solve.custom;
     s4.growth = plan.growth;
     s4.cowsNow = num(p.cows_n);
-    s4.startHalf = s4.own && s4.own.head ? Math.max(s4.cowsNow, s4.own.startHalf) : null;
-    s4.rampYears = s4.own && s4.own.head ? (s4.startHalf >= s4.own.head ? 0 : Math.round(calc.rampYears(s4.startHalf, s4.own.head, data))) : null;
-    if (s4.gapYear <= 0 || (s4.own && s4.own.head && s4.cowsNow >= s4.own.head)) {
+    /* the start of the herd: the cows he has, plus what a microloan buys */
+    s4.start = s4.own && s4.own.head ? Math.min(s4.own.head, s4.cowsNow + s3.cowsPerMicro) : null;
+    s4.startHalf = s4.start;
+    s4.startIsHis = s4.start != null && s4.cowsNow >= s4.start;
+    s4.startText = s4.start == null ? '' : s4.startIsHis ? cows(s4.start) + ' you have' : s4.cowsNow > 0 ? cows(s4.start) + ' (the ' + s4.cowsNow + ' you have and the rest on a microloan)' : cows(s4.start) + ' a microloan buys';
+    s4.rampYears = s4.start != null ? (s4.start >= s4.own.head ? 0 : Math.round(calc.rampYears(s4.start, s4.own.head, data))) : null;
+    s4.hoursWeek = s4.own && s4.own.head ? s4.own.hoursWeek : 0;
+    s4.hoursShort = s4.hoursWeek > num(p.hours);
+    s4.nearly = s4.gapYear > 0 && !!(s4.own && s4.own.head && s4.own.head <= 2);   /* a cow or two, or a leaner month */
+    s4.covered = s4.gapYear <= 0 || s4.nearly || !!(s4.own && s4.own.head && s4.cowsNow >= s4.own.head);
+    /* grown means covered while running cattle; a job that covers the family is not a herd */
+    if (s4.covered && where.done.s3) {
       where.done.s4 = true;
       where.current = 's6';
       for (var k = 0; k < STAGES.length; k++) { if (!where.done[STAGES[k].key]) { where.current = STAGES[k].key; break; } }
       where.index = STAGES.map(function (s) { return s.key; }).indexOf(where.current);
     }
-    s4.months = where.done.s4 ? 0 : (s4.rampYears ? s4.rampYears * 12 : (s4.gapYear <= 0 ? 0 : null));
+    s4.months = where.done.s4 || s4.covered ? 0 : (s4.rampYears ? s4.rampYears * 12 : (s4.own && s4.own.head ? 12 : null));
     out.stages.push(s4);
 
     /* stage 5: land, with the FSA down payment program */
@@ -290,7 +316,8 @@
     if (S.fsa && S.fsa.down_payment_rate != null) s5.downRate = S.fsa.down_payment_rate;
     s5.cashShort = Math.max(0, s5.down - Math.max(0, n.cash - n.runwayTarget));
     s5.monthsToDown = s5.cashShort === 0 ? 0 : surplus > 0 ? Math.ceil(s5.cashShort / surplus) : null;
-    s5.months = where.done.s5 ? 0 : (s5.monthsToDown == null ? null : s5.monthsToDown);
+    s5.floorMonths = 12;   /* the FSA paperwork starts a year ahead, and the place has to be found */
+    s5.months = where.done.s5 ? 0 : (s5.monthsToDown == null ? null : Math.max(s5.floorMonths, s5.monthsToDown));
     s5.experienceYears = (S.fsa && S.fsa.ownership_experience_years) || 3;
     s5.motorhome = ownHousing;
     s5.movingMobile = !!p.has_mobile && !p.has_rv && p.place !== 'motorhome';
@@ -351,8 +378,8 @@
         takes: setupTakes + ', the lease on paper, and a man who trusts you with his cattle.',
         leads: 'Nothing to buy, no price risk. It is the cheapest way to be running cattle, and the owner you care for is the man who leases you cows on shares next.' + (p.place === 'motorhome' ? ' Ask whether your motorhome can sit on the lease: a man living on the grass is worth more to the owner, and the lot rent goes away.' : ''),
         reach: when(handlingMonths == null ? null : Math.max(afterProving, handlingMonths), afterProving > 0 ? 'after stage 2' : 'when the setup money is there'), source: C.custom_care_day.source });
-      /* rung 2: cows on shares */
-      out.rungs.push({ key: 'share', title: 'Cows on shares', figure: Math.max(0, Math.round(head * ds.net - upkeep)), unit: 'a year', head: head, acres: Math.round(head * ds.acres),
+      /* rung 2: cows on shares, where the grass is cheap enough for them to clear anything */
+      if (s3.shareWorks) out.rungs.push({ key: 'share', title: 'Cows on shares', figure: Math.max(0, Math.round(head * ds.net - upkeep)), unit: 'a year', head: head, acres: Math.round(head * ds.acres),
         what: head + ' cows a rancher keeps owning, on your leased grass' + grassNote + '. You supply grass, hay, labor and management and keep about ' + Math.round(C.cow_share_operator.typ * 100) + '% of the calf money.',
         takes: (s3.handling > 0 ? 'The same panels and chute, ' : 'Your panels and chute, ') + 'the lease, and the rancher who is slowing down.',
         leads: 'Calves you can keep as heifers, and the cows themselves when he is ready to sell.',
@@ -367,7 +394,7 @@
       var upNow = s3.grassAcres > 0 ? calc.fenceFeet(s3.grassAcres, 1, 1).perimeter * C.fence_barbed_per_ft.typ * C.fence_upkeep_pct.typ : 0;
       out.rungs.push({ key: 'have', title: 'The cows you have', figure: Math.max(0, Math.round(cowsNow * ownNet - upNow)), unit: 'a year', head: cowsNow, acres: Math.round(cowsNow * planNow.perHead.own.acres), headline: cowsNow + ' cows',
         what: cowsNow + ' cows of your own' + (s3.grassAcres > 0 ? grassNote : ', needing about ' + fmt(cowsNow * planNow.perHead.own.acres) + ' acres of grass') + ', clearing about $' + fmt(Math.max(0, Math.round(ownNet))) + ' a head a year at typical prices after the keep and the lease.',
-        takes: s3.grassAcres > 0 ? 'Nothing you do not have.' : 'Grass to put them on.',
+        takes: (s3.grassAcres > 0 ? 'Nothing you do not have.' : 'Grass to put them on.') + (s3.handlingShort > 0 ? ' The panels and chute, about $' + fmt(s3.handling) + ': one cow sold buys them.' : ''),
         leads: 'Keep the heifers and they grow about ' + Math.round(planNow.growth * 100) + '% a year on their own.',
         reach: when(s3.grassAcres > 0 ? 0 : (handlingMonths == null ? null : Math.max(afterProving, handlingMonths)), s3.grassAcres > 0 ? 'now' : 'when the grass is found'), source: C.calf_sale.source });
     }
@@ -388,14 +415,17 @@
     }
 
     /* rung 4: a herd that carries the family */
-    if (s4.own && s4.own.head) {
-      out.rungs.push({ key: 'herd', title: 'A herd that carries the family', figure: s4.own.head, unit: 'cows', head: s4.own.head, acres: s4.own.acres, headline: s4.own.head + ' cows',
-        what: s4.own.head + ' cows on about ' + fmt(s4.own.acres) + ' leased acres clear what the family needs renting a house' + (plan.work > 0 ? ', with what you keep from work' : '') + '. About ' + s4.own.hoursWeek + ' hours a week.',
-        takes: s4.rampYears === 0 ? 'You have the cows. Grass for them and the hours.' : 'Years, not money: start with ' + s4.startHalf + (s4.cowsNow > 0 ? ' (the ' + s4.cowsNow + ' you have' + (s4.startHalf > s4.cowsNow ? ' and a few more' : '') + ')' : '') + ' and keep the heifers, about ' + s4.rampYears + ' years. Or buy in faster with calf checks and an FSA operating loan.',
+    if (s4.own && s4.own.head && !s4.nearly) {
+      var ownRung = out.rungs.filter(function (x) { return x.key === 'own'; })[0];
+      var herdFrom = s4.cowsNow >= s4.own.head ? 0 : s4.startIsHis ? (s3.grassAcres > 0 ? 0 : (handlingMonths == null ? null : Math.max(afterProving, handlingMonths))) : (ownRung ? ownRung.reach.months : null);
+      var hoursNote = s4.hoursShort ? ' That is more than the ' + p.hours + ' hours you have: the herd grows into the job, or the job shrinks to fit it.' : '';
+      out.rungs.push({ key: 'herd', title: 'A herd that carries the family', figure: s4.own.head, unit: 'cows', head: s4.own.head, acres: s4.own.acres, headline: cows(s4.own.head),
+        what: cows(s4.own.head) + ' on about ' + fmt(s4.own.acres) + ' leased acres clear what the family needs renting a house' + (plan.work > 0 ? ', with what you keep from work' : '') + '. About ' + s4.own.hoursWeek + ' hours a week.' + hoursNote,
+        takes: s4.cowsNow >= s4.own.head ? 'You have the cows. Grass for them and the hours.' : s4.rampYears > 0 ? 'Years, not money: start with the ' + s4.startText + ' and keep the heifers, about ' + s4.rampYears + ' years. Or buy in faster with calf checks and an FSA operating loan.' : 'The ' + s4.startText + ' are the herd. Grass for them and the hours.',
         leads: 'The point where the job becomes optional.',
-        reach: when(afterProving + (s4.rampYears || 0) * 12, s4.rampYears ? 'years out' : 'now'), source: C.calf_sale.source });
-    } else if (s4.gapYear <= 0) {
-      out.rungs.push({ key: 'herd', title: 'The family is covered', figure: 0, unit: '', what: 'What you keep from work already covers rent, household and health insurance. Every cow from here is money in the bank or a smaller job.', takes: '', leads: '', reach: when(0, 'now'), source: '' });
+        reach: when(herdFrom == null ? null : herdFrom + (s4.rampYears || 0) * 12, s4.rampYears ? 'years out' : 'now'), source: C.calf_sale.source });
+    } else if (s4.gapYear <= 0 || s4.nearly) {
+      out.rungs.push({ key: 'herd', title: 'The family is covered', figure: 0, unit: '', what: s4.nearly ? 'What you keep from work covers rent, household and health insurance all but ' + money(rh(s4.gapYear)) + ' a year. A cow or two, or a leaner month, closes that. Every cow past it is money in the bank or a smaller job.' : 'What you keep from work already covers rent, household and health insurance. Every cow from here is money in the bank or a smaller job.', takes: '', leads: '', reach: when(0, 'now'), source: '' });
     }
 
     /* rung 5: the place */
@@ -403,22 +433,27 @@
     var rate = (s5.fsaOwnershipRate || 6.25) / 100 / 12, nper = 40 * 12;
     var payment = loan > 0 ? Math.round(loan * rate / (1 - Math.pow(1 + rate, -nper)) * 12) : 0;
     var downMonths = s5.monthsToDown;
-    out.rungs.push({ key: 'place', title: 'A place of your own', figure: s5.down, unit: 'down, ' + s5.downPct + '%', what: (s5.motorhome ? 'Your motorhome is the house. ' + s5.acres + ' acres in ' + (inp.county || names[st]) + ' at $' + fmt(s5.pricePerAcre) + ' with a well, septic, power and fence, about ' + money(rh(s5.setupTotal)) + ' all in, and you park on it.' : 'A modest place in ' + (inp.county || names[st]) + ': ' + s5.acres + ' acres at $' + fmt(s5.pricePerAcre) + ' with the house, well, septic and fence, about ' + money(rh(s5.setupTotal)) + ' all in.') + ' The FSA ownership programs lend the rest over 40 years at ' + (s5.fsaOwnershipRate || 6.25) + '%, about ' + money(rh(payment)) + ' a year.',
+    if (r.where.done.s5) {
+      var finish = Math.max(0, s5.setupTotal - s5.landCost);
+      out.rungs.push({ key: 'place', title: 'The place you have', figure: finish, unit: 'to finish it, at most', what: 'You own the land. What is left is whatever of the well, septic, power and fence is not there yet; the figure is all of it new, so yours is less.',
+        takes: 'Line by line under The whole place: take out what you already have.', leads: 'Stage 6. The place, the cattle and what you keep cover the family.', reach: when(0, 'now'), source: C.fsa_operating_max.source, payment: 0, setup: s5.setupTotal });
+    } else out.rungs.push({ key: 'place', title: 'A place of your own', figure: s5.down, unit: 'down, ' + s5.downPct + '%', what: (s5.motorhome ? 'Your motorhome is the house. ' + s5.acres + ' acres in ' + (inp.county || names[st]) + ' at $' + fmt(s5.pricePerAcre) + ' with a well, septic, power and fence, about ' + money(rh(s5.setupTotal)) + ' all in, and you park on it.' : 'A modest place in ' + (inp.county || names[st]) + ': ' + s5.acres + ' acres at $' + fmt(s5.pricePerAcre) + ' with the house, well, septic and fence, about ' + money(rh(s5.setupTotal)) + ' all in.') + ' The FSA ownership programs lend the rest over 40 years at ' + (s5.fsaOwnershipRate || 6.25) + '%, about ' + money(rh(payment)) + ' a year.',
       takes: s5.experienceYears + ' years of experience, the down payment' + (s5.cashShort > 0 ? ' (you are about ' + money(rh(s5.cashShort)) + ' short of it)' : ' (you have it)') + ', and the place found. ' + (s5.movingMobile ? 'Moving the mobile home you own runs about $' + fmt(C.mobile_setup.typ) + ' for delivery, pad, tie-downs and hookups, and that is in the figure. ' : '') + (s5.motorhome ? 'Land with a well and power already on it saves the most; ask the lease owner first whether you can park on the grass and skip buying for now.' : 'Buy one with the house, well and septic already there.'),
       leads: 'Stage 6. The place, the cattle and what you keep cover the family.',
-      reach: when(downMonths == null ? null : Math.max(afterProving + 12, downMonths), 'when the down payment is there'), source: C.fsa_operating_max.source, payment: payment, setup: s5.setupTotal });
+      reach: when(r.monthsUnknown || downMonths == null ? null : r.months, 'when the down payment is there'), source: C.fsa_operating_max.source, payment: payment, setup: s5.setupTotal });
 
     /* soonest first; ties keep their order; the place stays last */
     var place = out.rungs.pop();
     out.rungs = out.rungs.map(function (x, i) { return [x, i]; }).sort(function (a, b) { var ma = a[0].reach.months == null ? 1e9 : a[0].reach.months, mb = b[0].reach.months == null ? 1e9 : b[0].reach.months; return ma - mb || a[1] - b[1]; }).map(function (x) { return x[0]; });
     out.rungs.push(place);
     /* the three headline figures */
-    var first = out.rungs.filter(function (x) { return x.reach.months === 0 && x.figure > 0 && x.key !== 'job'; })[0] || out.rungs.filter(function (x) { return x.reach.months === 0 && x.figure > 0; })[0] || out.rungs[0];
+    var first = out.rungs.filter(function (x) { return x.reach.months === 0 && x.figure > 0 && x.key !== 'job' && x.key !== 'place'; })[0] || out.rungs.filter(function (x) { return x.reach.months === 0 && x.figure > 0 && x.key !== 'place'; })[0] || out.rungs[0];
     var mid = out.rungs.filter(function (x) { return x.key === 'own'; })[0] || out.rungs.filter(function (x) { return x.key === 'share' || x.key === 'custom'; })[0];
     out.heroes = { now: first, next: mid, place: out.rungs[out.rungs.length - 1] };
     return out;
   }
   function money(n) { return (n < 0 ? '-$' : '$') + fmt(Math.abs(n)); }
+  function cows(n) { return n === 1 ? '1 cow' : fmt(n) + ' cows'; }
   function rh(n) { return Math.round(n / 100) * 100; }
 
   /* the calculator inputs that follow from his profile */
@@ -435,12 +470,12 @@
       well: 'well', well_depth: wd ? wd.typ : data.costs.well_depth_default.typ, septic: 'conventional', power: 'grid', power_distance: 300,
       fence_type: 'barbed', fence_shape: '1', pastures: 2, fence_existing_pct: 0, barn_sqft: 0,
       tractor: false, trailer: !p.has_trailer, truck: !p.has_truck, utv: false,
-      cows: 0, bull: false, horses: 0, goats: 0, hens: 12, garden: true, trees: 0,
+      cows: 0, bull: false, horses: num(p.horses_n), horses_owned: num(p.horses_n) > 0, goats: 0, hens: 12, garden: true, trees: 0,
       town_monthly: n.outgo, household_monthly: n.household, health_monthly: n.health, runway_months: n.runwayMonths,
       cow_deal: 'own', lease_acres: num(p.grass_acres), lease_rate: num(p.grass_rate) > 0 ? num(p.grass_rate) : (land.pasture_rent || C.lease_rate_us.typ), graze_apc: C.lease_apc.typ, sell_how: 'barn',
       work_income: Math.round(num(p.inc) * 12), rent_monthly: n.rent
     };
   }
 
-  root.GWpath = { STAGES: STAGES, needs: needs, place: place, path: path, rungs: rungs, calcInput: calcInput, debtPlan: debtPlan, fmt: fmt };
+  root.GWpath = { STAGES: STAGES, needs: needs, place: place, path: path, rungs: rungs, calcInput: calcInput, debtPlan: debtPlan, fmt: fmt, cows: cows };
 })(typeof window !== 'undefined' ? window : globalThis);

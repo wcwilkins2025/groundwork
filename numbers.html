@@ -1043,7 +1043,7 @@
   var profile = window.GW ? GW.readProfile() : null;
   if (profile && profile.has) {
     /* the eight answers set the inputs; any calculator id in the link still wins */
-    var n0 = GWpath.needs(profile, D);
+    var n0 = GWpath.needs(profile, D, calc);
     var fromProfile = GWpath.calcInput(profile, n0, D);
     fromProfile.household_monthly = n0.household; fromProfile.health_monthly = n0.health; fromProfile.rent_monthly = n0.rent; fromProfile.town_monthly = n0.outgo;
     var explicit = urlVals || {};
