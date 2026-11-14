@@ -83,6 +83,11 @@ check('stage 5 down payment = 5% of a modest place', near(s5.down, s5.setupTotal
 check('calculator input carries his income as work income', r2.calcInput.work_income === 9000 * 12);
 check('calculator input uses the county land value', r2.calcInput.price_per_acre > 0 && r2.calcInput.county === 'Fannin County');
 
+const retiree = P.path({ cash: 100000, debt: 400000, debtm: 7000, inc: 15000, from: 'pension', spend: 8000, rent: 1000, adults: 2, kids: 0, exp: 'own', place: 'rent', move: 'yes', state: 'AZ', county: '', hours: 20, health: 'other', has: true }, D, calc);
+check('retiree: $1,000 short, health not charged', retiree.needs.gap === -1000 && retiree.needs.health === 0, retiree.needs.gap);
+check('retiree: the job is not the advice; the payments are', !retiree.stages[0].jobFits && retiree.stages[0].debtHeavy && retiree.stages[0].cashYears === 8.3);
+check('a man with no income is pointed at the job', P.path(Object.assign({}, man, { inc: 0 }), D, calc).stages[0].jobFits);
+
 console.log('4b. Paying off what he owes');
 const dp = P.debtPlan([{ name: 'Card', bal: 3000, pay: 90, rate: 24 }, { name: 'Truck', bal: 8000, pay: 350, rate: 9 }], 500);
 check('smallest balance is paid first when there is money to spare', dp.order[0].name === 'Card' && dp.order[0].paidMonth < dp.order[1].paidMonth);

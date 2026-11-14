@@ -145,9 +145,14 @@
   var m1 = [];
   if (n.spendWarning) m1.push(n.spendWarning);
   if (n.gap < 0 || n.income === 0) {
-    if (s1.ranchMonthly) m1.push('Get money coming in first. A ranch hand job pays about $' + s1.ranchHourly.toFixed(2) + ' an hour' + (s1.wageState ? ' in ' + names[p.state] : '') + ', about ' + money(s1.ranchMonthly) + ' a month full time, and it is the schooling for stage 2.' );
-    else m1.push('Get money coming in first. Ranch hand, fence crew, custom haying, sale barn, feedlot. A year on another man\'s place is the schooling for stage 2, and it is paid.');
-    if (S.jobs && S.jobs.length) m1.push(['Where the jobs are listed:', S.jobs[0].name, S.jobs[0].url, S.jobs.length > 1 ? 'and ' + S.jobs.slice(1).map(function (j) { return j.name; }).join(', ') + '.' : '']);
+    if (s1.cashYears != null && s1.cashYears >= 1) m1.push('You are ' + money(-n.gap) + ' a month short, and the ' + money(n.cash) + ' in the bank covers that for about ' + s1.cashYears + ' years. Every month it does is cattle money gone. Close the gap first.');
+    if (s1.debtHeavy) m1.push('The payments are the line: ' + money(n.debt) + ' of the ' + money(n.income) + ' that comes in. ' + (s1.debtMonths ? 'On the list below they are gone in ' + months(s1.debtMonths) + ', and the gap goes with them. ' : '') + 'Until then, anything sold or refinanced on that list is a month bought back.');
+    if (s1.spendHeavy) m1.push('Spending runs ' + money(n.household) + ' a month against about ' + money(n.householdAverage) + ' for a household your size. That line is yours to move.');
+    if (s1.jobFits) {
+      if (s1.ranchMonthly) m1.push('Get money coming in first. A ranch hand job pays about $' + s1.ranchHourly.toFixed(2) + ' an hour' + (s1.wageState ? ' in ' + names[p.state] : '') + ', about ' + money(s1.ranchMonthly) + ' a month full time, and it is the schooling for stage 2.' );
+      else m1.push('Get money coming in first. Ranch hand, fence crew, custom haying, sale barn, feedlot. A year on another man\'s place is the schooling for stage 2, and it is paid.');
+      if (S.jobs && S.jobs.length) m1.push(['Where the jobs are listed:', S.jobs[0].name, S.jobs[0].url, S.jobs.length > 1 ? 'and ' + S.jobs.slice(1).map(function (j) { return j.name; }).join(', ') + '.' : '']);
+    } else if (!s1.debtHeavy && !s1.spendHeavy) m1.push('Money out is more than money in by ' + money(-n.gap) + ' a month. The lines above show where; the gap closes on the spending side or with more coming in.');
   } else {
     m1.push('Money in covers money out. Now the cushion: put ' + money(surplus) + ' a month away until you have ' + money(n.runwayTarget) + ' in hand. That is ' + months(s1.monthsToRunway) + '.');
   }
