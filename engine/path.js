@@ -179,7 +179,7 @@
     var done = {
       s1: n.income >= n.outgo && n.cash >= n.runwayTarget,
       s2: p.exp === 'two' || p.exp === 'own',
-      s3: p.exp === 'own' || num(p.cows_n) > 0,
+      s3: p.exp === 'own' || num(p.cows_n) > 0 || !!+p.running,
       s4: false,
       s5: p.place === 'own',
       s6: false

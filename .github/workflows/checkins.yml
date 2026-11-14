@@ -1,0 +1,39 @@
+# Groundwork check-ins: once a day, send the ones that are due.
+# Needs four repository secrets (Settings > Secrets and variables > Actions):
+#   SUPABASE_URL, SUPABASE_SECRET_KEY, RESEND_API_KEY, GW_FROM
+# Until they are set, the run says so and sends nothing.
+name: Check-ins
+
+on:
+  schedule:
+    - cron: '0 14 * * *'   # 8 or 9 in the morning, Central time
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: 'Dry run: list who is due, send nothing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checkins
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Send the check-ins that are due
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GW_FROM: ${{ secrets.GW_FROM }}
+        run: node scripts/send_checkins.js ${{ inputs.dry && '--dry' || '' }}

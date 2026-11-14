@@ -49,6 +49,9 @@ data/rent.json        HUD FY2026 Fair Market Rents by county (2 and 3 bedroom)
 data/stage.json       wages, poverty line and subsidy scale, household by family size, FSA terms, courses, jobs
 data/bundle.js        all of the above in one script so the pages work from a plain file open
 scripts/              make_costs.py, make_stage.py, build_counties.py, bundle_data.py, make_sources.py
+engine/checkin.js     the check-in: three questions by stage, the email, and what the answers change
+scripts/send_checkins.js  sends the check-ins that are due (daily GitHub Action, .github/workflows/checkins.yml); --sample DIR writes example emails
+checkin.html          where a man lands from a check-in button
 tests/run_tests.js    checks the bundle, the path rules and the engine (Node)
 tests/scenarios.js    36 men at 36 starting points, run through the path, the rungs and the rendered page; prints each one and checks the rules that hold for all
 ```

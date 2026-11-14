@@ -147,6 +147,34 @@ check('heroes: now is a reachable rung, place is the last rung', rg.heroes.now.r
 const rich = P.rungs(Object.assign({}, man, { inc: 12000, cash: 60000, exp: 'two' }), D, calc);
 check('a man past stage 2 with the setup money reaches the cattle rungs now', rich.rungs.find((x) => x.key === 'custom').reach.months === 0);
 
+console.log('4d. Check-ins');
+vm.runInContext(fs.readFileSync(path.join(root, 'engine', 'checkin.js'), 'utf8'), ctx);
+const K = ctx.window.GWcheckin;
+check('every stage has three questions, the last asks what changed', P.STAGES.every((s) => K.QUESTIONS[s.key].length === 3 && K.QUESTIONS[s.key][2].key === 'change'));
+const newb = Object.assign({}, man, { inc: 9000, cash: 30000, exp: 'none' });
+const once = K.apply(newb, {}, { worked: 'yes' }, { id: 7, cadence: 'monthly' });
+const twice = K.apply(once.profile, once.state, { worked: 'yes' }, { id: 7, cadence: 'monthly' });
+check('a month of work counts 30 days, and tapping twice counts once', K.daysWorked(once.state) === 30 && K.daysWorked(twice.state) === 30);
+check('changing the answer replaces the credit', K.daysWorked(K.apply(once.profile, once.state, { worked: 'some' }, { id: 7, cadence: 'monthly' }).state) === 15);
+check('a weekly yes counts 7 days', K.daysWorked(K.apply(newb, {}, { worked: 'yes' }, { id: 1, cadence: 'weekly' }).state) === 7);
+let st = {}, pr = newb;
+for (let i = 1; i <= 24; i++) { const o = K.apply(pr, st, { worked: 'yes' }, { id: i, cadence: 'monthly' }); pr = o.profile; st = o.state; if (i === 12) check('twelve months of work from none: some experience', pr.exp === 'some', pr.exp); }
+check('twenty-four months from none: two years, stage 2 done', pr.exp === 'two' && P.path(pr, D, calc).where.done.s2, pr.exp);
+let st2 = {}, pr2 = newb;
+for (let i = 1; i <= 40; i++) { const o = K.apply(pr2, st2, { worked: 'yes' }, { id: i, cadence: 'monthly' }); pr2 = o.profile; st2 = o.state; }
+check('old credits fold into a base, the total holds', K.daysWorked(st2) === 1200 && Object.keys(st2.worked).length <= 24);
+check('experience never goes down from a check-in', K.apply(Object.assign({}, man, { exp: 'own' }), {}, { worked: 'no' }, { id: 1 }).profile.exp === 'own');
+check('running cattle on leased grass puts stage 3 behind him', P.path(K.apply(Object.assign({}, steady, { exp: 'two' }), {}, { running: 'yes' }, { id: 1 }).profile, D, calc).where.done.s3);
+check('buying a place puts stage 5 behind him', K.apply(man, {}, { looked: 'bought' }, { id: 1 }).profile.place === 'own');
+check('typed numbers replace the plan figures', K.apply(man, {}, { cash: 4200, cows_n: 9 }, { id: 1 }).profile.cash === 4200 && K.apply(man, {}, { cows_n: 9 }, { id: 1 }).profile.cows_n === 9);
+check('a bad number is ignored', K.apply(man, {}, { cash: -5 }, { id: 1 }).profile.cash === man.cash && K.apply(man, {}, { cash: 'abc' }, { id: 1 }).profile.cash === man.cash);
+check('every answer that needs a word back gets one', K.apply(man, {}, { covered: 'short', logged: 'no' }, { id: 1 }).reply.length === 2);
+const mail = K.email(man, {}, D, calc, P, { base: 'https://x.test/gw', token: 'abc123', link: (pg) => pg });
+check('the email names his stage and says it is automated', /stage 1, Get steady/.test(mail.subject) && /automated/.test(mail.text) && /automated/.test(mail.html));
+check('every answer button carries his token', (mail.html.match(/checkin\.html\?t=abc123&amp;a=/g) || []).length === K.QUESTIONS.s1.reduce((t, q) => t + q.options.length, 0));
+check('the email has a way to stop them', /stop=1/.test(mail.text) && /stop=1/.test(mail.html));
+check('the base address gets its slash', /https:\/\/x\.test\/gw\/checkin\.html/.test(mail.text));
+
 console.log('5. Calculator engine still agrees with itself');
 const inp = r2.calcInput;
 const c = calc.compute(inp, D);

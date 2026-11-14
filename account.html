@@ -38,7 +38,7 @@
 
   <div class="card" id="signedOut" hidden>
     <h3>Sign in with your email</h3>
-    <p class="sub">No password. We send a link; you click it; you are in. The email is used for nothing else.</p>
+    <p class="sub">No password. We send a link; you click it; you are in. The email is used for that and, if you turn them on, the check-ins. Nothing else.</p>
     <form id="signinForm" class="fields" autocomplete="on">
       <div class="field"><label for="email">Your email</label><input id="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
       <div class="actions"><button class="btn" type="submit" id="sendBtn">Send me the link</button></div>
@@ -58,6 +58,18 @@
     <p class="flash" id="flash2" aria-live="polite"></p>
   </div>
 
+  <div class="card" id="checkinCard" hidden>
+    <h3>Check-ins by email</h3>
+    <p class="sub">Three questions about the stage you are in, one tap each from your phone, and your plan moves with the answers. They are automated: filled in from your plan and the published figures, not a brother on the other end.</p>
+    <div class="choice" role="radiogroup" aria-label="How often">
+      <label><input type="radio" name="checkin" value="off"> Off</label>
+      <label><input type="radio" name="checkin" value="monthly"> Once a month</label>
+      <label><input type="radio" name="checkin" value="weekly"> Once a week</label>
+    </div>
+    <p class="muted" id="checkinNote" style="font-size:14.5px;margin:8px 0 0"></p>
+    <p class="flash" id="flash3" aria-live="polite"></p>
+  </div>
+
   <div class="card danger" id="dangerCard" hidden>
     <h3>Delete my account</h3>
     <p>This removes your sign-in and your saved plan, today, for good. The link you have still works on its own; nothing in it is kept by us.</p>
@@ -66,7 +78,7 @@
 
   <div class="card">
     <h3>What is kept</h3>
-    <p>Your email, and the answers in your plan: the numbers and choices from Where you are and the debt list from Get steady. Nothing else. No name, no address, no account numbers, no documents. No one but you can read the row, and no one at all gets a report from it. <a href="privacy.html">The whole of it, in plain words.</a></p>
+    <p>Your email, and the answers in your plan: the numbers and choices from Where you are and the debt list from Get steady. If you turn on check-ins, how often, and your answers to them. Nothing else. No name, no address, no account numbers, no documents. No one but you can read the row, and no one at all gets a report from it. <a href="privacy.html">The whole of it, in plain words.</a></p>
   </div>
 </main>
 
@@ -91,6 +103,7 @@
     $('signedOut').hidden = !!session;
     $('signedIn').hidden = !session;
     $('dangerCard').hidden = !session;
+    $('checkinCard').hidden = !session;
     if (!session) return;
     $('who').textContent = 'As ' + session.user.email + '.';
     GW.loadPlan().then(function (row) {
@@ -103,9 +116,25 @@
         ps.appendChild(GW.el('p', 'muted', 'Nothing saved yet.'));
       }
       if (!p.has) { $('saveNow').hidden = true; } else { $('saveNow').hidden = false; }
+      checkinRow = row;
+      var ready = row && 'checkin' in row;
+      document.querySelectorAll('input[name=checkin]').forEach(function (r) { r.disabled = !ready; r.checked = ready ? r.value === (row.checkin || 'off') : r.value === 'off'; });
+      $('checkinNote').textContent = !ready ? (row ? 'Check-ins are not switched on yet.' : 'Save a plan first. The check-ins are about your plan.') : row.checkin_last ? 'The last one went out ' + new Date(row.checkin_last).toLocaleDateString() + '.' : row.checkin !== 'off' ? 'The first one goes out within a day.' : '';
     }).catch(function (e) { flash('Could not read your plan: ' + (e.message || e) + '. If the table is not set up yet, the link still works.', 'flash2'); });
   }
 
+  var checkinRow = null;
+  document.querySelectorAll('input[name=checkin]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      if (!r.checked) return;
+      var hasPlan = checkinRow && checkinRow.profile && Object.keys(checkinRow.profile).length;
+      if (!hasPlan && !p.has) { flash('Save a plan first. The check-ins are about your plan.', 'flash3'); return; }
+      GW.setCheckin(r.value, hasPlan ? null : p).then(function (v) {
+        flash(v === 'off' ? 'Check-ins are off.' : 'Check-ins are on, ' + (v === 'weekly' ? 'once a week' : 'once a month') + '. They come from Groundwork; check the junk folder for the first one.', 'flash3');
+        GW.session().then(show);
+      }, function (e) { flash('Could not change it: ' + (e.message || e), 'flash3'); });
+    });
+  });
   GW.session().then(show);
   GW.supa().auth.onAuthStateChange(function (ev, session) { show(session); });
 

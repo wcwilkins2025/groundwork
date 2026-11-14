@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Check in</title>
+<meta name="description" content="Your Groundwork check-in: three questions, one tap each, and your plan moves with the answers.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+  .q { margin-top: 14px; }
+  .q p.t { margin: 0 0 8px; font-weight: 500; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { font: inherit; font-size: 16px; min-height: 48px; padding: 10px 16px; border: 2px solid var(--rule); border-radius: 8px; background: var(--field); color: var(--fg); cursor: pointer; }
+  .opt[aria-pressed="true"] { border-color: var(--step); box-shadow: inset 0 0 0 1px var(--step); font-weight: 600; }
+  .q .field { margin-top: 10px; max-width: 280px; }
+  .moved { border-left: 3px solid var(--step); padding: 6px 12px; background: var(--field); margin: 10px 0 0; }
+  .reply li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Pages">
+      <a class="brand" href="index.html" data-carry="index.html">Groundwork</a>
+      <a href="start.html" data-carry="start.html">Where you are</a>
+      <a href="path.html" data-carry="path.html">Your path</a>
+      <a href="steady.html" data-carry="steady.html">Get steady</a>
+      <a href="numbers.html" data-carry="numbers.html">What you can get to</a>
+      <a href="resources.html" data-carry="resources.html">Resources</a>
+      <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+    <h1>Check in</h1>
+    <p class="lede" id="lede">Three questions, one tap each. Your plan moves with the answers.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card" id="msg" hidden><p id="msgText"></p><div class="actions" id="msgActions"></div></div>
+
+  <div id="body" hidden>
+    <div class="card">
+      <p class="state" style="font-size:13.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);margin:0 0 4px" id="stageLbl"></p>
+      <h3 id="stageName"></h3>
+      <div id="standing"></div>
+      <div id="qs"></div>
+      <p class="flash" id="flash" aria-live="polite"></p>
+    </div>
+
+    <div class="card" id="after" hidden>
+      <h3>From your answers</h3>
+      <div id="moved"></div>
+      <ul class="reply" id="reply"></ul>
+      <div class="actions">
+        <a class="btn" id="pathBtn" href="path.html">Open your path</a>
+        <a class="btn ghost" id="startBtn" href="start.html">Update my numbers</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="muted" style="margin:0">This check-in is automated. It is filled in from your plan and the published figures. It is not a brother on the other end.</p>
+      <div class="actions"><button class="btn ghost" type="button" id="stopBtn">Stop check-ins</button></div>
+      <p class="muted" style="font-size:14px;margin:8px 0 0">This page opened from a private link in your email. Do not forward the email; anyone with the link can answer it for you.</p>
+    </div>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <p>A check-in link works for 45 days. The next one comes on the schedule you set at Your account.</p>
+</div></footer>
+
+<script src="data/bundle.js"></script>
+<script src="engine/calc.js"></script>
+<script src="engine/path.js"></script>
+<script src="engine/checkin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = GW.$, D = window.HC, calc = window.HCcalc, P = window.GWpath, K = window.GWcheckin, el = GW.el, money = GW.money;
+  GW.initTheme();
+  var q = new URLSearchParams(location.search);
+  var tok = q.get('t') || '';
+  /* the token stays out of the address bar, history and any link this page makes; a reload keeps it for this tab */
+  try { if (tok) sessionStorage.setItem('gw-ck', tok); else tok = sessionStorage.getItem('gw-ck') || ''; } catch (e) {}
+  try { history.replaceState(null, '', 'checkin.html'); } catch (e) {}
+  GW.carry(GW.readProfile());
+
+  function say(text, actions) {
+    $('msg').hidden = false; $('msgText').textContent = text; $('msgActions').textContent = '';
+    (actions || []).forEach(function (a) { var x = el('a', 'btn' + (a[2] ? ' ghost' : ''), a[0]); x.href = a[1]; $('msgActions').appendChild(x); });
+  }
+  var c = GW.supa();
+  if (!c) { say('Check-ins are not switched on yet.'); return; }
+  if (!/^[a-f0-9]{32,64}$/.test(tok)) { say('This page opens from the buttons in a check-in email. Turn check-ins on at Your account.', [['Your account', 'account.html']]); return; }
+
+  if (q.get('stop') === '1') {
+    c.rpc('checkin_stop', { tok: tok }).then(function (r) {
+      if (r.error) throw r.error;
+      say(r.data ? 'Check-ins are off. No more emails. Turn them back on any time at Your account.' : 'That link did not match a check-in.', [['Your account', 'account.html', true]]);
+    }).catch(function (e) { say('Could not stop them just now: ' + (e.message || e) + '. Try the link again, or turn them off at Your account.'); });
+    return;
+  }
+
+  var first = q.get('a') || '';
+  c.rpc('checkin_open', { tok: tok }).then(function (r) {
+    if (r.error) throw r.error;
+    if (!r.data) { say('This check-in link has expired or was already replaced. The next one comes on schedule. Your plan is on Your account.', [['Your account', 'account.html']]); return; }
+    run(r.data);
+  }).catch(function (e) { say('Could not open the check-in: ' + (e.message || e) + '. Try the link again in a minute.'); });
+
+  function run(row) {
+    var stageKey = row.stage, qs = K.QUESTIONS[stageKey] || K.QUESTIONS.s1;
+    var base = Object.assign({}, GW.DEFAULTS, row.profile || {});
+    var state = row.state || {};
+    var answers = Object.assign({}, row.answers || {});
+    if (first && first.indexOf('.') > 0) { var kv = first.split('.'); if (qs.some(function (x) { return x.key === kv[0] && x.options.some(function (o) { return o[0] === kv[1]; }); })) answers[kv[0]] = kv[1]; }
+    var before = P.path(base, D, calc).where.index;
+
+    $('body').hidden = false;
+    var idx = P.STAGES.map(function (s) { return s.key; }).indexOf(stageKey);
+    $('stageLbl').textContent = 'Stage ' + (idx + 1) + ', when this was sent';
+    $('stageName').textContent = P.STAGES[idx].name;
+    var st = K.standing(base, state, D, calc, P);
+    st.lines.forEach(function (l) { $('standing').appendChild(el('p', null, l)); });
+
+    var buttons = {};
+    qs.forEach(function (x, i) {
+      var box = el('div', 'q'); box.appendChild(el('p', 't', (i + 1) + '. ' + x.text));
+      var row2 = el('div', 'opts'); buttons[x.key] = [];
+      x.options.forEach(function (o) {
+        var b = el('button', 'opt', o[1]); b.type = 'button'; b.setAttribute('aria-pressed', answers[x.key] === o[0] ? 'true' : 'false');
+        b.addEventListener('click', function () { answers[x.key] = o[0]; buttons[x.key].forEach(function (bb) { bb.setAttribute('aria-pressed', bb === b ? 'true' : 'false'); }); save(); });
+        buttons[x.key].push(b); row2.appendChild(b);
+      });
+      box.appendChild(row2);
+      if (x.number) {
+        var f = el('div', 'field'); var lab = el('label', null, x.number.label + ' '); lab.appendChild(el('span', 'unit', x.number.unit)); lab.htmlFor = 'n_' + x.number.field;
+        var inp = el('input'); inp.type = 'number'; inp.min = 0; inp.id = 'n_' + x.number.field; inp.inputMode = 'decimal';
+        inp.value = answers[x.number.field] != null ? answers[x.number.field] : (base[x.number.field] || 0);
+        var t; inp.addEventListener('input', function () { answers[x.number.field] = inp.value === '' ? undefined : +inp.value; clearTimeout(t); t = setTimeout(save, 700); });
+        f.appendChild(lab); f.appendChild(inp); box.appendChild(f);
+      }
+      $('qs').appendChild(box);
+    });
+
+    var saving = false, again = false;
+    function save() {
+      if (saving) { again = true; return; }
+      saving = true;
+      var out = K.apply(base, state, answers, { id: row.id, cadence: row.cadence });
+      var clean = {}; GW.FIELDS.forEach(function (k) { if (out.profile[k] !== undefined) clean[k] = out.profile[k]; });
+      c.rpc('checkin_answer', { tok: tok, answers: answers, new_profile: clean, new_state: out.state }).then(function (r) {
+        if (r.error) throw r.error;
+        if (!r.data) throw new Error('the link has expired');
+        $('flash').textContent = 'Saved.';
+        show(out);
+      }).catch(function (e) { $('flash').textContent = 'Could not save: ' + (e.message || e) + '. Tap again in a minute.'; })
+        .then(function () { saving = false; if (again) { again = false; save(); } });
+    }
+    function show(out) {
+      $('after').hidden = false;
+      var now = P.path(out.profile, D, calc).where;
+      var mv = $('moved'); mv.textContent = '';
+      out.changed.forEach(function (t) { mv.appendChild(el('p', 'moved', t)); });
+      if (now.index !== before) mv.appendChild(el('p', 'moved', 'That puts you at stage ' + (now.index + 1) + ': ' + P.STAGES[now.index].name + '.'));
+      var ul = $('reply'); ul.textContent = ''; out.reply.forEach(function (t) { ul.appendChild(el('li', null, t)); });
+      $('pathBtn').href = GW.link('path.html', out.profile);
+      $('startBtn').href = GW.link('start.html', out.profile);
+      GW.carry(out.profile);
+    }
+    if (Object.keys(answers).length) save();
+
+    $('stopBtn').addEventListener('click', function () {
+      if (!confirm('Stop check-in emails? You can turn them back on at Your account.')) return;
+      c.rpc('checkin_stop', { tok: tok }).then(function (r) { if (r.error) throw r.error; $('body').hidden = true; say('Check-ins are off. Turn them back on any time at Your account.', [['Your account', 'account.html', true]]); }, function (e) { $('flash').textContent = 'Could not stop them: ' + (e.message || e); });
+    });
+  }
+})();
+</script>
+</body>
+</html>

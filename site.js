@@ -7,10 +7,10 @@
 
   /* ---------- the profile: fields, defaults, URL ---------- */
   GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'rent', 'adults', 'kids', 'exp', 'place', 'live', 'move', 'state', 'county', 'hours', 'health', 'debts',
-    'has_rv', 'has_mobile', 'has_truck', 'has_trailer', 'has_tractor', 'has_panels', 'has_tools', 'horses_n', 'cows_n', 'grass_acres', 'grass_rate'];
-  GW.BOOLS = ['has_rv', 'has_mobile', 'has_truck', 'has_trailer', 'has_tractor', 'has_panels', 'has_tools'];
+    'has_rv', 'has_mobile', 'has_truck', 'has_trailer', 'has_tractor', 'has_panels', 'has_tools', 'horses_n', 'cows_n', 'grass_acres', 'grass_rate', 'running'];
+  GW.BOOLS = ['has_rv', 'has_mobile', 'has_truck', 'has_trailer', 'has_tractor', 'has_panels', 'has_tools', 'running'];
   GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, rent: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '', live: 'same',
-    has_rv: 0, has_mobile: 0, has_truck: 0, has_trailer: 0, has_tractor: 0, has_panels: 0, has_tools: 0, horses_n: 0, cows_n: 0, grass_acres: 0, grass_rate: 0 };
+    has_rv: 0, has_mobile: 0, has_truck: 0, has_trailer: 0, has_tractor: 0, has_panels: 0, has_tools: 0, horses_n: 0, cows_n: 0, grass_acres: 0, grass_rate: 0, running: 0 };
 
   GW.readProfile = function () {
     var q = new URLSearchParams(location.search);
@@ -111,7 +111,20 @@
     var c = GW.supa();
     return GW.session().then(function (s) {
       if (!s) return null;
-      return c.from('plans').select('profile, updated_at').eq('user_id', s.user.id).maybeSingle().then(function (r) { if (r.error) throw r.error; return r.data; });
+      return c.from('plans').select('profile, updated_at, checkin, checkin_last').eq('user_id', s.user.id).maybeSingle().then(function (r) {
+        /* before the check-in columns exist, fall back to the plan alone */
+        if (r.error && /checkin/.test(r.error.message || '')) return c.from('plans').select('profile, updated_at').eq('user_id', s.user.id).maybeSingle().then(function (r2) { if (r2.error) throw r2.error; return r2.data; });
+        if (r.error) throw r.error; return r.data; });
+    });
+  };
+  /* check-ins: off, weekly or monthly, on his own row */
+  GW.setCheckin = function (cadence, profile) {
+    var c = GW.supa();
+    return GW.session().then(function (s) {
+      if (!s) throw new Error('not signed in');
+      var row = { user_id: s.user.id, checkin: cadence };
+      if (profile) { var clean = {}; GW.FIELDS.forEach(function (k) { if (profile[k] !== undefined) clean[k] = profile[k]; }); row.profile = clean; }
+      return c.from('plans').upsert(row, { onConflict: 'user_id' }).then(function (r) { if (r.error) throw r.error; return cadence; });
     });
   };
   GW.deleteMe = function () {
@@ -144,7 +157,7 @@
           if (row && row.profile && Object.keys(row.profile).length) {
             try { sessionStorage.setItem('gw-loaded', '1'); } catch (e) {}
             var page = location.pathname.replace(/^.*\//, '') || 'index.html';
-            if (page !== 'index.html' && page !== 'account.html' && page !== 'privacy.html') location.replace(GW.link(page, row.profile));
+            if (page !== 'index.html' && page !== 'account.html' && page !== 'privacy.html' && page !== 'checkin.html') location.replace(GW.link(page, row.profile));
           }
         }).catch(function () {});
       }

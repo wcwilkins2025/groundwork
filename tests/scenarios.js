@@ -53,7 +53,7 @@ const D = base.window.HC, calc = base.window.HCcalc, P = base.window.GWpath;
 const C = D.costs.items;
 
 const DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, rent: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '', live: 'same',
-  has_rv: 0, has_mobile: 0, has_truck: 0, has_trailer: 0, has_tractor: 0, has_panels: 0, has_tools: 0, horses_n: 0, cows_n: 0, grass_acres: 0, grass_rate: 0 };
+  has_rv: 0, has_mobile: 0, has_truck: 0, has_trailer: 0, has_tractor: 0, has_panels: 0, has_tools: 0, horses_n: 0, cows_n: 0, grass_acres: 0, grass_rate: 0, running: 0 };
 
 /* render path.html for one profile: returns the text of every stage, in order, plus the hero line */
 function render(p) {
@@ -119,6 +119,7 @@ const BAD = /NaN|undefined|Infinity|\$-|-\$|\bnull\b|\[object/;
 function mo(m) { return m == null ? 'not yet' : m === 0 ? 'now' : m < 12 ? m + ' mo' : (Math.round(m / 12 * 10) / 10) + ' yr'; }
 const money = (n) => (n < 0 ? '-$' : '$') + Math.round(Math.abs(n)).toLocaleString('en-US');
 
+const sender = require(path.join(root, 'scripts', 'send_checkins.js'));
 const chosen = S.filter((s) => !only.length || only.some((o) => s.key.includes(o)));
 for (const sc of chosen) {
   const p = sc.p;
@@ -154,7 +155,7 @@ for (const sc of chosen) {
   check(sc.key, 'current stage is the first not done', keys.indexOf(w.current) === keys.findIndex((k) => !w.done[k]) || (keys.every((k) => w.done[k]) && w.current === 's6'), w.current + ' ' + JSON.stringify(w.done));
   check(sc.key, 'stage 1 done means money in covers out and cushion in hand', w.done.s1 === (n.income >= n.outgo && n.cash >= n.runwayTarget));
   check(sc.key, 'stage 2 done matches experience', w.done.s2 === (p.exp === 'two' || p.exp === 'own'));
-  check(sc.key, 'stage 3 done when he ran his own or owns cows', w.done.s3 === (p.exp === 'own' || p.cows_n > 0));
+  check(sc.key, 'stage 3 done when he ran his own, owns cows, or is running cattle', w.done.s3 === (p.exp === 'own' || p.cows_n > 0 || !!p.running));
   check(sc.key, 'stage 5 done only when he owns land', w.done.s5 === (p.place === 'own'));
   check(sc.key, 'stage 4 done only when covered and he is running cattle', w.done.s4 === (s4.covered && w.done.s3));
   check(sc.key, 'stage 4 covered when what he keeps covers the family, or nearly, or the herd is there', s4.covered === (s4.gapYear <= 0 || s4.nearly || !!(s4.own && s4.own.head && s4.cowsNow >= s4.own.head)));
@@ -203,6 +204,16 @@ for (const sc of chosen) {
   check(sc.key, 'the now hero is reachable now or is the first rung', R.heroes.now.reach.months === 0 || R.heroes.now === R.rungs[0]);
   check(sc.key, 'a rung reachable now is not short of its setup money', R.rungs.filter((x) => x.reach.months === 0 && (x.key === 'custom' || x.key === 'share')).every(() => s3.handlingShort === 0 && (w.done.s2)), R.rungs.filter((x) => x.reach.months === 0).map((x) => x.key).join(','));
   R.rungs.forEach((x) => check(sc.key, 'rung text is clean: ' + x.key, !BAD.test([x.title, x.what, x.takes, x.leads, x.unit].join(' ')), [x.what, x.takes].join(' ').match(BAD) && [x.what, x.takes].join(' ')));
+  /* the check-in email for this man */
+  const tok = 'f'.repeat(48);
+  const em = sender.build(p, {}, tok, 'https://wcwilkins2025.github.io/groundwork/');
+  check(sc.key, 'check-in names the same stage as the page', em.stage === w.current && em.subject.indexOf('stage ' + (w.index + 1) + ',') > 0, em.subject);
+  check(sc.key, 'check-in text is clean', !BAD.test(em.text.replace(/https?:\/\/\S+/g, '')), (em.text.match(new RegExp('.{0,60}(' + BAD.source + ').{0,60}')) || [])[0]);
+  check(sc.key, 'check-in has three questions and every button carries the token', (em.text.match(/^\d\. /gm) || []).length === 3 && (em.html.match(/checkin\.html\?t=f+&amp;a=/g) || []).length === sender.E.K.QUESTIONS[w.current].reduce((t, q) => t + q.options.length, 0));
+  check(sc.key, 'check-in path link carries his plan', em.text.indexOf('path.html' + (sender.E.GW.profileQuery(p) ? '?' + sender.E.GW.profileQuery(p) : '')) > 0);
+  check(sc.key, 'check-in says it is automated and how to stop', /automated/.test(em.text) && /stop=1/.test(em.html));
+  if (!quiet) console.log('  check-in: ' + em.subject + ' | ' + em.standing.lines.join(' '));
+
   /* rendered page */
   const pageText = T.stages.map((l) => l.join(' ')).join('\n') + '\n' + T.hero.join(' ') + '\n' + T.needsSub;
   check(sc.key, 'page text is clean', !BAD.test(pageText), (pageText.match(new RegExp('.{0,60}(' + BAD.source + ').{0,60}')) || [])[0]);
