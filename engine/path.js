@@ -203,6 +203,11 @@
       var pay = n.debt + surplus;
       s1.debtMonths = pay > 0 ? Math.ceil(s1.debt / pay) : null;
     }
+    /* what stage 1 is about for this man: no money coming in, payments eating it, spending above it, or a cushion still to build */
+    s1.jobFits = n.income === 0 || (s1.ranchMonthly ? n.income < s1.ranchMonthly * 1.5 : n.income < 4000);
+    s1.debtHeavy = n.income > 0 && n.debt >= n.income * 0.3;
+    s1.spendHeavy = n.householdAverage > 0 && n.household > n.householdAverage * 1.25;
+    s1.cashYears = n.gap < 0 && n.cash > 0 ? Math.round(n.cash / (-n.gap) / 12 * 10) / 10 : null;
     s1.months = where.done.s1 ? 0 : (s1.monthsToRunway == null ? null : s1.monthsToRunway);
     out.stages.push(s1);
 
