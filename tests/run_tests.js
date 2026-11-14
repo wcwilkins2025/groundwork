@@ -63,7 +63,8 @@ check('12 months with some experience', P.path(Object.assign({}, steady, { exp: 
 const proven = Object.assign({}, steady, { exp: 'two' });
 check('two years in: stage 3', P.path(proven, D, calc).where.current === 's3');
 const ran = Object.assign({}, steady, { exp: 'own' });
-check('ran his own: stage 4', P.path(ran, D, calc).where.current === 's4' && P.path(ran, D, calc).where.done.s3);
+const ranPath = P.path(ran, D, calc);
+check('ran his own: stage 4, or stage 5 when what he keeps already covers the family', ranPath.where.done.s3 && ranPath.where.current === (ranPath.stages[3].gapYear <= 0 ? 's5' : 's4'), ranPath.where.current);
 check('owns land already: stage 5 marked done', P.path(Object.assign({}, ran, { place: 'own' }), D, calc).where.done.s5);
 
 console.log('4. Stage figures');
