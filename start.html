@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Where you are</title>
-<meta name="description" content="Nine plain questions about where you stand today. Your path is built from the answers.">
+<meta name="description" content="Ten plain questions about where you stand today. Your path is built from the answers.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="site.css">
 </head>
@@ -22,7 +22,7 @@
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <h1>Where you are</h1>
-    <p class="lede">Nine questions. Answer what you know, skip what you do not. Nothing is sent anywhere; your answers ride in the link, so bookmark the page that comes next.</p>
+    <p class="lede">Ten questions. Answer what you know, skip what you do not. Nothing is sent anywhere; your answers ride in the link, so bookmark the page that comes next.</p>
   </div>
 </header>
 
@@ -34,6 +34,7 @@
         <div class="field"><label for="inc">Money coming in now, per month <span class="unit">$ after tax</span></label><input id="inc" type="number" min="0" step="100" inputmode="numeric"><span class="hint">Take-home pay, pension, disability, anything steady.</span></div>
       </div>
       <div class="field"><label for="spend">What you spend a month now, not counting rent, health insurance or debt <span class="unit">$</span></label><input id="spend" type="number" min="0" step="50" inputmode="numeric"><span class="hint" id="spendHint">Groceries, fuel, phone, clothes, everything else. Not rent, not health insurance, not debt payments; those are asked on their own. Leave at 0 and the page uses the government average for your family size.</span></div>
+      <div class="field"><label for="rent">Rent or lot rent you pay now, per month <span class="unit">$</span></label><input id="rent" type="number" min="0" step="25" inputmode="numeric"><span class="hint">House, apartment, a room, a motorhome lot. Leave at 0 and the page uses the government rent figure for your county, or nothing if you own your place.</span></div>
       <div class="field"><label for="from">Where it comes from</label>
         <select id="from">
           <option value="none">Nothing steady right now</option>
@@ -61,7 +62,7 @@
         </div></div>
       <div class="field"><span class="hint" style="font-weight:500;color:var(--fg)">Where do you live now?</span>
         <div class="choice" role="radiogroup" aria-label="Where you live now">
-          <label><input type="radio" name="place" value="rent" checked> Renting, or staying with family</label>
+          <label><input type="radio" name="place" value="rent" checked> Renting, staying with family, or in a motorhome</label>
           <label><input type="radio" name="place" value="house"> I own a house in town</label>
           <label><input type="radio" name="place" value="own"> I own land in the country already</label>
         </div></div>
@@ -118,7 +119,7 @@
   }
 
   function write(p) {
-    ['cash', 'inc', 'spend', 'debt', 'debtm', 'hours'].forEach(function (k) { $(k).value = p[k]; });
+    ['cash', 'inc', 'spend', 'rent', 'debt', 'debtm', 'hours'].forEach(function (k) { $(k).value = p[k]; });
     ['from', 'adults', 'kids', 'move', 'health'].forEach(function (k) { $(k).value = String(p[k]); });
     $('state').value = names[p.state] ? p.state : 'TX';
     fillCounties($('state').value, p.county);
@@ -126,7 +127,7 @@
   }
   function read() {
     var p = {};
-    ['cash', 'inc', 'spend', 'debt', 'debtm', 'hours'].forEach(function (k) { p[k] = +$(k).value || 0; });
+    ['cash', 'inc', 'spend', 'rent', 'debt', 'debtm', 'hours'].forEach(function (k) { p[k] = +$(k).value || 0; });
     ['from', 'adults', 'kids', 'move', 'health', 'state', 'county'].forEach(function (k) { p[k] = $(k).value; });
     ['exp', 'place'].forEach(function (k) { var el = document.querySelector('input[name=' + k + ']:checked'); p[k] = el ? el.value : GW.DEFAULTS[k]; });
     return p;

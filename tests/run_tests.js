@@ -31,6 +31,7 @@ check('family of four', n.family === 4);
 check('rent is the HUD 3-bedroom figure for Fannin County', n.rent === 1370 && n.rentFound);
 check('one or two people get the 2-bedroom figure', P.needs(Object.assign({}, man, { adults: 1, kids: 0 }), D).rent === 985);
 check('owning land already means no rent line', P.needs(Object.assign({}, man, { place: 'own' }), D).rent === 0);
+check('his own rent or lot rent figure wins over the HUD figure', P.needs(Object.assign({}, man, { rent: 650 }), D).rent === 650 && P.needs(Object.assign({}, man, { rent: 650 }), D).rentOwn);
 check('health through work is not counted', P.needs(Object.assign({}, man, { health: 'work' }), D).health === 0);
 check('Medicare, VA or Medicaid is not counted either', P.needs(Object.assign({}, man, { health: 'other' }), D).health === 0);
 check('a spending figure as big as the income gets a warning', !!P.needs(Object.assign({}, man, { inc: 15000, spend: 15000 }), D).spendWarning && !P.needs(Object.assign({}, man, { inc: 15000, spend: 4000 }), D).spendWarning);

@@ -57,13 +57,14 @@
 
     /* rent: HUD for his county, 2 bedroom for one or two people, 3 bedroom for a family */
     var rent = 0, rentSrc = '';
-    if (p.place !== 'own') {
+    if (num(p.rent) > 0) { rent = num(p.rent); rentSrc = 'you'; }
+    else if (p.place !== 'own') {
       var r = countyRent(data, p.state, p.county);
       if (r) { rent = family <= 2 ? r.fmr2 : r.fmr3; rentSrc = data.rent.source && data.rent.source.name; }
       else { rent = family <= 2 ? C.rent_monthly.low : C.rent_monthly.typ; rentSrc = C.rent_monthly.source; }
     }
-    out.rent = Math.round(rent); out.rentFound = !!countyRent(data, p.state, p.county);
-    out.parts.push({ key: 'rent', label: p.place === 'own' ? 'Rent (you own your place)' : 'Rent', monthly: out.rent, source: rentSrc });
+    out.rent = Math.round(rent); out.rentFound = !!countyRent(data, p.state, p.county); out.rentOwn = num(p.rent) > 0;
+    out.parts.push({ key: 'rent', label: out.rentOwn ? 'Rent or lot rent' : p.place === 'own' ? 'Rent (you own your place)' : 'Rent', monthly: out.rent, source: rentSrc, note: out.rentOwn ? 'Your figure.' : '' });
 
     /* health insurance: through work is counted in his pay; otherwise the marketplace, capped by the subsidy rule when we have it */
     var health = 0, healthNote = '', healthSrc = C.health_family_monthly.source;

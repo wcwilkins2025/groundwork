@@ -9,7 +9,7 @@ Grows out of the [Brotherhood Homestead Cost Calculator](https://github.com/wcwi
 | Page | What it does |
 |---|---|
 | `index.html` | Why this exists and how it works. |
-| `start.html` | Where you are: nine plain questions. |
+| `start.html` | Where you are: ten plain questions. |
 | `path.html` | Your path: the stage you are in, the gate, this month's steps, and the figures for each stage on your numbers. Printable. |
 | `numbers.html` | What you can get to: the rungs from where he stands (the job, caring for pairs, cows on shares, first cows on a microloan, a herd that carries the family, a place of his own), each with what it clears, what it takes and when. The full cost calculator and Make it pay sit under a fold, prefilled from his answers. |
 | `steady.html` | Get steady: the budget sheet, what you owe and the payoff order (smallest first, payments roll on), health insurance at your income with the Medicaid and marketplace rules, and the jobs that pay while you learn. Printable. |
@@ -22,7 +22,7 @@ The plan rides in the link. Every page carries the answers in the query string, 
 
 ## The profile
 
-`cash`, `debt`, `debtm` (payments a month), `inc` (money in a month, after tax), `from` (none, job, own, pension, other), `spend` (a month, not counting rent, health or debt; 0 means the BLS average for the family size), `adults`, `kids`, `exp` (none, some, two, own), `place` (rent, house, own), `move` (yes, no), `state`, `county`, `hours` (a week), `health` (none, work, marketplace, other), `debts` (name:balance:payment:rate, joined with |).
+`cash`, `debt`, `debtm` (payments a month), `inc` (money in a month, after tax), `from` (none, job, own, pension, other), `spend` (a month, not counting rent, health or debt; 0 means the BLS average for the family size), `rent` (rent or lot rent a month; 0 means the HUD figure for the county), `adults`, `kids`, `exp` (none, some, two, own), `place` (rent, house, own), `move` (yes, no), `state`, `county`, `hours` (a week), `health` (none, work, marketplace, other), `debts` (name:balance:payment:rate, joined with |).
 
 Example: `path.html?cash=3000&debt=12000&debtm=350&inc=2400&from=job&adults=2&kids=2&exp=none&state=TX&county=Fannin&hours=10&health=none`
 

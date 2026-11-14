@@ -6,14 +6,14 @@
   var GW = {};
 
   /* ---------- the profile: fields, defaults, URL ---------- */
-  GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'adults', 'kids', 'exp', 'place', 'move', 'state', 'county', 'hours', 'health', 'debts'];
-  GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '' };
+  GW.FIELDS = ['cash', 'debt', 'debtm', 'inc', 'from', 'spend', 'rent', 'adults', 'kids', 'exp', 'place', 'move', 'state', 'county', 'hours', 'health', 'debts'];
+  GW.DEFAULTS = { cash: 0, debt: 0, debtm: 0, inc: 0, from: 'none', spend: 0, rent: 0, adults: 1, kids: 0, exp: 'none', place: 'rent', move: 'yes', state: 'TX', county: '', hours: 10, health: 'none', debts: '' };
 
   GW.readProfile = function () {
     var q = new URLSearchParams(location.search);
     var p = {};
     GW.FIELDS.forEach(function (k) { p[k] = q.has(k) ? q.get(k) : GW.DEFAULTS[k]; });
-    ['cash', 'debt', 'debtm', 'inc', 'spend', 'adults', 'kids', 'hours'].forEach(function (k) { p[k] = Math.max(0, +p[k] || 0); });
+    ['cash', 'debt', 'debtm', 'inc', 'spend', 'rent', 'adults', 'kids', 'hours'].forEach(function (k) { p[k] = Math.max(0, +p[k] || 0); });
     p.state = String(p.state || 'TX').toUpperCase();
     p.has = GW.FIELDS.some(function (k) { return q.has(k); });
     return p;
