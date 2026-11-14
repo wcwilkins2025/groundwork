@@ -68,6 +68,7 @@
     /* health insurance: through work is counted in his pay; otherwise the marketplace, capped by the subsidy rule when we have it */
     var health = 0, healthNote = '', healthSrc = C.health_family_monthly.source;
     if (p.health === 'work') { health = 0; healthNote = 'Through your job today. If you leave it, this line comes back.'; }
+    else if (p.health === 'other') { health = 0; healthNote = 'Medicare, VA, Medicaid or other. Nothing to add here.'; }
     else {
       var bench = S.aca && S.aca.benchmark_single && (S.aca.benchmark_single[p.state] || S.aca.benchmark_single.US);
       var full = family === 1 ? (bench || C.health_family_monthly.low) : C.health_family_monthly.typ;
@@ -100,6 +101,8 @@
     out.debt = Math.round(num(p.debtm));
     out.parts.push({ key: 'debt', label: 'Debt payments', monthly: out.debt, source: 'you' });
 
+    /* a spending figure as big as the income is almost always rent, insurance or debt counted twice */
+    out.spendWarning = own && num(p.inc) > 0 && num(p.spend) >= num(p.inc) * 0.6 ? 'Your spending figure, $' + fmt(num(p.spend)) + ' a month, is most of what comes in. It should not include rent, health insurance or debt payments; those are counted on their own lines. Check it on Where you are.' : '';
     out.outgo = out.household + out.rent + out.health + out.debt;
     out.income = Math.round(num(p.inc));
     out.gap = out.income - out.outgo;

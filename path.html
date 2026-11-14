@@ -110,7 +110,7 @@
   $('printHead').textContent = 'Groundwork plan. ' + placeName + '. ' + new Date().toLocaleDateString();
 
   /* needs table */
-  $('needsSub').textContent = 'Where you are now' + (p.place === 'own' ? ', on your own land' : ', renting') + '. This is the number every stage is measured against.';
+  $('needsSub').textContent = 'Where you are now' + (p.place === 'own' ? ', on your own land' : ', renting') + '. This is the number every stage is measured against.' + (n.spendWarning ? ' ' + n.spendWarning : '');
   var tb = $('needsTable').querySelector('tbody');
   n.parts.forEach(function (part) {
     var tr = el('tr');
@@ -143,6 +143,7 @@
   /* 1 */
   var f1 = [[money(Math.abs(n.gap)) + (n.gap >= 0 ? ' spare' : ' short'), 'each month now'], [money(n.runwayTarget), n.runwayMonths + ' months in hand, the target'], [months(s1.months), 'to get there' + (surplus > 0 ? ' at ' + money(surplus) + ' a month' : '')]];
   var m1 = [];
+  if (n.spendWarning) m1.push(n.spendWarning);
   if (n.gap < 0 || n.income === 0) {
     if (s1.ranchMonthly) m1.push('Get money coming in first. A ranch hand job pays about $' + s1.ranchHourly.toFixed(2) + ' an hour' + (s1.wageState ? ' in ' + names[p.state] : '') + ', about ' + money(s1.ranchMonthly) + ' a month full time, and it is the schooling for stage 2.' );
     else m1.push('Get money coming in first. Ranch hand, fence crew, custom haying, sale barn, feedlot. A year on another man\'s place is the schooling for stage 2, and it is paid.');

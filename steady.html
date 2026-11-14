@@ -143,8 +143,8 @@
     $('heroOut').textContent = money(n.outgo); $('heroOutSub').textContent = 'For ' + (n.family === 1 ? 'one man' : n.family + ' people') + (p.county ? ' in ' + p.county + ' County' : ' in ' + names[p.state]) + '.';
     $('heroGap').textContent = (n.gap >= 0 ? '+' : '-') + money(Math.abs(n.gap)).replace('-', '');
     $('heroGap').className = 'val ' + (n.gap >= 0 ? 'ok' : 'short');
-    $('heroGapSub').textContent = n.gap >= 0 ? 'Spare each month. This is what pays off debt and builds the cushion.' : 'Short each month. Stage 1 is closing this, and the first move is money coming in.';
-    $('spendNote').textContent = p.spend > 0 ? 'Your figure. The BLS average for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ' is $' + fmt(n.householdAverage) + '.' : 'Leave at 0 and this is the BLS average for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ', $' + fmt(n.householdAverage) + '. Put in your own figure.';
+    $('heroGapSub').textContent = n.gap >= 0 ? 'Spare each month. This is what pays off debt and builds the cushion.' : (n.spendWarning ? 'Short each month, but check the spending line first.' : 'Short each month. Stage 1 is closing this, and the first move is money coming in.');
+    $('spendNote').textContent = n.spendWarning ? n.spendWarning : p.spend > 0 ? 'Your figure. The BLS average for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ' is $' + fmt(n.householdAverage) + '.' : 'Leave at 0 and this is the BLS average for ' + (n.family === 1 ? 'one person' : n.family + ' people') + ', $' + fmt(n.householdAverage) + '. Put in your own figure.';
     $('rentCell').textContent = money(n.rent); $('rentNote').textContent = p.place === 'own' ? 'You own your place.' : (n.rentFound ? 'HUD Fair Market Rent, ' + (n.family <= 2 ? '2 bedroom' : '3 bedroom') + ', your county, 2026.' : 'HUD Fair Market Rent for Fannin County, TX stands in; pick your county on Where you are.');
     $('healthCell').textContent = money(n.health); $('healthNote').textContent = n.healthNote;
     $('debtCell').textContent = money(n.debt);
