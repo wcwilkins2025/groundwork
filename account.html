@@ -118,7 +118,11 @@
       if (r.error) throw r.error;
       flash('Sent. Open the email on this device and click the link. Your plan in this link will be waiting to save.');
       try { sessionStorage.setItem('gw-pending', GW.profileQuery(p)); } catch (e) {}
-    }).catch(function (e) { flash('Could not send: ' + (e.message || e)); }).then(function () { $('sendBtn').disabled = false; });
+    }).catch(function (e) {
+      var m = String(e.message || e);
+      if (/security purposes|after \d+ seconds|rate limit/i.test(m)) flash('A link already went out a moment ago. Check your inbox and the junk folder. If nothing comes in two minutes, press the button again.');
+      else flash('Could not send: ' + m);
+    }).then(function () { $('sendBtn').disabled = false; });
   });
   $('saveNow').addEventListener('click', function () {
     GW.savePlan(p).then(function () { flash('Saved.', 'flash2'); GW.session().then(show); }, function (e) { flash('Could not save: ' + (e.message || e), 'flash2'); });
