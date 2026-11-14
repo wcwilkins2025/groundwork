@@ -16,7 +16,7 @@
       <a href="start.html" data-carry="start.html">Where you are</a>
       <a href="path.html" data-carry="path.html" aria-current="page">Your path</a>
       <a href="steady.html" data-carry="steady.html">Get steady</a>
-      <a href="numbers.html" id="numbersLink">Your numbers</a>
+      <a href="numbers.html" id="numbersLink">What you can get to</a>
       <a href="resources.html" data-carry="resources.html">Resources</a>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
@@ -186,8 +186,8 @@
     m4.push('Keep every heifer calf. At an ' + Math.round(C.calf_crop.typ * 100) + '% calf crop and ' + Math.round(C.cull_rate.typ * 100) + '% culled, the herd grows about ' + Math.round(s4.growth * 100) + '% a year on its own.');
     m4.push('Add grass as the herd grows: ' + C.lease_apc.typ + ' acres a cow on decent pasture. The cheapest acres are the ones next to the ones you already lease.');
     m4.push('Own more of the herd each year. Buy cows from the man you share with when he is ready to sell, with calf checks and an FSA operating loan (up to ' + money(s3.fsa.operatingMax) + ' at ' + s3.fsa.standardPct + '%).');
-    m4.push(['See the whole picture, every deal, on your numbers:', 'Your numbers', GW.link('numbers.html', p) + '#pay', '']);
-  } else m4.push('At your lease rate owning cows loses money per head; see Your numbers for the deals that work in your county.');
+    m4.push(['See the whole picture, every deal:', 'What you can get to', GW.link('numbers.html', p) + '#pay', '']);
+  } else m4.push('At your lease rate owning cows loses money per head; see What you can get to for the deals that work in your county.');
   stage('s4', 'Grow', 'A herd grows itself if you let it. Keep the heifers, add grass, buy a few more cows each year with calf money. This is the stage that takes years, and the one where most men quit too early.', 'The cattle and what you keep from work cover the family, renting a house.', f4, m4, [cite(C.calf_crop.source), cite(C.cull_rate.source), cite(C.cow_bred.source), cite(C.calf_sale.source), cite(C.fsa_operating_max.source)]);
 
   /* 5 */
@@ -195,12 +195,12 @@
   var m5 = ['Buy a place with the house, well and septic already on it. Used improvements never bring what new ones cost, and you skip a year of contractors.',
     'The FSA down payment program lends a beginning farmer with ' + s5.experienceYears + ' years of experience at ' + (s5.downRate != null ? s5.downRate + '%' : 'a low rate') + ' with ' + s5.downPct + '% down, and the direct farm ownership loan goes 40 years at ' + s5.fsaOwnershipRate + '%. Start the paperwork a year before you want to buy.',
     'File for ag valuation the day you close. Land running cattle is taxed on what it produces, not what it sells for.',
-    ['What that place costs to set up and run in ' + placeName + ', every line:', 'Your numbers', GW.link('numbers.html', p), '']];
+    ['What that place costs to set up and run in ' + placeName + ', every line:', 'What you can get to', GW.link('numbers.html', p), '']];
   stage('s5', 'Land', 'Land comes last, not first. By now you have the experience the loan programs want, a herd that pays, and a cushion. The government lends forty years to a man like that.', s5.experienceYears + ' years of experience for the FSA ownership programs, the down payment in hand, and the place found.', f5, m5, [cite(C.fsa_operating_max.source), cite(C.fsa_operating_rate.source), cite(C.closing_pct.source), p.county ? 'USDA 2022 county land value' : cite(C.lease_rate_us.source)]);
 
   /* 6 */
   var f6 = [[money(rh(s6.setup)), 'to set the place up'], [money(rh(s6.yearly)), 'a year to live there'], s6.solve && s6.solve.head ? [s6.solve.head + ' cows', 'on ' + fmt(s6.solve.acres) + ' acres to cover it with cattle alone'] : ['Covered', 'by what you keep from work']];
-  var m6 = ['This is the calculator\'s picture for a modest place in ' + placeName + '. Change anything on Your numbers: the house, the well, the fence, the deal, the herd.',
+  var m6 = ['This is the calculator\'s picture for a modest place in ' + placeName + '. Change anything under The whole place, line by line: the house, the well, the fence, the deal, the herd.',
     'Most men who live off a place do three things at once: the cattle, something they keep from work, and a household that runs lean. The page shows all three.'];
   stage('s6', 'Live off it', 'The place, the cattle and what you keep from work cover the family, with the health insurance line fixed and the household running lean.', 'Needs covered by the place, the cattle and what you keep.', f6, m6, ['the cost calculator tables']);
 

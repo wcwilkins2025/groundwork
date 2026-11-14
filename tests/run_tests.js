@@ -93,6 +93,21 @@ const stuck = P.debtPlan([{ name: 'A', bal: 10000, pay: 50, rate: 30 }], 0);
 check('a payment below the interest is reported as stuck', stuck.stuck && stuck.months === null);
 check('no debts: nothing to pay', P.debtPlan([], 100).months === null && P.debtPlan([], 100).order.length === 0);
 
+console.log('4c. What he can get to');
+const rg = P.rungs(man, D, calc);
+check('rungs come in order: job, custom, share, own, herd, place', rg.rungs.map((x) => x.key).join(',') === 'job,custom,share,own,herd,place', rg.rungs.map((x) => x.key).join(','));
+check('no rung shows a negative figure', rg.rungs.every((x) => x.figure >= 0));
+check('the job rung is reachable now and pays the BLS ranch hand wage', rg.rungs[0].reach.months === 0 && rg.rungs[0].figure === Math.round(D.stage.wages.ranch_hand.states.TX.median_hourly * 2080 / 12));
+const cu = rg.rungs.find((x) => x.key === 'custom');
+check('custom care rung = head by hours x net per head, less lease fence upkeep', near(cu.figure, Math.max(0, cu.head * Math.round(calc.dealPerHead('custom', rg.path.calcInput, D).net) - calc.fenceFeet(cu.head * items.lease_apc.typ, 1, 1).perimeter * items.fence_barbed_per_ft.typ * items.fence_upkeep_pct.typ), 1));
+const ow = rg.rungs.find((x) => x.key === 'own');
+check('first cows rung = cows a microloan buys, less the loan payment', ow.head === Math.floor(items.fsa_microloan_max.typ / (items.cow_bred.typ + items.bull.typ / 25)) && ow.figure === Math.max(0, Math.round(ow.head * calc.dealPerHead('own', rg.path.calcInput, D).net - rg.path.stages[2].fsa.microPayment)));
+const pl5 = rg.rungs.find((x) => x.key === 'place');
+check('place rung shows the 5% down payment and a 40-year payment on the rest', pl5.figure === rg.path.stages[4].down && pl5.payment > 0 && pl5.payment < pl5.setup);
+check('heroes: now is a reachable rung, place is the last rung', rg.heroes.now.reach.months === 0 && rg.heroes.place.key === 'place');
+const rich = P.rungs(Object.assign({}, man, { inc: 12000, cash: 60000, exp: 'two' }), D, calc);
+check('a man past stage 2 with the setup money reaches the cattle rungs now', rich.rungs.find((x) => x.key === 'custom').reach.months === 0);
+
 console.log('5. Calculator engine still agrees with itself');
 const inp = r2.calcInput;
 const c = calc.compute(inp, D);

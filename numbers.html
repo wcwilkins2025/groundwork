@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Your numbers</title>
+<title>What you can get to</title>
 <meta name="description" content="What it costs to leave town and set up a self-sustaining place in the country, and what it costs to keep it running each year. Every number from a public source. Free, no login, no tracking.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="site.css">
@@ -178,7 +178,11 @@
     display: none; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; z-index: 10; border-top: 1px solid rgba(255,255,255,.15); }
   .stick b { font-size: 19px; font-weight: 600; display: block; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .stick a { color: inherit; font-weight: 600; white-space: nowrap; }
-  @media (max-width: 900px) { .stick { display: flex; } body { padding-bottom: 72px; } }
+  @media (max-width: 900px) { .fold[open] ~ .stick { display: flex; } body:has(.fold[open]) { padding-bottom: 72px; } }
+  .fold > summary { cursor: pointer; list-style: none; }
+  .fold > summary::-webkit-details-marker { display: none; }
+  .fold > summary h3::before { content: '\25B8  '; }
+  .fold[open] > summary h3::before { content: '\25BE  '; }
 </style>
 </head>
 <body>
@@ -189,21 +193,41 @@
       <a href="start.html" data-carry="start.html">Where you are</a>
       <a href="path.html" data-carry="path.html">Your path</a>
       <a href="steady.html" data-carry="steady.html">Get steady</a>
-      <a href="numbers.html" aria-current="page">Your numbers</a>
+      <a href="numbers.html" aria-current="page">What you can get to</a>
       <a href="resources.html" data-carry="resources.html">Resources</a>
       <button class="theme" id="themeBtn" type="button" aria-pressed="false">Dark mode</button>
     </nav>
     <div>
-      <h1>Your numbers</h1>
-      <p class="lede">What it takes to set up a place in the country, what it costs to keep it going each year, and what it takes to live off it. Every number traces to a public source. Change anything to fit your plan.</p>
+      <h1>What you can get to</h1>
+      <p class="lede">From where you stand, one rung at a time: what each one clears, what it takes, and when your cash and hours get you there. Every number traces to a public source. The whole place, line by line, is further down for when you want it.</p>
     </div>
   </div>
 </header>
 
 <main class="wrap">
+  <p class="printonly" id="printHead"></p>
+  <div class="heroes" id="rungHeroes">
+    <div class="hero"><p class="lbl">This year</p><p class="val" id="heroNow">&ndash;</p><p class="rng" id="heroNowSub"></p></div>
+    <div class="hero"><p class="lbl">In a few years</p><p class="val" id="heroNext">&ndash;</p><p class="rng" id="heroNextSub"></p></div>
+    <div class="hero"><p class="lbl">The place</p><p class="val" id="heroPlace">&ndash;</p><p class="rng" id="heroPlaceSub"></p></div>
+  </div>
+
+  <div class="card noprint" id="noProfileNote" hidden>
+    <p>These rungs are built on the defaults: no cash, no income, one man, never worked cattle, headed for Texas. <a href="start.html" data-carry="start.html">Answer the nine questions</a> and they become yours.</p>
+  </div>
+
+  <div class="card">
+    <h3>The rungs, from where you stand</h3>
+    <p class="sub" id="rungSub"></p>
+    <ol class="stages" id="rungs"></ol>
+  </div>
+
+  <details class="card fold" id="fold" style="margin-top:16px">
+    <summary><h3 style="display:inline">The whole place, line by line</h3> <span class="muted">Every cost of setting up and running a place in your county, the cattle deals, and what it takes to live off it. For stage 5 and for the curious. Change anything.</span></summary>
+    <div style="margin-top:16px">
   <section class="card steps" aria-label="How to use this">
     <ol>
-      <li><span class="n">1</span><div><b>Pick a county.</b> The <a href="https://wcwilkins2025.github.io/brotherhood-land-finder/" rel="noopener">Land Finder</a> ranks every US county for a self-sustaining life. Pick one there or choose below.</div></li>
+      <li><span class="n">1</span><div><b>Pick a county.</b> Yours is filled in from Where you are. The <a href="https://wcwilkins2025.github.io/brotherhood-land-finder/" rel="noopener">Land Finder</a> ranks every US county for a self-sustaining life if you are still choosing.</div></li>
       <li><span class="n">2</span><div><b>Set the place up on paper.</b> Acres, house, well, fence, animals. Defaults are already filled in from public cost tables. Change what you know.</div></li>
       <li><span class="n">3</span><div><b>Copy the summary.</b> Paste it in a post, show your wife, or hand it to your banker. Then go get real quotes.</div></li>
     </ol>
@@ -422,6 +446,8 @@
       </div>
     </section>
   </div>
+    </div>
+  </details>
 </main>
 
 <footer><div class="wrap">
@@ -598,6 +624,39 @@
   /* ---------- render ---------- */
   var lastResult = null;
   var lastPlan = null;
+  function drawRungs() {
+    if (!window.GW || !window.GWpath) return;
+    var prof = GW.readProfile();
+    if (!prof.has) $('noProfileNote').hidden = false;
+    var R = GWpath.rungs(prof, D, calc);
+    var el2 = function (tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    function figText(x) { return x.headline ? x.headline : x.figure > 0 ? money(rh(x.figure)) : (x.key === 'herd' ? 'Covered' : '\u2013'); }
+    function unitText(x) { return x.headline ? '' : (x.unit || ''); }
+    function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    function reachText(x) { var m = x.reach.months; if (m == null) return 'when money in covers money out'; if (m === 0) return 'reachable now'; if (m < 12) return 'about ' + m + ' months out'; return 'about ' + Math.round(m / 12 * 10) / 10 + ' years out'; }
+    var H = R.heroes;
+    $('heroNow').textContent = H.now ? figText(H.now) : '\u2013'; $('heroNowSub').textContent = H.now ? H.now.title + (unitText(H.now) ? ', ' + unitText(H.now) : '') + '. ' + cap(reachText(H.now)) + '.' : '';
+    if (H.next && H.next.five) { $('heroNext').textContent = H.next.head + ' cows'; $('heroNextSub').textContent = 'Your first cows on an FSA microloan, growing to about ' + H.next.five + ' in five years with the heifers kept. ' + cap(reachText(H.next)) + '.'; }
+    else { $('heroNext').textContent = H.next ? figText(H.next) : '\u2013'; $('heroNextSub').textContent = H.next ? H.next.title + (unitText(H.next) ? ', ' + unitText(H.next) : '') + '. ' + cap(reachText(H.next)) + '.' : ''; }
+    $('heroPlace').textContent = H.place ? money(rh(H.place.figure)) : '\u2013'; $('heroPlaceSub').textContent = H.place ? 'Down on a modest place, with the government lending the rest over 40 years. ' + cap(reachText(H.place)) + '.' : '';
+    $('rungSub').textContent = 'Each rung is reachable. The figure is what it clears a year at typical published prices on grass leased at $' + (+R.path.leaseRate).toFixed(2) + ' an acre in your state. Below it: what it takes, and what it leads to.';
+    var ol = $('rungs'); ol.textContent = '';
+    R.rungs.forEach(function (x) {
+      var li = el2('li', 'stage' + (x.reach.months === 0 ? ' now' : ''));
+      li.appendChild(el2('p', 'state', reachText(x)));
+      li.appendChild(el2('h3', null, x.title));
+      var figs = el2('div', 'figs');
+      var f = el2('div', 'fig'); f.appendChild(el2('span', 'n', figText(x))); f.appendChild(el2('span', 'l', unitText(x))); figs.appendChild(f);
+      if (x.head && x.key !== 'herd') { var f2 = el2('div', 'fig'); f2.appendChild(el2('span', 'n', x.head + ' head')); f2.appendChild(el2('span', 'l', 'on about ' + fmt(x.acres) + ' leased acres')); figs.appendChild(f2); }
+      li.appendChild(figs);
+      li.appendChild(el2('p', 'why', x.what));
+      if (x.takes) { var g = el2('div', 'gate'); var b = el2('b', null, 'What it takes: '); g.appendChild(b); g.appendChild(document.createTextNode(x.takes)); li.appendChild(g); }
+      if (x.leads) li.appendChild(el2('p', 'src', x.leads));
+      ol.appendChild(li);
+    });
+    $('printHead').textContent = 'Groundwork, what you can get to. ' + new Date().toLocaleDateString();
+  }
+
   function render() {
     showHide();
     var inp = readForm();
@@ -641,6 +700,7 @@
     else if (ps.head == null) { $('payTyp').textContent = 'Not this way'; $('payRng').textContent = pl.dealName + ' loses money per head at these rates.'; }
     else { $('payTyp').textContent = ps.head + ' head'; $('payRng').textContent = pl.dealName + ' on about ' + fmt(ps.acres) + ' leased acres, ' + money(rh(ps.cashToStart)) + ' to start, ' + ps.hoursWeek + ' hours a week.'; }
     $('summaryText').textContent = summaryText(r, inp, placeName);
+    drawRungs();
   }
   function houseLabel(h) {
     return { mobile_used: 'used mobile home', mobile_new: 'new manufactured home', barndo: 'barndominium', build: 'house built new', existing: 'house already there' }[h] || h;
@@ -1001,6 +1061,7 @@
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () { if (lastResult) drawChart(calc.groupSetup(lastResult.setup)); }, 150);
   });
+  $('fold').addEventListener('toggle', function () { if ($('fold').open && lastResult) drawChart(calc.groupSetup(lastResult.setup)); });
   $('chartTableBtn').addEventListener('click', function () {
     var open = $('chartTable').hidden; $('chartTable').hidden = !open;
     this.textContent = open ? 'Hide the table' : 'Show as a table'; this.setAttribute('aria-expanded', open ? 'true' : 'false');
