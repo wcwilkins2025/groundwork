@@ -9,6 +9,10 @@ create table if not exists public.plans (
 
 alter table public.plans enable row level security;
 
+-- signed-in men may use the table; the policies below narrow that to each man's own row. Anonymous visitors get nothing.
+grant select, insert, update, delete on public.plans to authenticated;
+revoke all on public.plans from anon;
+
 drop policy if exists "a man reads his own plan"   on public.plans;
 drop policy if exists "a man writes his own plan"  on public.plans;
 drop policy if exists "a man changes his own plan" on public.plans;
