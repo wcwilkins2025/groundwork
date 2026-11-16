@@ -2,7 +2,7 @@
 
 A path from wherever you are to a place of your own in the country. Six stages, a gate at each one, what to do this month, and every figure from a public source or marked estimate. Free, no login, nothing stored anywhere but the link.
 
-Grows out of the [Brotherhood Homestead Cost Calculator](https://github.com/wcwilkins2025/homestead-cost-calculator), whose tables and arithmetic are the engine here.
+Grows out of the [Homestead Cost Calculator](https://github.com/wcwilkins2025/homestead-cost-calculator), whose tables and arithmetic are the engine here.
 
 ## Pages
 

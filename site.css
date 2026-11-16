@@ -1,4 +1,4 @@
-/* Groundwork: shared look. Same range-country palette and type as the Brotherhood Land Finder and the cost calculator. */
+/* Groundwork: shared look. Same range-country palette and type as the Land Finder and the cost calculator. */
 :root {
   --bg: #f3f1ec; --surface: #ffffff; --fg: #1f2328; --muted: #5c6369; --rule: #d6d2c8;
   --accent: #8a4b1f; --accent-ink: #ffffff; --accent-hover: #6e3a16;

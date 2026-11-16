@@ -1,6 +1,6 @@
 # Groundwork: build plan
 
-The Brotherhood homestead planner. It takes a man from wherever he is today, with no money, no income and no experience if that is where he is, to living off a place of his own, in stages with a gate at each one, and it coaches him to the next step.
+A homestead planner. It takes a man from wherever he is today, with no money, no income and no experience if that is where he is, to living off a place of his own, in stages with a gate at each one, and it coaches him to the next step.
 
 Grows out of the Homestead Cost Calculator (wcwilkins2025/homestead-cost-calculator). The calculator's sourced tables and arithmetic become the engine inside Groundwork.
 
@@ -108,6 +108,6 @@ Milestone 1 needs research for the stage 1 sources (BLS wages, KFF, extension bu
 
 1. Which personal email owns the Supabase, Resend and Twilio accounts.
 2. Domain or not. groundwork.something, or wcwilkins2025.github.io/groundwork for now.
-3. Does the privacy page name Wiley as the man running it, or the Brotherhood, or neither.
+3. Does the privacy page name Wiley as the man running it, or no one.
 4. Check-in cadence default: weekly or monthly.
 5. Whether the intro page carries Wiley's own words or a draft to edit.

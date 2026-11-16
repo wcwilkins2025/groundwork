@@ -189,7 +189,7 @@
       a.appendChild(GW.el('small', null, t[2])); row.appendChild(a);
     });
     box.appendChild(row);
-    box.appendChild(GW.el('p', null, "Reports go to the project's public issue page on GitHub, so you need a free GitHub account to post one. The report link carries only the page name, never your plan. Do not paste your plan link into a report. No GitHub? Say it in the Brotherhood group instead."));
+    box.appendChild(GW.el('p', null, "Reports go to the project's public issue page on GitHub, so you need a free GitHub account to post one. The report link carries only the page name, never your plan. Do not paste your plan link into a report."));
     wrap.appendChild(box);
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', GW.initFeedback); else GW.initFeedback();
