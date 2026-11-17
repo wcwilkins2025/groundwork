@@ -6,7 +6,7 @@
 <title>Your account</title>
 <meta name="description" content="Sign in with your email to keep your plan on every phone and computer. One row that only you can read, until you delete it.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="site.css?v=20261117b">
 <style>
   .field input[type=email] { font: inherit; font-size: 17px; color: var(--fg); background: var(--field); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; min-height: 48px; width: 100%; }
   .danger { border-color: var(--warn); }
@@ -88,8 +88,8 @@
 </div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
-<script src="config.js"></script>
-<script src="site.js"></script>
+<script src="config.js?v=20261117b"></script>
+<script src="site.js?v=20261117b"></script>
 <script>
 (function () {
   'use strict';
@@ -100,6 +100,14 @@
   if (!GW.supa()) { $('setupMissing').hidden = false; return; }
 
   function flash(msg, id) { var f = $(id || 'flash'); if (f) { f.textContent = msg; } }
+  /* back from a link Supabase would not accept (already used, replaced by a newer one, or expired): say so plainly */
+  (function () {
+    var raw = (location.hash || '').replace(/^#/, '') + '&' + (location.search || '').replace(/^\?/, '');
+    var q = new URLSearchParams(raw);
+    if (!q.get('error') && !q.get('error_code')) return;
+    flash('That sign-in link was already used, or a newer one replaced it, or it expired. Send yourself one new link below and tap the newest email.');
+    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])(error|error_code|error_description)=[^&]*/g, '$1').replace(/[?&]+$/, '')); } catch (e) {}
+  })();
   function show(session) {
     $('signedOut').hidden = !!session;
     $('signedIn').hidden = !session;
