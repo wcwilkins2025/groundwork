@@ -86,7 +86,9 @@
   GW.supa = function () {
     if (client) return client;
     if (!window.supabase || !window.GW_CONFIG) return null;
-    client = window.supabase.createClient(GW_CONFIG.supabaseUrl, GW_CONFIG.supabaseKey, { auth: { persistSession: true, detectSessionInUrl: true, flowType: 'pkce' } });
+    client = window.supabase.createClient(GW_CONFIG.supabaseUrl, GW_CONFIG.supabaseKey, { auth: { persistSession: true, detectSessionInUrl: true, flowType: 'implicit' } });
+    /* implicit, not pkce: the sign-in arrives in the link itself, so it works when the email opens in another browser
+       (Facebook or Gmail's in-app browser asked for it, Safari opens it). */
     return client;
   };
   GW.session = function () {

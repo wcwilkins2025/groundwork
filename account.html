@@ -147,7 +147,8 @@
     GW.signIn(email).then(function (r) {
       if (r.error) throw r.error;
       flash('Sent. Open the email on this device and click the link. Your plan in this link will be waiting to save.');
-      try { sessionStorage.setItem('gw-pending', GW.profileQuery(p)); } catch (e) {}
+      /* the plan typed here waits for the link; localStorage so the new tab the email opens can see it, for one hour */
+      try { localStorage.setItem('gw-pending', JSON.stringify({ q: GW.profileQuery(p), at: Date.now() })); } catch (e) {}
     }).catch(function (e) {
       var m = String(e.message || e);
       if (/security purposes|after \d+ seconds|rate limit/i.test(m)) flash('A link already went out a moment ago. Check your inbox and the junk folder. If nothing comes in two minutes, press the button again.');
@@ -163,11 +164,14 @@
     GW.deleteMe().then(function () { alert('Deleted. Your link still works on its own.'); location.href = 'index.html'; }, function (e) { flash('Could not delete: ' + (e.message || e), 'flash2'); });
   });
 
-  /* back from the email link with a plan waiting in the session: carry it */
-  try {
-    var pending = sessionStorage.getItem('gw-pending');
-    if (pending && !p.has) { sessionStorage.removeItem('gw-pending'); location.replace('account.html?' + pending); }
-  } catch (e) {}
+  /* back from the email link with a plan waiting: carry it, but only once the sign-in in the link has been read.
+     Opened in a different browser there is nothing waiting; he is signed in and his own plan link still has it. */
+  GW.session().then(function (s) {
+    if (!s) return;
+    var w = null;
+    try { w = JSON.parse(localStorage.getItem('gw-pending') || 'null'); localStorage.removeItem('gw-pending'); } catch (e) {}
+    if (w && w.q && Date.now() - w.at < 3600000 && !p.has) location.replace('account.html?' + w.q);
+  });
 })();
 </script>
 </body>
