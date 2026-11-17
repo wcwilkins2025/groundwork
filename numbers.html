@@ -10,27 +10,27 @@
 <style>
   /* Page styles; palette and nav come from site.css. */
   :root {
-    --bg: #f3f1ec; --surface: #ffffff; --fg: #1f2328; --muted: #5c6369; --rule: #d6d2c8;
-    --accent: #8a4b1f; --accent-ink: #ffffff; --accent-hover: #6e3a16;
-    --band: #22302e; --band-fg: #f3f1ec; --step: #2f5d4a; --warn: #9a3b1f;
-    --bar: #3d7a62; --grid: #e6e2d9; --field: #faf9f6;
+    --bg: #f5efe2; --surface: #fffaf0; --fg: #2b2a24; --muted: #5d5848; --rule: #e0d5bd;
+    --accent: #9a4f1f; --accent-ink: #ffffff; --accent-hover: #7d3f17;
+    --band: #2f4a32; --band-fg: #f5efe2; --step: #2f4a32; --warn: #9a3b1f;
+    --bar: #4f6a3a; --grid: #ebe3d0; --field: #fffdf7;
     --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
     --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
-      --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
-      --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
-      --bar: #7fb49b; --grid: #2a3134; --field: #15191b;
+      --bg: #1a1d16; --surface: #252a1f; --fg: #ece5d4; --muted: #b5ad99; --rule: #3a3f31;
+      --accent: #d9884c; --accent-ink: #1a1d16; --accent-hover: #e9a068;
+      --band: #12150f; --band-fg: #ece5d4; --step: #9fbf5e; --warn: #e58a6a;
+      --bar: #9fbf5e; --grid: #2f3428; --field: #1a1d16;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
-    --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
-    --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
-    --bar: #7fb49b; --grid: #2a3134; --field: #15191b;
+    --bg: #1a1d16; --surface: #252a1f; --fg: #ece5d4; --muted: #b5ad99; --rule: #3a3f31;
+    --accent: #d9884c; --accent-ink: #1a1d16; --accent-hover: #e9a068;
+    --band: #12150f; --band-fg: #ece5d4; --step: #9fbf5e; --warn: #e58a6a;
+    --bar: #9fbf5e; --grid: #2f3428; --field: #1a1d16;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
@@ -453,6 +453,7 @@
 
 <footer><div class="wrap">
   <p>These are planning figures, not quotes. Prices change by county, by year and by who you know. Get three bids on anything over a few thousand dollars, and check with the county before you buy. Open source on <a href="https://github.com/wcwilkins2025/homestead-cost-calculator" rel="noopener">GitHub</a>. Companion to the <a href="https://thelandfinder.org/" rel="noopener">Land Finder</a>.</p>
+  <p class="hr-family">Part of <a href="https://homesteadready.org/">Homestead Ready</a>, free tools for land, homesteading, readiness and radio. <a href="https://www.facebook.com/groups/homesteadready" rel="noopener">Join the Facebook group</a>.</p>
 </div></footer>
 
 <div class="stick" id="stick"><div>Set up <b id="stickSetup">$0</b></div><div>Each year <b id="stickAnnual">$0</b></div><a href="#where">See the numbers</a></div>
