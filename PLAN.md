@@ -107,7 +107,7 @@ Milestone 1 needs research for the stage 1 sources (BLS wages, KFF, extension bu
 ## 9. Open questions for Wiley
 
 1. Which personal email owns the Supabase, Resend and Twilio accounts.
-2. Domain or not. groundwork.something, or wcwilkins2025.github.io/groundwork for now.
+2. Domain: groundworkpath.org, bought 2026-11-16 (groundwork.org is taken). The old github.io address redirects to it.
 3. Does the privacy page name Wiley as the man running it, or no one.
 4. Check-in cadence default: weekly or monthly.
 5. Whether the intro page carries Wiley's own words or a draft to edit.

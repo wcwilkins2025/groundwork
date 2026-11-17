@@ -7,7 +7,7 @@
      SUPABASE_SECRET_KEY    the secret (service role) key, from Supabase > Project Settings > API Keys
      RESEND_API_KEY         from resend.com > API Keys
      GW_FROM                the sender, e.g. "Groundwork <checkin@yourdomain>"
-     GW_BASE                the site, default https://wcwilkins2025.github.io/groundwork/
+     GW_BASE                the site, default https://groundworkpath.org/
 
    node scripts/send_checkins.js                 send what is due
    node scripts/send_checkins.js --dry           list who is due and build their emails, send nothing, change nothing
@@ -75,7 +75,7 @@ const mask = (e) => String(e).replace(/^(.).*(@.*)$/, '$1***$2');
 
 async function main() {
   const args = process.argv.slice(2);
-  const base = env('GW_BASE', 'https://wcwilkins2025.github.io/groundwork/').replace(/\/?$/, '/');
+  const base = env('GW_BASE', 'https://groundworkpath.org/').replace(/\/?$/, '/');
 
   if (args[0] === '--sample') {
     const dir = path.resolve(args[1] || 'checkin-samples'); fs.mkdirSync(dir, { recursive: true });

@@ -206,7 +206,7 @@ for (const sc of chosen) {
   R.rungs.forEach((x) => check(sc.key, 'rung text is clean: ' + x.key, !BAD.test([x.title, x.what, x.takes, x.leads, x.unit].join(' ')), [x.what, x.takes].join(' ').match(BAD) && [x.what, x.takes].join(' ')));
   /* the check-in email for this man */
   const tok = 'f'.repeat(48);
-  const em = sender.build(p, {}, tok, 'https://wcwilkins2025.github.io/groundwork/');
+  const em = sender.build(p, {}, tok, 'https://groundworkpath.org/');
   check(sc.key, 'check-in names the same stage as the page', em.stage === w.current && em.subject.indexOf('stage ' + (w.index + 1) + ',') > 0, em.subject);
   check(sc.key, 'check-in text is clean', !BAD.test(em.text.replace(/https?:\/\/\S+/g, '')), (em.text.match(new RegExp('.{0,60}(' + BAD.source + ').{0,60}')) || [])[0]);
   check(sc.key, 'check-in has three questions and every button carries the token', (em.text.match(/^\d\. /gm) || []).length === 3 && (em.html.match(/checkin\.html\?t=f+&amp;a=/g) || []).length === sender.E.K.QUESTIONS[w.current].reduce((t, q) => t + q.options.length, 0));
