@@ -95,6 +95,15 @@
     var c = GW.supa(); if (!c) return Promise.resolve(null);
     return c.auth.getSession().then(function (r) { return r.data.session || null; });
   };
+  /* the 6-digit code from the email; type 'email' covers a new man and a returning one */
+  GW.verifyCode = function (email, code) {
+    var c = GW.supa(); if (!c) return Promise.reject(new Error('not set up'));
+    return c.auth.verifyOtp({ email: String(email).trim(), token: String(code).replace(/\D/g, ''), type: 'email' }).then(function (r) {
+      if (r.error) throw r.error;
+      if (!r.data || !r.data.session) throw new Error('no session');
+      return r.data.session;
+    });
+  };
   GW.signIn = function (email) {
     var c = GW.supa(); if (!c) return Promise.reject(new Error('not set up'));
     var back = location.origin + location.pathname.replace(/[^\/]*$/, '') + 'account.html';

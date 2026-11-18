@@ -6,7 +6,7 @@
 <title>Your account</title>
 <meta name="description" content="Sign in with your email to keep your plan on every phone and computer. One row that only you can read, until you delete it.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="site.css?v=20261117b">
+<link rel="stylesheet" href="site.css?v=20261118a">
 <style>
   .field input[type=email] { font: inherit; font-size: 17px; color: var(--fg); background: var(--field); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; min-height: 48px; width: 100%; }
   .danger { border-color: var(--warn); }
@@ -38,10 +38,19 @@
 
   <div class="card" id="signedOut" hidden>
     <h3>Sign in with your email</h3>
-    <p class="sub">No password. We send a link; you click it; you are in. The email is used for that and, if you turn them on, the check-ins. Nothing else.</p>
+    <p class="sub">No password. We email you a 6-digit code; you type it here; you are in. The email is used for that and, if you turn them on, the check-ins. Nothing else.</p>
     <form id="signinForm" class="fields" autocomplete="on">
       <div class="field"><label for="email">Your email</label><input id="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
-      <div class="actions"><button class="btn" type="submit" id="sendBtn">Send me the link</button></div>
+      <div class="actions"><button class="btn" type="submit" id="sendBtn">Send me a code</button></div>
+    </form>
+    <form id="codeForm" class="fields" autocomplete="off" hidden>
+      <p style="margin:0">We sent a 6-digit code to <b id="codeTo"></b>. Type it here. It can take a minute; check the junk folder too.</p>
+      <div class="field"><label for="code">Code from the email</label><input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" pattern="[0-9 ]*" placeholder="123456"></div>
+      <div class="actions">
+        <button class="btn" type="submit" id="codeBtn">Sign in</button>
+        <button class="btn ghost" type="button" id="resendBtn">Send a new code</button>
+        <button class="btn ghost" type="button" id="otherBtn">Use a different email</button>
+      </div>
     </form>
     <p class="flash" id="flash" aria-live="polite"></p>
   </div>
@@ -83,13 +92,13 @@
 </main>
 
 <footer><div class="wrap">
-  <p>If the sign-in link does not arrive in a few minutes, check the junk folder, then try again. Links expire after an hour.</p>
+  <p>If the code does not arrive in a few minutes, check the junk folder, then send a new one. A code works for an hour, and only the newest one works.</p>
   <p class="hr-family">Part of <a href="https://homesteadready.org/">Homestead Ready</a>, free tools for land, homesteading, health, readiness and radio. <a href="https://www.facebook.com/groups/homesteadready" rel="noopener">Join the Facebook group</a>.</p>
 </div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
-<script src="config.js?v=20261117b"></script>
-<script src="site.js?v=20261117b"></script>
+<script src="config.js?v=20261118a"></script>
+<script src="site.js?v=20261118a"></script>
 <script>
 (function () {
   'use strict';
@@ -105,7 +114,7 @@
     var raw = (location.hash || '').replace(/^#/, '') + '&' + (location.search || '').replace(/^\?/, '');
     var q = new URLSearchParams(raw);
     if (!q.get('error') && !q.get('error_code')) return;
-    flash('That sign-in link was already used, or a newer one replaced it, or it expired. Send yourself one new link below and tap the newest email.');
+    flash('That sign-in link was already used, or a newer one replaced it, or it expired. Sign-in is by a 6-digit code now: send yourself one below.');
     try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])(error|error_code|error_description)=[^&]*/g, '$1').replace(/[?&]+$/, '')); } catch (e) {}
   })();
   function show(session) {
@@ -151,18 +160,50 @@
     ev.preventDefault();
     var email = $('email').value.trim();
     if (!email) return;
-    $('sendBtn').disabled = true;
-    GW.signIn(email).then(function (r) {
+    sendCode(email, $('sendBtn'));
+  });
+
+  /* the code box. The email waits in localStorage for an hour, so a phone that reloads the page
+     while he is in his mail app comes back to the box. The plan typed here waits the same way. */
+  function codeEmail() { try { var w = JSON.parse(localStorage.getItem('gw-code-email') || 'null'); return w && Date.now() - w.at < 3600000 ? w.e : ''; } catch (e) { return ''; } }
+  function codeBox(email) {
+    $('signinForm').hidden = !!email; $('codeForm').hidden = !email;
+    $('codeTo').textContent = email || '';
+    if (email) { $('code').value = ''; try { $('code').focus(); } catch (e) {} }
+  }
+  function sendCode(email, btn) {
+    btn.disabled = true;
+    return GW.signIn(email).then(function (r) {
       if (r.error) throw r.error;
-      flash('Sent. Open the email on this device and click the link. Your plan in this link will be waiting to save.');
-      /* the plan typed here waits for the link; localStorage so the new tab the email opens can see it, for one hour */
+      try { localStorage.setItem('gw-code-email', JSON.stringify({ e: email, at: Date.now() })); } catch (e) {}
       try { localStorage.setItem('gw-pending', JSON.stringify({ q: GW.profileQuery(p), at: Date.now() })); } catch (e) {}
+      codeBox(email);
+      flash('Sent. Look for the email from Groundwork Plan and type the 6-digit code.');
     }).catch(function (e) {
       var m = String(e.message || e);
-      if (/security purposes|after \d+ seconds|rate limit/i.test(m)) flash('A link already went out a moment ago. Check your inbox and the junk folder. If nothing comes in two minutes, press the button again.');
+      if (e.status === 429 || /security purposes|after \d+ seconds|rate limit/i.test(m)) flash('A code already went out a moment ago. Check your inbox and the junk folder. If nothing comes in two minutes, send a new one.');
       else flash('Could not send: ' + m);
-    }).then(function () { $('sendBtn').disabled = false; });
+    }).then(function () { btn.disabled = false; });
+  }
+  $('codeForm').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var code = $('code').value.replace(/\D/g, '');
+    if (code.length < 6) { flash('Type the 6-digit code from the email.'); return; }
+    $('codeBtn').disabled = true;
+    GW.verifyCode(codeEmail() || $('codeTo').textContent, code).then(function (s) {
+      try { localStorage.removeItem('gw-code-email'); } catch (e) {}
+      codeBox(''); flash('');
+      var w = null;
+      try { w = JSON.parse(localStorage.getItem('gw-pending') || 'null'); localStorage.removeItem('gw-pending'); } catch (e) {}
+      if (w && w.q && Date.now() - w.at < 3600000 && !p.has) { location.replace('account.html?' + w.q); return; }
+      show(s);
+    }, function () {
+      flash('That code did not work. Use the code from the newest email; older codes stop working when a new one is sent, and every code stops after an hour.');
+    }).then(function () { $('codeBtn').disabled = false; });
   });
+  $('resendBtn').addEventListener('click', function () { var e = codeEmail() || $('codeTo').textContent; if (e) sendCode(e, $('resendBtn')); });
+  $('otherBtn').addEventListener('click', function () { try { localStorage.removeItem('gw-code-email'); } catch (e) {} codeBox(''); flash(''); $('email').focus(); });
+  if (codeEmail()) codeBox(codeEmail());
   $('saveNow').addEventListener('click', function () {
     GW.savePlan(p).then(function () { flash('Saved.', 'flash2'); GW.session().then(show); }, function (e) { flash('Could not save: ' + (e.message || e), 'flash2'); });
   });
